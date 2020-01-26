@@ -1,0 +1,12 @@
+{
+    "dev": {
+        "django_settings": "radon.settings",
+        "profile_name": "lambda",
+        "project_name": "radon",
+        "runtime": "python3.7",
+        "s3_bucket": "zappa-cgf3ulzfy",
+        "aws_region": "us-west-2",
+        "domain": "radargas.com",
+        "certificate_arn" :"arn:aws:acm:us-east-1:529539714514:certificate/967512aa-4bd3-4e50-a668-3909d3f620d2"
+    }
+}
