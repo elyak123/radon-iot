@@ -11,10 +11,7 @@
         "events": [{
             "function": "radon.views.lectura",
             "event_source": {
-                "arn": "",
-                "events": [
-                    "iot:eventoaws:*"
-                ]
+                "arn": "arn:aws:iot:us-west-2:529539714514:rule/sigfox_lambda"
             }
         }]
     }
