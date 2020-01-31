@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'radon.apps.RadonConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -99,6 +100,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Modelo Personalizado de Usuario
+AUTH_USER_MODEL = 'radon.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
