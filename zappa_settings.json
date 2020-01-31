@@ -11,7 +11,8 @@
         "events": [{
             "function": "radon.views.lectura",
             "event_source": {
-                "arn": "arn:aws:iot:us-west-2:529539714514:rule/sigfox_lambda"
+                "arn": "arn:aws:s3:::betaconstrubots3",
+                "events": ["s3:ObjectCreated:*"]
             }
         }]
     }
