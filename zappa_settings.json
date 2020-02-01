@@ -14,6 +14,7 @@
                 "arn": "arn:aws:s3:::betaconstrubots3",
                 "events": ["s3:ObjectCreated:*"]
             }
-        }]
+        }],
+        "keep_warm": false
     }
 }
