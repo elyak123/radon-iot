@@ -1,7 +1,6 @@
 {
     "dev": {
         "django_settings": "radon.settings",
-        "profile_name": "lambda",
         "project_name": "radon",
         "runtime": "python3.7",
         "s3_bucket": "zappa-cgf3ulzfy",
@@ -11,8 +10,8 @@
         "events": [{
             "function": "radon.views.lectura",
             "event_source": {
-                "arn": "arn:aws:s3:::betaconstrubots3",
-                "events": ["s3:ObjectCreated:*"]
+                "arn": "arn:aws:sns:us-west-2:529539714514:sigfox",
+                    "events": ["sns:Publish"]
             }
         }],
         "keep_warm": false
