@@ -1,19 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-
-
-class User(AbstractUser):
-    class Meta:
-        verbose_name = "User"
-        verbose_name_plural = "Users"
-
-    def __str__(self):
-        pass
 
 
 class Dispositivo(models.Model):
     # ubicacion = Pendiente
-    n_serie = models.CharField(max_length=45)
+    serie = models.CharField(max_length=45)
     capacidad = models.IntegerField()
 
     class Meta:

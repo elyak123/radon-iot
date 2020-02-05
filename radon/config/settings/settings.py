@@ -31,7 +31,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'radon.apps.RadonConfig',
+    'radon.iot.apps.IotConfig',
+    'radon.users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'radon.urls'
+ROOT_URLCONF = 'radon.config.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'radon.wsgi.application'
+WSGI_APPLICATION = 'radon.config.wsgi.application'
 
 
 # Database
@@ -101,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Modelo Personalizado de Usuario
-AUTH_USER_MODEL = 'radon.User'
+AUTH_USER_MODEL = 'users.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
