@@ -14,6 +14,7 @@
                     "events": ["sns:Publish"]
             }
         }],
+        "exclude": [".env"],
         "keep_warm": false
     }
 }
