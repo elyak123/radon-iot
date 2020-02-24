@@ -1,6 +1,7 @@
 # Created by https://www.gitignore.io/api/git,django,python,sublimetext
 # Edit at https://www.gitignore.io/?templates=git,django,python,sublimetext
-
+#### osx
+*.bak
 ### Django ###
 *.log
 *.pot
