@@ -1,9 +1,10 @@
 {
     "dev": {
-        "django_settings": "radon.settings",
+        "django_settings": "DJANGO_SETTINGS_MODULE",
         "project_name": "radon",
         "runtime": "python3.7",
         "s3_bucket": "ZAPPA_BUCKET",
+        "slim_handler": false,
         "aws_region": "AWS_REGION_DEPLOYMENT",
         "domain": "DOMAIN_NAME",
         "certificate_arn" :"SSL_CERT",
@@ -14,7 +15,7 @@
                     "events": ["sns:Publish"]
             }
         }],
-        "exclude": [".env"],
+        //"exclude": [".env"],
         "keep_warm": false
     }
 }

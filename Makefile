@@ -21,8 +21,10 @@ hidevars:
 	@sed -i.bak "s|"$(AWS_SNS_ARN)"|AWS_SNS_ARN|g" zappa_settings.json
 	@sed -i.bak "s|$(AWS_REGION_DEPLOYMENT)|AWS_REGION_DEPLOYMENT|g" zappa_settings.json
 	@sed -i.bak "s|$(DOMAIN_NAME)|DOMAIN_NAME|g" zappa_settings.json
+	@sed -i.bak "s|radon\.config\.settings.*|DJANGO_SETTINGS_MODULE\"\,|g" zappa_settings.json
 
 dev:
-	@zappa deploy dev
+	@sed -i.bak "s|DJANGO_SETTINGS_MODULE|$(DJANGO_SETTINGS_MODULE)|g" zappa_settings.json
+	@zappa update dev
 
 deploydev: showvars dev hidevars
