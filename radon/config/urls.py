@@ -19,5 +19,4 @@ from .challenge import acmechallenge
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^.well-known/acme-challenge/.*$', acmechallenge, name='acme-challenge'),
 ]
