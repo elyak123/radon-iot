@@ -1,17 +1,14 @@
 import struct
-import json
 
 
-def lectura(event, context):
+def lectura(message):
     # Tenemos que guardar en RDS (Postgres).
     # Tenemos que regresar un OK por cualquier cuestión.
     # Aqui hacer la separación.
-    message = json.loads(event['Records'][0]['Sns']['Message'])
     angulo = decode_int_little_endian(message['data'][0:4])
     temperatura = decode_float_little_endian(message['data'][4:12])
     humedad = decode_float_little_endian(message['data'][4:12])
-    return "Hola desde Lectura\n{}\n{}\nangulo:{}\ntemperatura:{}\nhumedad:{}".format(
-        str(event), str(context), angulo, temperatura, humedad)
+    return angulo, temperatura, humedad
 
 
 def decode_float_little_endian(hex_val):

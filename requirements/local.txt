@@ -4,6 +4,10 @@
 #
 #    pip-compile --generate-hashes --output-file=requirements/local.txt requirements/local.in
 #
+asn1crypto==1.3.0 \
+    --hash=sha256:5a215cb8dc12f892244e3a113fe05397ee23c5c4ca7a69cd6e69811755efc42d \
+    --hash=sha256:831d2710d3274c8a74befdddaf9f17fcbf6e350534565074818722d6d615b315 \
+    # via -r requirements/base.txt, oscrypto
 botocore==1.14.9 \
     --hash=sha256:1909424c9544f92142c8e551888731e32a99f9c99cfe8d21fea3ec0c32981dae \
     --hash=sha256:e3e3c0f59dc30c86dd2116aece3bd554f8476446cf1c5770bbf5111993d676c8 \
@@ -12,6 +16,36 @@ certifi==2019.11.28 \
     --hash=sha256:017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3 \
     --hash=sha256:25b64c7da4cd7479594d035c08c2d809eb4aab3a26e5a990ea98cc450c320f1f \
     # via -r requirements/base.txt, requests
+cffi==1.14.0 \
+    --hash=sha256:001bf3242a1bb04d985d63e138230802c6c8d4db3668fb545fb5005ddf5bb5ff \
+    --hash=sha256:00789914be39dffba161cfc5be31b55775de5ba2235fe49aa28c148236c4e06b \
+    --hash=sha256:028a579fc9aed3af38f4892bdcc7390508adabc30c6af4a6e4f611b0c680e6ac \
+    --hash=sha256:14491a910663bf9f13ddf2bc8f60562d6bc5315c1f09c704937ef17293fb85b0 \
+    --hash=sha256:1cae98a7054b5c9391eb3249b86e0e99ab1e02bb0cc0575da191aedadbdf4384 \
+    --hash=sha256:2089ed025da3919d2e75a4d963d008330c96751127dd6f73c8dc0c65041b4c26 \
+    --hash=sha256:2d384f4a127a15ba701207f7639d94106693b6cd64173d6c8988e2c25f3ac2b6 \
+    --hash=sha256:337d448e5a725bba2d8293c48d9353fc68d0e9e4088d62a9571def317797522b \
+    --hash=sha256:399aed636c7d3749bbed55bc907c3288cb43c65c4389964ad5ff849b6370603e \
+    --hash=sha256:3b911c2dbd4f423b4c4fcca138cadde747abdb20d196c4a48708b8a2d32b16dd \
+    --hash=sha256:3d311bcc4a41408cf5854f06ef2c5cab88f9fded37a3b95936c9879c1640d4c2 \
+    --hash=sha256:62ae9af2d069ea2698bf536dcfe1e4eed9090211dbaafeeedf5cb6c41b352f66 \
+    --hash=sha256:66e41db66b47d0d8672d8ed2708ba91b2f2524ece3dee48b5dfb36be8c2f21dc \
+    --hash=sha256:675686925a9fb403edba0114db74e741d8181683dcf216be697d208857e04ca8 \
+    --hash=sha256:7e63cbcf2429a8dbfe48dcc2322d5f2220b77b2e17b7ba023d6166d84655da55 \
+    --hash=sha256:8a6c688fefb4e1cd56feb6c511984a6c4f7ec7d2a1ff31a10254f3c817054ae4 \
+    --hash=sha256:8c0ffc886aea5df6a1762d0019e9cb05f825d0eec1f520c51be9d198701daee5 \
+    --hash=sha256:95cd16d3dee553f882540c1ffe331d085c9e629499ceadfbda4d4fde635f4b7d \
+    --hash=sha256:99f748a7e71ff382613b4e1acc0ac83bf7ad167fb3802e35e90d9763daba4d78 \
+    --hash=sha256:b8c78301cefcf5fd914aad35d3c04c2b21ce8629b5e4f4e45ae6812e461910fa \
+    --hash=sha256:c420917b188a5582a56d8b93bdd8e0f6eca08c84ff623a4c16e809152cd35793 \
+    --hash=sha256:c43866529f2f06fe0edc6246eb4faa34f03fe88b64a0a9a942561c8e22f4b71f \
+    --hash=sha256:cab50b8c2250b46fe738c77dbd25ce017d5e6fb35d3407606e7a4180656a5a6a \
+    --hash=sha256:cef128cb4d5e0b3493f058f10ce32365972c554572ff821e175dbc6f8ff6924f \
+    --hash=sha256:cf16e3cf6c0a5fdd9bc10c21687e19d29ad1fe863372b5543deaec1039581a30 \
+    --hash=sha256:e56c744aa6ff427a607763346e4170629caf7e48ead6921745986db3692f987f \
+    --hash=sha256:e577934fc5f8779c554639376beeaa5657d54349096ef24abe8c74c5d9c117c3 \
+    --hash=sha256:f2b0fa0c01d8a0c7483afd9f31d7ecf2d71760ca24499c8697aeb5ca37dc090c \
+    # via -r requirements/base.txt, validate-aws-sns-message
 chardet==3.0.4 \
     --hash=sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae \
     --hash=sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691 \
@@ -41,6 +75,10 @@ jmespath==0.9.3 \
     --hash=sha256:6a81d4c9aa62caf061cb517b4d9ad1dd300374cd4706997aff9cd6aedd61fc64 \
     --hash=sha256:f11b4461f425740a1d908e9a3f7365c3d2e569f6ca68a2ff8bc5bcd9676edd63 \
     # via -r requirements/base.txt, botocore
+oscrypto==1.2.0 \
+    --hash=sha256:2f53f50813ecc5114fd126b89766fabdb9448e0bb080814451cc4bb92acafca4 \
+    --hash=sha256:e9ea9401294b20ee17225502cc308660814ba8de386f94bc9b1dcf518d5399d9 \
+    # via -r requirements/base.txt, validate-aws-sns-message
 psycopg2==2.8.4 \
     --hash=sha256:4212ca404c4445dc5746c0d68db27d2cbfb87b523fe233dc84ecd24062e35677 \
     --hash=sha256:47fc642bf6f427805daf52d6e52619fe0637648fe27017062d898f3bf891419d \
@@ -56,6 +94,9 @@ psycopg2==2.8.4 \
     --hash=sha256:ef6df7e14698e79c59c7ee7cf94cd62e5b869db369ed4b1b8f7b729ea825712a \
     --hash=sha256:f898e5cc0a662a9e12bde6f931263a1bbd350cfb18e1d5336a12927851825bb6 \
     # via -r requirements/base.txt
+pycparser==2.19 \
+    --hash=sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3 \
+    # via -r requirements/base.txt, cffi
 python-dateutil==2.6.1 \
     --hash=sha256:891c38b2a02f5bb1be3e4793866c8df49c7d19baabf9c1bad62547e0b4866aca \
     --hash=sha256:95511bae634d69bc7329ba55e646499a842bc4ec342ad54a8cdb65645a0aad3c \
@@ -71,7 +112,7 @@ requests==2.23.0 \
 six==1.14.0 \
     --hash=sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a \
     --hash=sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c \
-    # via -r requirements/base.txt, python-dateutil
+    # via -r requirements/base.txt, python-dateutil, validate-aws-sns-message
 sqlparse==0.3.0 \
     --hash=sha256:40afe6b8d4b1117e7dff5504d7a8ce07d9a1b15aeeade8a2d10f130a834f8177 \
     --hash=sha256:7c3dca29c022744e95b547e867cee89f4fce4373f3549ccd8797d8eb52cdb873 \
@@ -80,6 +121,10 @@ urllib3==1.25.8 \
     --hash=sha256:2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc \
     --hash=sha256:87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc \
     # via -r requirements/base.txt, botocore, requests
+validate_aws_sns_message==0.9.0 \
+    --hash=sha256:099e073c0aaf66a5e294ff71c91dbdbc32583addb1b761ee42ea8ea2de1339cc \
+    --hash=sha256:3da7364c18ae54014b741e8d0ea854fb9a6966212ea96f6676a380df2d6fa98f \
+    # via -r requirements/base.txt
 
 # WARNING: The following packages were not pinned, but pip requires them to be
 # pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
