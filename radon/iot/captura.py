@@ -1,7 +1,7 @@
 import struct
 
 
-def lectura(message):
+def sigfox_decode(message):
     # Tenemos que guardar en RDS (Postgres).
     # Tenemos que regresar un OK por cualquier cuestión.
     # Aqui hacer la separación.

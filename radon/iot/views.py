@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 import validate_aws_sns_message
-# from .captura import lectura
+from .captura import sigfox_decode
 
 
 @csrf_exempt
@@ -18,7 +18,7 @@ def lectura(request):
         if body['Type'] == 'SubscriptionConfirmation':
             requests.get(body['SubscribeURL'])
         message = json.loads(body['Message'])
-        angulo, temperatura, humedad = lectura(message['data'])
+        angulo, temperatura, humedad = sigfox_decode(message['data'])
         return HttpResponse('post')
     else:
         return HttpResponse('get')
@@ -31,6 +31,6 @@ def registro_wisol(request):
             url.format('devices/'),
             auth=creds,
             json={
-                'deviceTypeId': '', 'id': '', 'pac': '', 'prototype': True
+                'name': '', 'deviceTypeId': '', 'id': '', 'pac': '', 'prototype': True
             }
         )
