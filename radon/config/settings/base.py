@@ -179,3 +179,6 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_URL = '/static/'
+
+SIGFOX_CREDENTIAL_ID = env('SIGFOX_CREDENTIAL_ID', default='CHANGEME')
+SIGFOX_CREDENTIAL_KEY = env('SIGFOX_CREDENTIAL_KEY', default='SECRET')

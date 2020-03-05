@@ -1,10 +1,25 @@
 from django.db import models
 
 
+class DeviceType(models.Model):
+    key = models.CharField(max_length=45, unique=True)
+    name = models.CharField(max_length=45)
+
+    class Meta:
+        verbose_name = "DeviceType"
+        verbose_name_plural = "DeviceTypes"
+
+    def __str__(self):
+        pass
+
+
 class Dispositivo(models.Model):
     # ubicacion = Pendiente
-    serie = models.CharField(max_length=45)
-    capacidad = models.IntegerField()
+    serie = models.CharField(max_length=45, unique=True)
+    capacidad = models.IntegerField('Capacidad del tanque', blank=True)
+    deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
+    pac = models.CharField(max_length=80)
+    prototype = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = "Dispositivo"

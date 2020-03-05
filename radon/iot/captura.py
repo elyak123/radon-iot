@@ -5,9 +5,9 @@ def lectura(message):
     # Tenemos que guardar en RDS (Postgres).
     # Tenemos que regresar un OK por cualquier cuestión.
     # Aqui hacer la separación.
-    angulo = decode_int_little_endian(message['data'][0:4])
-    temperatura = decode_float_little_endian(message['data'][4:12])
-    humedad = decode_float_little_endian(message['data'][4:12])
+    angulo = decode_int_little_endian(message[0:4])
+    temperatura = decode_float_little_endian(message[4:12])
+    humedad = decode_float_little_endian(message[4:12])
     return angulo, temperatura, humedad
 
 
