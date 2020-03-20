@@ -39,7 +39,7 @@ if READ_DOT_ENV_FILE:
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 
-ALLOWED_HOSTS = '*'
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 
 
 # Application definition
@@ -47,6 +47,7 @@ ALLOWED_HOSTS = '*'
 INSTALLED_APPS = [
     'radon.iot.apps.IotConfig',
     'radon.users.apps.UsersConfig',
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
