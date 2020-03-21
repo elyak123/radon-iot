@@ -47,6 +47,7 @@ ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 INSTALLED_APPS = [
     'radon.iot.apps.IotConfig',
     'radon.users.apps.UsersConfig',
+    'rest_framework',
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -156,6 +157,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
 
 # Modelo Personalizado de Usuario
 AUTH_USER_MODEL = 'users.User'
