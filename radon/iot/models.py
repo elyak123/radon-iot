@@ -10,7 +10,7 @@ class DeviceType(models.Model):
         verbose_name_plural = "DeviceTypes"
 
     def __str__(self):
-        pass
+        return self.name
 
 
 class Dispositivo(models.Model):
@@ -26,7 +26,7 @@ class Dispositivo(models.Model):
         verbose_name_plural = "Dispositivos"
 
     def __str__(self):
-        pass
+        return 'Dispositivo {}'.format(self.serie)
 
 
 class Lectura(models.Model):

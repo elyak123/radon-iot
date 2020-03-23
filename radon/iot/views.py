@@ -6,16 +6,22 @@ from django.conf import settings
 from rest_framework import viewsets
 from rest_framework import permissions
 import validate_aws_sns_message
-from radon.iot.serializers import DispositivoSerializer
-from radon.iot.models import Dispositivo
+from radon.iot.serializers import DispositivoSerializer, DeviceTypeSerializer
+from radon.iot.models import Dispositivo, DeviceType
 from .captura import sigfox_decode
+
+
+class DeviceTypeViewSet(viewsets.ModelViewSet):
+    queryset = DeviceType.objects.all()
+    serializer_class = DeviceTypeSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 class DeviceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = Dispositivo.objects.all().order_by('-date_joined')
+    queryset = Dispositivo.objects.all()
     serializer_class = DispositivoSerializer
     permission_classes = [permissions.IsAdminUser]
 

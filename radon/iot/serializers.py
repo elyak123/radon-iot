@@ -1,8 +1,14 @@
 from rest_framework import serializers
-from radon.iot.models import Dispositivo
+from radon.iot import models
+
+
+class DeviceTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceType
+        fields = ['pk', 'key', 'name']
 
 
 class DispositivoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dispositivo
-        fields = ['serie', 'capacidad', 'deviceTypeId', 'pac', 'prototype']
+        model = models.Dispositivo
+        fields = ['pk', 'serie', 'capacidad', 'deviceTypeId', 'pac', 'prototype']
