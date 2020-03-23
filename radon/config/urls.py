@@ -14,13 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path, include
-from rest_framework import routers
-from radon.users import views as user_views
-
-
+from django.conf import settings
+from django.urls import path, include
 
 urlpatterns = [
-    re_path(r'^api/v1/', include('radon.api.urls')),
     path('admin/', admin.site.urls),
+    path('users/', include('radon.users.urls')),
+    path('iot/', include('radon.iot.urls')),
 ]
+if settings.DEBUG:
+    urlpatterns += [
+        path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    ]
