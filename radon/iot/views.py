@@ -3,8 +3,21 @@ import requests
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
+from rest_framework import viewsets
+from rest_framework import permissions
 import validate_aws_sns_message
+from radon.iot.serializers import DispositivoSerializer
+from radon.iot.models import Dispositivo
 from .captura import sigfox_decode
+
+
+class DeviceViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Dispositivo.objects.all().order_by('-date_joined')
+    serializer_class = DispositivoSerializer
+    permission_classes = [permissions.IsAdminUser]
 
 
 @csrf_exempt
