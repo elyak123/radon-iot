@@ -1,10 +1,11 @@
 import json
 import requests
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, JsonResponse
 from django.conf import settings
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import api_view, permission_classes
 import validate_aws_sns_message
 from radon.iot.serializers import DispositivoSerializer, DeviceTypeSerializer
 from radon.iot.models import Dispositivo, DeviceType
@@ -26,21 +27,24 @@ class DeviceViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
-@csrf_exempt
+@api_view(['POST', 'GET'])
+@permission_classes([permissions.AllowAny])
 def lectura(request):
     if request.method == 'POST':
-        try:
-            body = json.loads(request.body)
-            validate_aws_sns_message.validate(body)
-        except validate_aws_sns_message.ValidationError:
-            return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
-        if body['Type'] == 'SubscriptionConfirmation':
-            requests.get(body['SubscribeURL'])
-        message = json.loads(body['Message'])
-        angulo, temperatura, humedad = sigfox_decode(message['data'])
-        return HttpResponse('post')
+        # try:
+        #     body = json.loads(request.body)
+        #     validate_aws_sns_message.validate(body)
+        # except validate_aws_sns_message.ValidationError:
+        #     return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
+        # if body['Type'] == 'SubscriptionConfirmation':
+        #     requests.get(body['SubscribeURL'])
+        # message = json.loads(body['Message'])
+        # angulo, temperatura, humedad = sigfox_decode(message['data'])
+        return JsonResponse({'cookie': request.COOKIES.get('mi_galleta', 'No hay cookie')}, status=200)
     else:
-        return HttpResponse('get')
+        response = JsonResponse({'get': True}, status=200)
+        response.set_cookie('mi_galleta', value='comeme soy galleta', httponly=True)
+        return response
 
 
 def registro_wisol(request):
