@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 
 
 class DeviceType(models.Model):
@@ -17,6 +17,7 @@ class Dispositivo(models.Model):
     # ubicacion = Pendiente
     serie = models.CharField(max_length=45, unique=True)
     capacidad = models.IntegerField('Capacidad del tanque', blank=True)
+    location = models.PointField()
     deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
     pac = models.CharField(max_length=80)
     prototype = models.BooleanField(default=True)

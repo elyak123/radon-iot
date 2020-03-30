@@ -4,6 +4,7 @@ requests==2.23.0
 Django==2.2.10
 django-cors-headers==3.2.1
 djangorestframework>=3.10, <3.11
+djangorestframework-gis==0.15
 djangorestframework-simplejwt==4.4.0
 django-environ==0.4.5
 psycopg2>=2.8.4
