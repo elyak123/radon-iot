@@ -9,6 +9,6 @@ router.register(r'dispositivos', views.DeviceViewSet)
 router.register(r'devicetype', views.DeviceTypeViewSet)
 
 urlpatterns = [
-    path('lectura/', views.lectura, name='lectura'),
+    path('registro-lectura/', views.registrolectura, name='registrolectura'),
     path(r'', include(router.urls)),
 ]

@@ -1,4 +1,7 @@
 from django.contrib.gis.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class DeviceType(models.Model):
@@ -14,13 +17,16 @@ class DeviceType(models.Model):
 
 
 class Dispositivo(models.Model):
-    # ubicacion = Pendiente
     serie = models.CharField(max_length=45, unique=True)
     capacidad = models.IntegerField('Capacidad del tanque', blank=True)
+    usuario = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # establecer gasera????
     location = models.PointField()
     deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
     pac = models.CharField(max_length=80)
     prototype = models.BooleanField(default=True)
+
+    def get_ultima_lectura(self):
+        return self.lectura_set.all().order_by('-fecha').first()
 
     class Meta:
         verbose_name = "Dispositivo"
@@ -31,7 +37,7 @@ class Dispositivo(models.Model):
 
 
 class Lectura(models.Model):
-    fecha = models.DateTimeField()
+    fecha = models.DateTimeField(auto_now=True)
     nivel = models.IntegerField()  # 0 - 100
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
 
