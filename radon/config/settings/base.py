@@ -197,31 +197,31 @@ REST_FRAMEWORK = {
 
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'radargas-auth'
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#     'ROTATE_REFRESH_TOKENS': False,
-#     'BLACKLIST_AFTER_ROTATION': True,
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
 
-#     'ALGORITHM': 'HS256',
-#     'SIGNING_KEY': env('SIMPLE_JWT_SIGNING_KEY'),
-#     'VERIFYING_KEY': '',  # env('SIMPLE_JWT_VERIFYING_KEY'),
-#     'AUDIENCE': None,
-#     'ISSUER': None,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': env('SIMPLE_JWT_SIGNING_KEY'),
+    'VERIFYING_KEY': '',  # env('SIMPLE_JWT_VERIFYING_KEY'),
+    'AUDIENCE': None,
+    'ISSUER': None,
 
-#     'AUTH_HEADER_TYPES': ('Bearer',),
-#     'USER_ID_FIELD': 'id',
-#     'USER_ID_CLAIM': 'user_id',
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
 
-#     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-#     'TOKEN_TYPE_CLAIM': 'token_type',
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'sliding',
 
-#     'JTI_CLAIM': 'jti',
+    'JTI_CLAIM': 'jti',
 
-#     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-#     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-# }
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
 
 
 # Modelo Personalizado de Usuario
