@@ -18,9 +18,9 @@ class DeviceType(models.Model):
 
 class Dispositivo(models.Model):
     serie = models.CharField(max_length=45, unique=True)
-    capacidad = models.IntegerField('Capacidad del tanque', blank=True)
+    capacidad = models.IntegerField('Capacidad del tanque', null=True)
     usuario = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)  # establecer gasera????
-    location = models.PointField()
+    location = models.PointField(null=True)
     deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
     pac = models.CharField(max_length=80)
     prototype = models.BooleanField(default=True)

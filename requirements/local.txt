@@ -54,6 +54,16 @@ chardet==3.0.4 \
     --hash=sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae \
     --hash=sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691 \
     # via -r requirements/base.txt, requests
+defusedxml==0.6.0 \
+    --hash=sha256:6687150770438374ab581bb7a1b327a847dd9c5749e396102de3fad4e8a3ef93 \
+    --hash=sha256:f684034d135af4c6cbb949b8a4d2ed61634515257a67299e5f940fbaa34377f5 \
+    # via -r requirements/base.txt, python3-openid
+dj-rest-auth==1.0.1 \
+    --hash=sha256:ec56e8b4e0d85912d85580c998852d56c89b937c5d86f473aed33eb75482c4f5 \
+    # via -r requirements/base.txt
+django-allauth==0.41.0 \
+    --hash=sha256:7ab91485b80d231da191d5c7999ba93170ef1bf14ab6487d886598a1ad03e1d8 \
+    # via -r requirements/base.txt
 django-cors-headers==3.2.1 \
     --hash=sha256:a5960addecc04527ab26617e51b8ed42f0adab4594b24bb0f3c33e2bd3857c3f \
     --hash=sha256:a785b5f446f6635810776d9f5f5d23e6a2a2f728ea982648370afaf0dfdf2627 \
@@ -69,7 +79,7 @@ django-phonenumber-field==4.0.0 \
 django==2.2.10 \
     --hash=sha256:1226168be1b1c7efd0e66ee79b0e0b58b2caa7ed87717909cd8a57bb13a7079a \
     --hash=sha256:9a4635813e2d498a3c01b10c701fe4a515d76dd290aaa792ccb65ca4ccb6b038 \
-    # via -r requirements/base.txt, django-cors-headers, django-phonenumber-field, djangorestframework-simplejwt
+    # via -r requirements/base.txt, dj-rest-auth, django-allauth, django-cors-headers, django-phonenumber-field, djangorestframework-simplejwt
 djangorestframework-gis==0.15 \
     --hash=sha256:63c253528a107bc77cd71506cd639a0489b05b763fa7c3190cfd4622bf094594 \
     # via -r requirements/base.txt
@@ -80,7 +90,7 @@ djangorestframework-simplejwt==4.4.0 \
 djangorestframework==3.10.3 \
     --hash=sha256:5488aed8f8df5ec1d70f04b2114abc52ae6729748a176c453313834a9ee179c8 \
     --hash=sha256:dc81cbf9775c6898a580f6f1f387c4777d12bd87abf0f5406018d32ccae71090 \
-    # via -r requirements/base.txt, djangorestframework-gis, djangorestframework-simplejwt
+    # via -r requirements/base.txt, dj-rest-auth, djangorestframework-gis, djangorestframework-simplejwt
 docutils==0.15.2 \
     --hash=sha256:6c4f696463b79f1fb8ba0c594b63840ebd41f059e92b31957c46b74a4599b6d0 \
     --hash=sha256:9e4d7ecfc600058e07ba661411a2b7de2fd0fafa17d1a7f7361cd47b1175c827 \
@@ -98,6 +108,10 @@ jmespath==0.9.3 \
     --hash=sha256:6a81d4c9aa62caf061cb517b4d9ad1dd300374cd4706997aff9cd6aedd61fc64 \
     --hash=sha256:f11b4461f425740a1d908e9a3f7365c3d2e569f6ca68a2ff8bc5bcd9676edd63 \
     # via -r requirements/base.txt, botocore
+oauthlib==3.1.0 \
+    --hash=sha256:bee41cc35fcca6e988463cacc3bcb8a96224f470ca547e697b604cc697b2f889 \
+    --hash=sha256:df884cd6cbe20e32633f1db1072e9356f53638e4361bef4e8b03c9127c9328ea \
+    # via -r requirements/base.txt, requests-oauthlib
 oscrypto==1.2.0 \
     --hash=sha256:2f53f50813ecc5114fd126b89766fabdb9448e0bb080814451cc4bb92acafca4 \
     --hash=sha256:e9ea9401294b20ee17225502cc308660814ba8de386f94bc9b1dcf518d5399d9 \
@@ -132,14 +146,22 @@ python-dateutil==2.6.1 \
     --hash=sha256:891c38b2a02f5bb1be3e4793866c8df49c7d19baabf9c1bad62547e0b4866aca \
     --hash=sha256:95511bae634d69bc7329ba55e646499a842bc4ec342ad54a8cdb65645a0aad3c \
     # via -r requirements/base.txt, botocore
+python3-openid==3.1.0 \
+    --hash=sha256:0086da6b6ef3161cfe50fb1ee5cceaf2cda1700019fda03c2c5c440ca6abe4fa \
+    --hash=sha256:628d365d687e12da12d02c6691170f4451db28d6d68d050007e4a40065868502 \
+    # via -r requirements/base.txt, django-allauth
 pytz==2019.3 \
     --hash=sha256:1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d \
     --hash=sha256:b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be \
     # via -r requirements/base.txt, babel, django
+requests-oauthlib==1.3.0 \
+    --hash=sha256:7f71572defaecd16372f9006f33c2ec8c077c3cfa6f5911a9a90202beb513f3d \
+    --hash=sha256:b4261601a71fd721a8bd6d7aa1cc1d6a8a93b4a9f5e96626f8e4d91e8beeaa6a \
+    # via -r requirements/base.txt, django-allauth
 requests==2.23.0 \
     --hash=sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee \
     --hash=sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6 \
-    # via -r requirements/base.txt
+    # via -r requirements/base.txt, django-allauth, requests-oauthlib
 six==1.14.0 \
     --hash=sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a \
     --hash=sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c \

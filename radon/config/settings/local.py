@@ -8,6 +8,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append('rest_framework.renderers.BrowsableAPIRenderer')
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # SECRET CONFIGURATION
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
