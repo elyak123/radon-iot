@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.response import Response
-from radon.users.serializers import UserSerializer
+from dj_rest_auth.views import LoginView
+from radon.users.serializers import UserSerializer, ExpirationJWTSerializer
 
 User = get_user_model()
 
@@ -19,3 +20,9 @@ class UserViewSet(viewsets.ModelViewSet):
         queryset = User.objects.all().order_by('-date_joined')
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class UsersLoginView(LoginView):
+
+    def get_response_serializer(self):
+        return ExpirationJWTSerializer

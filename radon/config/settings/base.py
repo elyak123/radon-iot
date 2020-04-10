@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'rest_framework_gis',
     'phonenumber_field',
+    'allauth',  # registration
+    'allauth.account',  # registration
+    'allauth.socialaccount',  # registration
     'dj_rest_auth',
     'django.contrib.auth',
     'django.contrib.admin',
@@ -197,6 +200,7 @@ REST_FRAMEWORK = {
 
 REST_USE_JWT = True
 JWT_AUTH_COOKIE = 'radargas-auth'
+REST_SESSION_LOGIN = False
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -214,7 +218,7 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'sliding',
+    'TOKEN_TYPE_CLAIM': 'access',
 
     'JTI_CLAIM': 'jti',
 
@@ -254,4 +258,3 @@ SIGFOX_CREDENTIAL_KEY = env('SIGFOX_CREDENTIAL_KEY', default='SECRET')
 #  Default phone number region
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'MX'
-
