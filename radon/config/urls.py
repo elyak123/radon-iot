@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from rest_framework_simplejwt.views import TokenRefreshView
 from radon.users.views import UsersLoginView
 
 
@@ -25,6 +26,7 @@ urlpatterns = [
             TemplateView.as_view(template_name="account/password_reset_confirm.html"),
             name='password_reset_confirm'),
     re_path(r'^auth/login/$', UsersLoginView.as_view(), name='rest_login'),
+    re_path(r'^auth/refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
     re_path(r'^auth/', include('dj_rest_auth.urls')),
     path('admin/', admin.site.urls),
     path('users/', include('radon.users.urls')),
