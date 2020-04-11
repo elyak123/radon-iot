@@ -6,7 +6,7 @@ from . import views
 app_name = 'users'
 
 router = routers.DefaultRouter()
-router.register(r'', views.UserViewSet)
+router.register(r'', views.UserViewSet, basename='user')
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),

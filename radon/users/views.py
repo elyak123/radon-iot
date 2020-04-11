@@ -1,7 +1,5 @@
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets
-from rest_framework import permissions
-from rest_framework.response import Response
+from rest_framework import viewsets, permissions
 from dj_rest_auth.views import LoginView
 from radon.users.serializers import UserSerializer, ExpirationJWTSerializer
 
@@ -12,14 +10,11 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
 
-    def list(self, request):
-        queryset = User.objects.all().order_by('-date_joined')
-        serializer = UserSerializer(queryset, many=True)
-        return Response(serializer.data)
+    def get_queryset(self, request):
+        return User.objects.all().order_by('-date_joined')
 
 
 class UsersLoginView(LoginView):

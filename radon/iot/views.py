@@ -26,7 +26,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAdminUser]
 
 
-@api_view(['POST', 'GET'])
+@api_view(['POST'])
 @permission_classes([permissions.IsAdminUser])
 def registrolectura(request):
     try:
