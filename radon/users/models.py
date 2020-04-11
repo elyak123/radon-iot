@@ -13,7 +13,7 @@ class User(AbstractUser):
 
     telefono = PhoneNumberField(blank=True)
     tipo = models.CharField(max_length=14, choices=TIPO_USUARIO, default='CLIENTE')
-    gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
+    gasera = models.ForeignKey(Gasera, on_delete=models.SET(get_default_gasera))
 
     class Meta:
         verbose_name = "User"

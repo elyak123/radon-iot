@@ -20,7 +20,7 @@ class DeviceType(models.Model):
 class Dispositivo(models.Model):
     serie = models.CharField(max_length=45, unique=True)
     capacidad = models.IntegerField('Capacidad del tanque', null=True)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, default=get_default_user, on_delete=models.SET(get_default_user))
     location = models.PointField(null=True)
     deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
     pac = models.CharField(max_length=80)
