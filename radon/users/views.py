@@ -18,6 +18,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class UsersLoginView(LoginView):
+    permission_classes = ()
+    authentication_classes = ()
 
     def get_response_serializer(self):
         return ExpirationJWTSerializer
