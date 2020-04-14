@@ -13,7 +13,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAdminUser]
 
-    def get_queryset(self, request):
+    def get_queryset(self):
         return User.objects.all().order_by('-date_joined')
 
 
