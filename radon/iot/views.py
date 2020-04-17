@@ -6,8 +6,8 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
 import validate_aws_sns_message
-from radon.iot.serializers import DispositivoSerializer, DeviceTypeSerializer
-from radon.iot.models import Dispositivo, DeviceType, Lectura
+from radon.iot.serializers import DispositivoSerializer, DeviceTypeSerializer, WisolSerializer
+from radon.iot.models import Dispositivo, DeviceType, Lectura, Wisol
 from .captura import sigfox_decode
 
 
@@ -24,6 +24,17 @@ class DeviceViewSet(viewsets.ModelViewSet):
     queryset = Dispositivo.objects.all()
     serializer_class = DispositivoSerializer
     permission_classes = [permissions.IsAdminUser]
+    lookup_field = 'wisol__serie'
+
+
+class WisolViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    queryset = Wisol.objects.all()
+    serializer_class = WisolSerializer
+    permission_classes = [permissions.IsAdminUser]
+    lookup_field = 'serie'
 
 
 @api_view(['POST'])
