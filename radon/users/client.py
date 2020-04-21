@@ -38,21 +38,6 @@ class RadonCookieRequests(object):
         else:
             self.login()
 
-    def continue_refresh_or_login(self):
-        try:
-            token_expiration = [x.expires for x in self.session.cookies if x.name == settings.JWT_AUTH_COOKIE][0]
-        except IndexError:
-            token_expiration = None
-        if self.session.cookies.get(settings.JWT_AUTH_COOKIE) and token_expiration:
-            if token_expiration < round(datetime.utcnow().timestamp()):
-                self.refresh()
-            else:
-                return
-        if hasattr(self, 'refresh_token') and self.refresh_exp > round(datetime.utcnow().timestamp()):
-            self.refresh()
-        else:
-            self.login()
-
     def prepare_request(self, url_specific, specific_headers={}):
         URL = self.radon_base_url + url_specific
         main_headers = {'content-type': 'application/json'}
