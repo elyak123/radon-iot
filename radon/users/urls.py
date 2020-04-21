@@ -8,5 +8,6 @@ router = routers.DefaultRouter()
 router.register(r'', views.UserViewSet, basename='user')
 
 urlpatterns = [
+    path('user-dispositivo-registration/', views.RegisterUsersView.as_view()),
     path(r'', include(router.urls)),
 ]
