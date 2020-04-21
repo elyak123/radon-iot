@@ -38,29 +38,40 @@ class RadonCookieRequests(object):
         else:
             self.login()
 
-    def refresh_or_login(self):
-        if hasattr(self, 'refresh_token'):
-            if self.refresh_exp > round(datetime.utcnow().timestamp()):
+    def continue_refresh_or_login(self):
+        try:
+            token_expiration = [x.expires for x in self.session.cookies if x.name == settings.JWT_AUTH_COOKIE][0]
+        except IndexError:
+            token_expiration = None
+        if self.session.cookies.get(settings.JWT_AUTH_COOKIE) and token_expiration:
+            if token_expiration < round(datetime.utcnow().timestamp()):
                 self.refresh()
+            else:
+                return
+        if hasattr(self, 'refresh_token') and self.refresh_exp > round(datetime.utcnow().timestamp()):
+            self.refresh()
         else:
             self.login()
 
     def prepare_request(self, url_specific, specific_headers={}):
         URL = self.radon_base_url + url_specific
         main_headers = {'content-type': 'application/json'}
-        self.session.cookies.clear_expired_cookies()
         headers = {**main_headers, **specific_headers}
-        if not self.session.cookies:
-            self.refresh_or_login()
         return URL, headers
 
     def send(self, method, url_specific, payload={}, specific_headers={}):
         URL, headers = self.prepare_request(url_specific, specific_headers)
         handler = getattr(self.session, method.lower())
+        kwargs = {'headers': headers}
         if method in ['post', 'put', 'patch']:
-            response = handler(URL, headers=headers, json=payload)
-        else:
-            response = handler(URL, headers=headers)
+            kwargs['json'] = payload
+        response = handler(URL, **kwargs)
+        if response.status_code == 401:
+            if hasattr(self, 'refresh_token'):
+                self.refresh()
+            else:
+                self.login()
+            response = handler(URL, **kwargs)
         try:
             return response.json()
         except json.decoder.JSONDecodeError:
