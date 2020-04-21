@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from rest_framework import viewsets, permissions
+from rest_framework_simplejwt.views import TokenRefreshView
 from dj_rest_auth.views import LoginView
 from dj_rest_auth.registration.views import RegisterView
 from radon.users import serializers
@@ -30,6 +31,10 @@ class UsersLoginView(LoginView):
 
     def get_response_serializer(self):
         return serializers.ExpirationJWTSerializer
+
+
+class RefreshUsersView(TokenRefreshView):
+    serializer_class = serializers.ExpirationRefreshJWTSerializer
 
 
 class RegisterUsersView(RegisterView):

@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework_gis.fields import GeometryField
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 from dj_rest_auth.serializers import JWTSerializer
 from allauth.account import app_settings as allauth_settings
 from allauth.utils import (email_address_exists,
@@ -38,6 +41,26 @@ class ExpirationJWTSerializer(JWTSerializer):
         return {"refresh_token":  str(obj['refresh_token']), 'exp': obj['refresh_token']['exp']}
 
 
+class ExpirationRefreshJWTSerializer(TokenRefreshSerializer):
+
+    def validate(self, attrs):
+        refresh = RefreshToken(attrs['refresh'])
+        data = {'access': {'token': str(refresh.access_token), 'exp': refresh.access_token['exp']}}
+        if settings.SIMPLE_JWT['ROTATE_REFRESH_TOKENS']:
+            if settings.SIMPLE_JWT['BLACKLIST_AFTER_ROTATION']:
+                try:
+                    # Attempt to blacklist the given refresh token
+                    refresh.blacklist()
+                except AttributeError:
+                    # If blacklist app not installed, `blacklist` method will
+                    # not be present
+                    pass
+            refresh.set_jti()
+            refresh.set_exp()
+            data['refresh'] = {'token': str(refresh), 'exp': refresh['exp']}
+        return data
+
+
 class AsistedUserDispositivoCreation(serializers.Serializer):
     username = serializers.CharField(
         max_length=get_username_max_length(),
@@ -47,6 +70,7 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
     email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
     wisol = serializers.CharField(required=True)
     location = GeometryField(precision=14)
+    capacidad = serializers.IntegerField(required=False)
 
     def validate_username(self, username):
         username = get_adapter().clean_username(username)
@@ -74,7 +98,8 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
             'username': self.validated_data.get('username', ''),
             'email': self.validated_data.get('email', ''),
             'wisol': self.validated_data.get('wisol', ''),
-            'location': self.validated_data.get('location', '')
+            'location': self.validated_data.get('location', ''),
+            'capacidad': self.validated_data.get('capacidad', '')
         }
 
     def save(self, request):
@@ -83,5 +108,10 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
         self.cleaned_data = self.get_cleaned_data()
         adapter.save_user(request, user, self)
         setup_user_email(request, user, [])
-        Dispositivo.objects.create(wisol=self.wisol, location=self.cleaned_data['location'], usuario=user)
+        Dispositivo.objects.create(
+            wisol=self.wisol,
+            location=self.cleaned_data['location'],
+            usuario=user,
+            capacidad=self.cleaned_data['capacidad']
+        )
         return user
