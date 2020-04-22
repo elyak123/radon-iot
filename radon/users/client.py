@@ -32,7 +32,7 @@ class RadonCookieRequests(object):
             '{}auth/refresh/'.format(self.radon_base_url),
             json={'refresh': self.refresh_token}
         )
-        token = response.json()['access']
+        token = response.json()['access']['token']
         if response.status_code == 200:
             self.session.cookies.update({settings.JWT_AUTH_COOKIE: token})
         else:
