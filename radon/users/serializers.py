@@ -89,7 +89,7 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
             self.wisol = Wisol.objects.get(serie=serie)
         except Wisol.DoesNotExist:
             raise serializers.ValidationError("El chip Wisol no existe o no ha sido registrado")
-        if hasattr(self.wisol, 'dispositivo'):
+        if self.wisol.activo:
             raise serializers.ValidationError("El chip Wisol ya tiene un dispositivo asignado")
         return serie
 
@@ -99,7 +99,7 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
             'email': self.validated_data.get('email', ''),
             'wisol': self.validated_data.get('wisol', ''),
             'location': self.validated_data.get('location', ''),
-            'capacidad': self.validated_data.get('capacidad', '')
+            'capacidad': self.validated_data.get('capacidad', None)
         }
 
     def save(self, request):

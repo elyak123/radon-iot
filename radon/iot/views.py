@@ -50,7 +50,7 @@ def registrolectura(request):
     message = json.loads(body['Message'])
     angulo, temperatura, humedad = sigfox_decode(message['data'])
     porcentaje = (angulo * 100) / 360
-    dispositivo = Dispositivo.get(serie=message['device'])
+    dispositivo = Dispositivo.objects.get(wisol__serie=message['device'])
     Lectura.objects.create(nivel=porcentaje, dispositivo=dispositivo)
     return HttpResponse('Registro Creado', status_code=201)
 
