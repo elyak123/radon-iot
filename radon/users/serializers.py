@@ -10,9 +10,10 @@ from allauth.account import app_settings as allauth_settings
 from allauth.utils import (email_address_exists,
                            get_username_max_length)
 from allauth.account.adapter import get_adapter
-from allauth.account.utils import setup_user_email
+from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer
-from radon.iot.models import Wisol, Dispositivo
+from radon.iot.models import Wisol
+from .utils import create_user_and_dispositivo
 
 User = get_user_model()
 
@@ -24,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'first_name', 'last_name',
-            'email', 'telefono', 'dispositivo_set'
+            'email', 'telefono', 'dispositivo_set', 'tipo', 'gasera',
         ]
         depth = 2
 
@@ -68,9 +69,16 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
         required=allauth_settings.USERNAME_REQUIRED
     )
     email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+    gasera = serializers.HiddenField(default='DUMMY')
+    tipo = serializers.HiddenField(default='CONSUMIDOR')
+    pwdtemporal = serializers.HiddenField(default=True)
+    telefono = PhoneNumberField(required=False)
     wisol = serializers.CharField(required=True)
     location = GeometryField(precision=14)
     capacidad = serializers.IntegerField(required=False)
+
+    def validate_gasera(self, gasera):
+        return self.context['request'].user.gasera
 
     def validate_username(self, username):
         username = get_adapter().clean_username(username)
@@ -94,24 +102,58 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
         return serie
 
     def get_cleaned_data(self):
-        return {
+        user_data = {
             'username': self.validated_data.get('username', ''),
             'email': self.validated_data.get('email', ''),
-            'wisol': self.validated_data.get('wisol', ''),
+            'gasera': self.validated_data.get('gasera', None),
+            'tipo': self.validated_data.get('tipo'),
+            'pwdtemporal': self.validated_data.get('pwdtemporal'),
+        }
+        disp_data = {
+            'wisol': self.wisol,
             'location': self.validated_data.get('location', ''),
             'capacidad': self.validated_data.get('capacidad', None)
         }
+        return user_data, disp_data
 
     def save(self, request):
-        adapter = get_adapter()
-        user = adapter.new_user(request)
-        self.cleaned_data = self.get_cleaned_data()
-        adapter.save_user(request, user, self)
-        setup_user_email(request, user, [])
-        Dispositivo.objects.create(
-            wisol=self.wisol,
-            location=self.cleaned_data['location'],
-            usuario=user,
-            capacidad=self.cleaned_data['capacidad']
-        )
+        user_data, disp_data = self.get_cleaned_data()
+        user, dispositivo = create_user_and_dispositivo(user_data, disp_data)
         return user
+
+
+class ActivateUsers(serializers.Serializer):
+    email = serializers.EmailField()
+    serie = serializers.CharField()
+
+    def validate_serie(self, serie):
+        try:
+            self.wisol = Wisol.objects.get(serie=serie)
+        except Wisol.DoesNotExist:
+            raise serializers.ValidationError(
+                'El chip que corresponde al dispositivo no existe '
+                'favor de llamar a soporte.'
+            )
+        return serie
+
+    def validate(self, attrs):
+        if hasattr(self, 'wisol'):
+            wisol = self.wisol
+        else:
+            wisol = Wisol.objects.get(attrs['serie'])
+        if wisol.dispositivo.usuario.email == attrs['email']:
+            raise serializers.ValidationError(
+                'Este dispositivo está registrado con otro correo electrónico.'
+            )
+
+    def validate_email(self, email):
+        try:
+            usr = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError(
+                'Tu correo electronico o tu usuario no fueron registrados '
+                'correctamente, favor de llamar a soporte'
+            )
+        if not usr.pwdtemporal or not usr.is_active:
+            raise serializers.ValidationError('El correo electrónico del usuario no se encuentra activo.')
+        return email

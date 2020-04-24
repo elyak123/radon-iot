@@ -21,7 +21,6 @@ class WisolSerializer(serializers.ModelSerializer):
 class DispositivoSerializer(GeoFeatureModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=models.User.objects.all())
     # buscar limitar los querysets o revisar la implicacion de querysets abiertos.
-    # wisol = WisolSerializer() # Este tipo de serializador es bueno para crear en el aire
     wisol = serializers.SlugRelatedField(queryset=models.Wisol.objects.all(), slug_field='serie')
     ultima_lectura = serializers.IntegerField(source='get_ultima_lectura', read_only=True)
 

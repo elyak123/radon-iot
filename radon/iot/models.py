@@ -52,6 +52,20 @@ class Dispositivo(models.Model):
         return 'Dispositivo {}'.format(self.wisol.serie)
 
 
+class Instalacion(models.Model):
+
+    fecha = models.DateTimeField(auto_now=True)
+    operario = models.ForeignKey(User, related_name='operario', on_delete=models.CASCADE)
+    consumidor = models.ForeignKey(User, related_name='consumidor', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Instalacion"
+        verbose_name_plural = "Instalaciones"
+
+    def __str__(self):
+        return '{} {}'.format(self.fecha, self.operario)
+
+
 class Lectura(models.Model):
     fecha = models.DateTimeField(auto_now=True)
     nivel = models.IntegerField()  # 0 - 100
