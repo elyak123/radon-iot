@@ -10,7 +10,7 @@ class Gasera(models.Model):
 
 
 class User(AbstractUser):
-    TIPO_USUARIO = (('CLIENTE', 'Cliente'), ('CONSUMIDOR', 'Consumidor'), ('STAFF', 'Staff'))
+    TIPO_USUARIO = (('CLIENTE', 'Cliente'), ('CONSUMIDOR', 'Consumidor'), ('STAFF', 'Staff'), ('OPERARIO', 'Operario'))
 
     telefono = PhoneNumberField(blank=True)
     email = models.EmailField(unique=True, validators=[validate_email])

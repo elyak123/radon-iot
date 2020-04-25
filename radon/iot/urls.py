@@ -8,6 +8,7 @@ router = routers.DefaultRouter()
 router.register(r'dispositivos', views.DeviceViewSet)
 router.register(r'devicetype', views.DeviceTypeViewSet)
 router.register(r'wisol', views.WisolViewSet)
+router.register(r'instalaciones', views.InstalacionViewSet, basename='instalacion')
 
 urlpatterns = [
     path('registro-lectura/', views.registrolectura, name='registrolectura'),

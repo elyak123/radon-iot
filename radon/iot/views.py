@@ -6,8 +6,8 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
 import validate_aws_sns_message
-from radon.iot.serializers import DispositivoSerializer, DeviceTypeSerializer, WisolSerializer
-from radon.iot.models import Dispositivo, DeviceType, Lectura, Wisol
+from radon.iot.serializers import DispositivoSerializer, DeviceTypeSerializer, WisolSerializer, InstalacionSerializer
+from radon.iot.models import Dispositivo, DeviceType, Lectura, Wisol, Instalacion
 from .captura import sigfox_decode
 
 
@@ -25,6 +25,15 @@ class DeviceViewSet(viewsets.ModelViewSet):
     serializer_class = DispositivoSerializer
     permission_classes = [permissions.IsAdminUser]
     lookup_field = 'wisol__serie'
+
+
+class InstalacionViewSet(viewsets.ModelViewSet):
+
+    serializer_class = InstalacionSerializer
+    permission_classes = [permissions.IsAuthenticated] # por lo pronto
+
+    def get_queryset(self):
+        return Instalacion.objects.filter(operario=self.request.user).order_by('-fecha')
 
 
 class WisolViewSet(viewsets.ModelViewSet):

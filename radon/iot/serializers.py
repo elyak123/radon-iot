@@ -44,3 +44,13 @@ class LecturaSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Lectura
         fields = ['pk', 'fecha', 'nivel', 'dispositivo']
+
+
+class InstalacionSerializer(serializers.ModelSerializer):
+    operario = serializers.SlugRelatedField(queryset=models.User.objects.filter(tipo='OPERARIO'), slug_field='username')
+    consumidor = serializers.SlugRelatedField(queryset=models.User.objects.filter(tipo='CONSUMIDOR'), slug_field='username')
+    fecha = serializers.DateTimeField(read_only=True)
+
+    class Meta:
+        model = models.Instalacion
+        fields = ['fecha', 'operario', 'consumidor']

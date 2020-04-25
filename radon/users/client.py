@@ -13,10 +13,14 @@ class RadonCookieRequests(object):
         super(RadonCookieRequests, self).__init__(*args, **kwargs)
         self.session = requests.Session()
 
-    def login(self):
+    def login(self, username=None, password=None):
+        if not username:
+            username = self.radon_username
+        if not password:
+            password = self.radon_password
         data = {
-          "username": self.radon_username,
-          "password": self.radon_password
+          "username": username,
+          "password": password
         }
         req = self.session.post(
             '{}auth/login/'.format(self.radon_base_url),
@@ -26,6 +30,10 @@ class RadonCookieRequests(object):
         response = req.json()
         self.refresh_token = response['refresh_token']['refresh_token']
         self.refresh_exp = response['refresh_token']['exp']
+
+    def change_user(self, username, password):
+        self.session.cookies.clear()
+        self.login(username=username, password=password)
 
     def refresh(self):
         response = self.session.post(

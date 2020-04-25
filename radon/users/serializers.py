@@ -36,10 +36,10 @@ class ExpirationJWTSerializer(JWTSerializer):
     user = serializers.SerializerMethodField()
 
     def get_access_token(self, obj):
-        return {'access': str(obj['access_token']), 'exp': obj['access_token']['exp']}
+        return {'token': str(obj['access_token']), 'exp': obj['access_token']['exp']}
 
     def get_refresh_token(self, obj):
-        return {"refresh_token":  str(obj['refresh_token']), 'exp': obj['refresh_token']['exp']}
+        return {"token":  str(obj['refresh_token']), 'exp': obj['refresh_token']['exp']}
 
 
 class ExpirationRefreshJWTSerializer(TokenRefreshSerializer):
@@ -123,37 +123,46 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
 
 
 class ActivateUsers(serializers.Serializer):
-    email = serializers.EmailField()
-    serie = serializers.CharField()
+    email = serializers.EmailField(required=True)
+    serie = serializers.CharField(required=True)
+    #password1
+    #password2
+
+    not_wisol_error = 'El chip que corresponde al dispositivo no existe favor de llamar a soporte.'
 
     def validate_serie(self, serie):
         try:
             self.wisol = Wisol.objects.get(serie=serie)
         except Wisol.DoesNotExist:
-            raise serializers.ValidationError(
-                'El chip que corresponde al dispositivo no existe '
-                'favor de llamar a soporte.'
-            )
+            raise serializers.ValidationError(self.not_wisol_error)
         return serie
 
     def validate(self, attrs):
         if hasattr(self, 'wisol'):
             wisol = self.wisol
         else:
-            wisol = Wisol.objects.get(attrs['serie'])
-        if wisol.dispositivo.usuario.email == attrs['email']:
+            try:
+                wisol = Wisol.objects.get(attrs['serie'])
+            except Wisol.DoesNotExist:
+                raise serializers.ValidationError(self.not_wisol_error)
+        if wisol.dispositivo.usuario.email != attrs['email']:
             raise serializers.ValidationError(
                 'Este dispositivo está registrado con otro correo electrónico.'
             )
 
+    def save(self):
+        #  asumimos que wisol y user ya existen
+        pass
+
     def validate_email(self, email):
         try:
-            usr = User.objects.get(email=email)
+            self.user = User.objects.get(email=email)
         except User.DoesNotExist:
             raise serializers.ValidationError(
                 'Tu correo electronico o tu usuario no fueron registrados '
                 'correctamente, favor de llamar a soporte'
             )
-        if not usr.pwdtemporal or not usr.is_active:
-            raise serializers.ValidationError('El correo electrónico del usuario no se encuentra activo.')
+        if not self.user.pwdtemporal or not self.user.is_active:
+            raise serializers.ValidationError(
+                'El correo electrónico del usuario no se encuentra pendiente de activación.')
         return email
