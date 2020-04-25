@@ -20,11 +20,12 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     dispositivo_set = NestedDispositivoSerializer(many=True, read_only=True)
+    password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'first_name', 'last_name',
+            'id', 'username', 'first_name', 'last_name', 'password',
             'email', 'telefono', 'dispositivo_set', 'tipo', 'gasera',
         ]
         depth = 2
