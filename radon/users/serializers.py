@@ -22,6 +22,15 @@ class UserSerializer(serializers.ModelSerializer):
     dispositivo_set = NestedDispositivoSerializer(many=True, read_only=True)
     password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
+    def create(self, validated_data):
+        return User.objects.create_user(validated_data)
+
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+        return super(UserSerializer, self).update(instance, validated_data)
+
     class Meta:
         model = User
         fields = [

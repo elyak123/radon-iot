@@ -1,6 +1,5 @@
 import json
 import requests
-from datetime import datetime
 from django.conf import settings
 
 
@@ -28,12 +27,16 @@ class RadonCookieRequests(object):
             json=data
         )
         response = req.json()
-        self.refresh_token = response['refresh_token']['refresh_token']
+        self.refresh_token = response['refresh_token']['token']
         self.refresh_exp = response['refresh_token']['exp']
+        return response
 
     def change_user(self, username, password):
         self.session.cookies.clear()
-        self.login(username=username, password=password)
+        try:
+            resp = self.login(username=username, password=password)
+        except KeyError:
+            return resp
 
     def refresh(self):
         response = self.session.post(
