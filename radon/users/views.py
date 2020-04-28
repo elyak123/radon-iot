@@ -43,7 +43,7 @@ class RefreshUsersView(TokenRefreshView):
 
 class RegisterUsersView(RegisterView):
     serializer_class = serializers.AsistedUserDispositivoCreation
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated] # por lo pronto....
 
     @sensitive_post_parameters_m
     def dispatch(self, *args, **kwargs):

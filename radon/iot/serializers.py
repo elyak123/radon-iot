@@ -19,6 +19,16 @@ class WisolSerializer(serializers.ModelSerializer):
 
 
 class WisolValidation(serializers.Serializer):
+    """
+    ENDPOINT:
+    /iot/disponibilidad-wisol/
+    POST
+    wisol: <serie>
+
+    VALIDA:
+    * Wisol con serie existe
+    * Wisol disponible (sin dispositivo o Usuario)
+    """
     wisol = serializers.CharField(required=True)
     not_wisol_error = 'El chip que corresponde al dispositivo no existe favor de llamar a soporte.'
 

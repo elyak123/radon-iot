@@ -73,6 +73,39 @@ class ExpirationRefreshJWTSerializer(TokenRefreshSerializer):
 
 
 class AsistedUserDispositivoCreation(WisolValidation):
+    """
+    ENDPOINT:
+    /users/user-dispositivo-registration/
+
+    DESCRIPCION:
+    Este endpoint es para crear el usuario con password inutilizable y el dispositivo del chip wisol
+    que se esta instalando. El dispositivo deberá de comenzar a funcionar pero el usuario aún necesita
+    activación.
+
+    CAMPOS:
+    username: Nombre de usuario del futuro usuario
+    email: Correo del futuro usuario
+    telefono: (string) Telefono del futuro usuario a 10 digitos
+    location: (string) Ubicacion geografica del futuro dispositivo en formato POINT(x.abcd -y.xyz)
+    capacidad: (int) Capacidad del tanque del futuro dispositivo
+
+    CAMPOS OCULTOS (NO UTILIZABLES PARA EL CLIENTE)
+    gasera: (<Gasera: Model>) Sera la gasera del cliente que da de alta el consumidor
+    tipo: (string) En este caso siempre será `CONSUMIDOR`
+    pwdtemporal: (bool) En este caso siempre será True
+
+    VALIDA:
+    * Wisol con serie existe
+    * Wisol disponible (sin dispositivo o Usuario)
+    * Username sigue convenciones UTF-8
+    * Username no existe previo a la creación
+    * Email no existe previo a la creación
+
+    ACCIONES:
+    * Crea el usuario con pwd no utilizable
+    * Crea el dispositivo con el chip Wisol proporcionado
+    * Asigna el dispositivo al usuario recién creado
+    """
     username = serializers.CharField(
         max_length=get_username_max_length(),
         min_length=allauth_settings.USERNAME_MIN_LENGTH,
@@ -123,6 +156,26 @@ class AsistedUserDispositivoCreation(WisolValidation):
 
 
 class ActivateUsers(WisolValidation):
+    """
+    ENDPOINT:
+    /users/activacion-usuarios/
+    wisol: <serie>
+    email: <bla@hola.com>
+    password1: pwd
+    password2: pwd
+
+    VALIDA:
+    * Usuario existe
+    * Wisol existe
+    * Wisol fue asignado al usuario
+    * Los pwd son iguales
+
+    ACCIONES:
+    * Establece pwd
+    * Quita bandera `pwdtemporal`
+    * Pone bandera `is_active`
+    * Guarda en DB
+    """
     email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
     password1 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
