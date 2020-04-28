@@ -18,6 +18,24 @@ class WisolSerializer(serializers.ModelSerializer):
         fields = ['pk', 'serie', 'pac', 'deviceTypeId', 'prototype', ]
 
 
+class WisolValidation(serializers.Serializer):
+    wisol = serializers.CharField(required=True)
+    not_wisol_error = 'El chip que corresponde al dispositivo no existe favor de llamar a soporte.'
+
+    def get_wisol_or_error(self, serie):
+        try:
+            wisol = models.Wisol.objects.get(serie=serie)
+        except models.Wisol.DoesNotExist:
+            raise serializers.ValidationError(self.not_wisol_error)
+        return wisol
+
+    def validate_wisol(self, serie):
+        self.wisol = self.get_wisol_or_error(serie)
+        if self.wisol.activo:
+            raise serializers.ValidationError("El chip Wisol ya tiene un dispositivo asignado")
+        return serie
+
+
 class DispositivoSerializer(GeoFeatureModelSerializer):
     usuario = serializers.PrimaryKeyRelatedField(queryset=models.User.objects.all())
     # buscar limitar los querysets o revisar la implicacion de querysets abiertos.

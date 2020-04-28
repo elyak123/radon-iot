@@ -3,17 +3,18 @@ import requests
 from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 from rest_framework import viewsets
+from rest_framework.response import Response
 from rest_framework import permissions
+from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 import validate_aws_sns_message
-from radon.iot.serializers import DispositivoSerializer, DeviceTypeSerializer, WisolSerializer, InstalacionSerializer
-from radon.iot.models import Dispositivo, DeviceType, Lectura, Wisol, Instalacion
+from radon.iot import serializers, models
 from .captura import sigfox_decode
 
 
 class DeviceTypeViewSet(viewsets.ModelViewSet):
-    queryset = DeviceType.objects.all()
-    serializer_class = DeviceTypeSerializer
+    queryset = models.DeviceType.objects.all()
+    serializer_class = serializers.DeviceTypeSerializer
     permission_classes = [permissions.IsAdminUser]
 
 
@@ -21,29 +22,37 @@ class DeviceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = Dispositivo.objects.all()
-    serializer_class = DispositivoSerializer
+    queryset = models.Dispositivo.objects.all()
+    serializer_class = serializers.DispositivoSerializer
     permission_classes = [permissions.IsAdminUser]
     lookup_field = 'wisol__serie'
 
 
 class InstalacionViewSet(viewsets.ModelViewSet):
 
-    serializer_class = InstalacionSerializer
+    serializer_class = serializers.InstalacionSerializer
     permission_classes = [permissions.IsAuthenticated] # por lo pronto
 
     def get_queryset(self):
-        return Instalacion.objects.filter(operario=self.request.user).order_by('-fecha')
+        return models.Instalacion.objects.filter(operario=self.request.user).order_by('-fecha')
 
 
 class WisolViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = Wisol.objects.all()
-    serializer_class = WisolSerializer
+    queryset = models.Wisol.objects.all()
+    serializer_class = serializers.WisolSerializer
     permission_classes = [permissions.IsAdminUser]
     lookup_field = 'serie'
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated]) # por lo pronto....
+def wisol_initial_validation(request):
+    serializer = serializers.WisolValidation(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    return Response({'wisol': 'valid'}, status.HTTP_200_OK, {})
 
 
 @api_view(['POST'])
@@ -59,8 +68,8 @@ def registrolectura(request):
     message = json.loads(body['Message'])
     angulo, temperatura, humedad = sigfox_decode(message['data'])
     porcentaje = (angulo * 100) / 360
-    dispositivo = Dispositivo.objects.get(wisol__serie=message['device'])
-    Lectura.objects.create(nivel=porcentaje, dispositivo=dispositivo)
+    dispositivo = models.Dispositivo.objects.get(wisol__serie=message['device'])
+    models.Lectura.objects.create(nivel=porcentaje, dispositivo=dispositivo)
     return HttpResponse('Registro Creado', status_code=201)
 
 

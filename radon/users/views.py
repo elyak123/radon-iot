@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework import viewsets, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenRefreshView
 from dj_rest_auth.views import LoginView
 from dj_rest_auth.registration.views import RegisterView
@@ -52,3 +55,12 @@ class RegisterUsersView(RegisterView):
     def perform_create(self, serializer):
         user = serializer.save(self.request)
         return user
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated]) # por lo pronto....
+def activacion_usuarios(request):
+    serializer = serializers.ActivateUsers(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save()
+    return Response(serializer.data, status.HTTP_200_OK, {})

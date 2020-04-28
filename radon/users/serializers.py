@@ -11,7 +11,7 @@ from allauth.utils import (email_address_exists,
                            get_username_max_length)
 from allauth.account.adapter import get_adapter
 from phonenumber_field.serializerfields import PhoneNumberField
-from radon.iot.serializers import NestedDispositivoSerializer
+from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
 from .utils import create_user_and_dispositivo
 
@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     def create(self, validated_data):
-        return User.objects.create_user(validated_data)
+        return User.objects.create_user(**validated_data)
 
     def update(self, instance, validated_data):
         if 'password' in validated_data:
@@ -72,7 +72,7 @@ class ExpirationRefreshJWTSerializer(TokenRefreshSerializer):
         return data
 
 
-class AsistedUserDispositivoCreation(serializers.Serializer):
+class AsistedUserDispositivoCreation(WisolValidation):
     username = serializers.CharField(
         max_length=get_username_max_length(),
         min_length=allauth_settings.USERNAME_MIN_LENGTH,
@@ -83,16 +83,8 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
     tipo = serializers.HiddenField(default='CONSUMIDOR')
     pwdtemporal = serializers.HiddenField(default=True)
     telefono = PhoneNumberField(required=False)
-    wisol = serializers.CharField(required=True)
     location = GeometryField(precision=14)
     capacidad = serializers.IntegerField(required=False)
-
-    def validate_gasera(self, gasera):
-        return self.context['request'].user.gasera
-
-    def validate_username(self, username):
-        username = get_adapter().clean_username(username)
-        return username
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
@@ -102,14 +94,12 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
                     _("A user is already registered with this e-mail address."))
         return email
 
-    def validate_wisol(self, serie):
-        try:
-            self.wisol = Wisol.objects.get(serie=serie)
-        except Wisol.DoesNotExist:
-            raise serializers.ValidationError("El chip Wisol no existe o no ha sido registrado")
-        if self.wisol.activo:
-            raise serializers.ValidationError("El chip Wisol ya tiene un dispositivo asignado")
-        return serie
+    def validate_gasera(self, gasera):
+        return self.context['request'].user.gasera
+
+    def validate_username(self, username):
+        username = get_adapter().clean_username(username)
+        return username
 
     def get_cleaned_data(self):
         user_data = {
@@ -132,37 +122,10 @@ class AsistedUserDispositivoCreation(serializers.Serializer):
         return user
 
 
-class ActivateUsers(serializers.Serializer):
-    email = serializers.EmailField(required=True)
-    serie = serializers.CharField(required=True)
-    #password1
-    #password2
-
-    not_wisol_error = 'El chip que corresponde al dispositivo no existe favor de llamar a soporte.'
-
-    def validate_serie(self, serie):
-        try:
-            self.wisol = Wisol.objects.get(serie=serie)
-        except Wisol.DoesNotExist:
-            raise serializers.ValidationError(self.not_wisol_error)
-        return serie
-
-    def validate(self, attrs):
-        if hasattr(self, 'wisol'):
-            wisol = self.wisol
-        else:
-            try:
-                wisol = Wisol.objects.get(attrs['serie'])
-            except Wisol.DoesNotExist:
-                raise serializers.ValidationError(self.not_wisol_error)
-        if wisol.dispositivo.usuario.email != attrs['email']:
-            raise serializers.ValidationError(
-                'Este dispositivo está registrado con otro correo electrónico.'
-            )
-
-    def save(self):
-        #  asumimos que wisol y user ya existen
-        pass
+class ActivateUsers(WisolValidation):
+    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+    password1 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     def validate_email(self, email):
         try:
@@ -176,3 +139,36 @@ class ActivateUsers(serializers.Serializer):
             raise serializers.ValidationError(
                 'El correo electrónico del usuario no se encuentra pendiente de activación.')
         return email
+
+    def validate_wisol(self, serie):
+        self.wisol = self.get_wisol_or_error(serie)
+        return serie
+
+    def clean_wisol_email(self, attrs):
+        if not hasattr(self, 'wisol'):
+            self.wisol = self.get_wisol_or_error(attrs['serie'])
+            try:
+                if self.wisol.dispositivo.usuario.email != attrs['email']:
+                    raise serializers.ValidationError(
+                        'Este dispositivo está registrado con otro correo electrónico.'
+                    )
+            except Wisol.dispositivo.RelatedObjectDoesNotExist:
+                raise serializers.ValidationError(
+                    'Este chip no ha sido dado de alta correctamente'
+                )
+
+    def clean_passwords(self, attrs):
+        if attrs['password1'] != attrs['password2']:
+            raise serializers.ValidationError('Los campos de password no coinciden.')
+        self.pwd = attrs['password1']
+
+    def validate(self, attrs):
+        self.clean_wisol_email(attrs)
+        self.clean_passwords(attrs)
+        return attrs
+
+    def save(self):
+        self.user.set_password(self.pwd)
+        self.user.pwdtemporal = False
+        self.user.is_active = True
+        self.user.save()

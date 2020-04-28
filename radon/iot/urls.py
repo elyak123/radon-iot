@@ -12,5 +12,6 @@ router.register(r'instalaciones', views.InstalacionViewSet, basename='instalacio
 
 urlpatterns = [
     path('registro-lectura/', views.registrolectura, name='registrolectura'),
+    path('disponibilidad-wisol/', views.wisol_initial_validation, name='dispwisol'),
     path(r'', include(router.urls)),
 ]

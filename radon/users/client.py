@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 import requests
 from django.conf import settings
 
@@ -55,7 +56,7 @@ class RadonCookieRequests(object):
         headers = {**main_headers, **specific_headers}
         return URL, headers
 
-    def send(self, method, url_specific, payload={}, specific_headers={}):
+    def send(self, method, url_specific, payload={}, specific_headers={}, pretty=False):
         URL, headers = self.prepare_request(url_specific, specific_headers)
         handler = getattr(self.session, method.lower())
         kwargs = {'headers': headers}
@@ -69,15 +70,18 @@ class RadonCookieRequests(object):
                 self.login()
             response = handler(URL, **kwargs)
         try:
-            return response.json()
+            if pretty:
+                return pprint(response.json())
+            else:
+                return response.json()
         except json.decoder.JSONDecodeError:
             return response.status_code
 
     def post(self, url_specific, payload, specific_headers={}):
         return self.send('post', url_specific, payload, specific_headers)
 
-    def get(self, url, specific_headers={}):
-        return self.send('get', url, specific_headers)
+    def get(self, url, specific_headers={}, pretty=False):
+        return self.send('get', url, specific_headers, pretty=pretty)
 
 
 client = RadonCookieRequests()
