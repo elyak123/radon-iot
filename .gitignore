@@ -2,6 +2,8 @@
 # Edit at https://www.gitignore.io/?templates=git,django,python,sublimetext
 #### osx
 *.bak
+*.DS_Store
+.DS_Store
 ### Django ###
 *.log
 *.pot

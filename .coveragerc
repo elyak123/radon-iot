@@ -31,6 +31,9 @@ omit =
     */staticfiles/*
     # radon/templates/bootstrap4/*
     radon/templates/account/*
+    radon/templates/openid/*
+    */htmlcov/*
+    radon/.pytest_cache/*
     radon/templates/socialaccount/*
 show_missing = True
 
