@@ -1,0 +1,36 @@
+[run]
+branch = True
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin
+[report]
+exclude_lines =
+  pragma: no cover
+ 
+    # Don't complain about missing debug-only code:
+    def __unicode__
+    def __repr__
+    if self\.debug
+ 
+    # Don't complain if tests don't hit defensive assertion code:
+    raise AssertionError
+    raise NotImplementedError
+ 
+    # Don't complain if non-runnable code isn't run:
+    if 0:
+    if __name__ == .__main__.:
+skip_covered = True
+precision = 2
+sort = Miss
+omit =
+    setup.py
+    */migrations/*
+    */config/settings/*
+    docs/conf.py
+    radon/config/wsgi.py
+    */staticfiles/*
+    # radon/templates/bootstrap4/*
+    radon/templates/account/*
+    radon/templates/socialaccount/*
+show_missing = True
+

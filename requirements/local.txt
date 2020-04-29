@@ -8,6 +8,10 @@ asn1crypto==1.3.0 \
     --hash=sha256:5a215cb8dc12f892244e3a113fe05397ee23c5c4ca7a69cd6e69811755efc42d \
     --hash=sha256:831d2710d3274c8a74befdddaf9f17fcbf6e350534565074818722d6d615b315 \
     # via -r requirements/base.txt, oscrypto
+attrs==19.3.0 \
+    --hash=sha256:08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c \
+    --hash=sha256:f7b7ce16570fe9965acd6d30101a28f62fb4a7f9e926b3bbc9b61f8b04247e72 \
+    # via pytest
 babel==2.8.0 \
     --hash=sha256:1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38 \
     --hash=sha256:d670ea0b10f8b723672d3a6abeb87b565b244da220d76b4dba1b66269ec152d4 \
@@ -54,6 +58,39 @@ chardet==3.0.4 \
     --hash=sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae \
     --hash=sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691 \
     # via -r requirements/base.txt, requests
+coverage==5.1 \
+    --hash=sha256:00f1d23f4336efc3b311ed0d807feb45098fc86dee1ca13b3d6768cdab187c8a \
+    --hash=sha256:01333e1bd22c59713ba8a79f088b3955946e293114479bbfc2e37d522be03355 \
+    --hash=sha256:0cb4be7e784dcdc050fc58ef05b71aa8e89b7e6636b99967fadbdba694cf2b65 \
+    --hash=sha256:0e61d9803d5851849c24f78227939c701ced6704f337cad0a91e0972c51c1ee7 \
+    --hash=sha256:1601e480b9b99697a570cea7ef749e88123c04b92d84cedaa01e117436b4a0a9 \
+    --hash=sha256:2742c7515b9eb368718cd091bad1a1b44135cc72468c731302b3d641895b83d1 \
+    --hash=sha256:2d27a3f742c98e5c6b461ee6ef7287400a1956c11421eb574d843d9ec1f772f0 \
+    --hash=sha256:402e1744733df483b93abbf209283898e9f0d67470707e3c7516d84f48524f55 \
+    --hash=sha256:5c542d1e62eece33c306d66fe0a5c4f7f7b3c08fecc46ead86d7916684b36d6c \
+    --hash=sha256:5f2294dbf7875b991c381e3d5af2bcc3494d836affa52b809c91697449d0eda6 \
+    --hash=sha256:6402bd2fdedabbdb63a316308142597534ea8e1895f4e7d8bf7476c5e8751fef \
+    --hash=sha256:66460ab1599d3cf894bb6baee8c684788819b71a5dc1e8fa2ecc152e5d752019 \
+    --hash=sha256:782caea581a6e9ff75eccda79287daefd1d2631cc09d642b6ee2d6da21fc0a4e \
+    --hash=sha256:79a3cfd6346ce6c13145731d39db47b7a7b859c0272f02cdb89a3bdcbae233a0 \
+    --hash=sha256:7a5bdad4edec57b5fb8dae7d3ee58622d626fd3a0be0dfceda162a7035885ecf \
+    --hash=sha256:8fa0cbc7ecad630e5b0f4f35b0f6ad419246b02bc750de7ac66db92667996d24 \
+    --hash=sha256:a027ef0492ede1e03a8054e3c37b8def89a1e3c471482e9f046906ba4f2aafd2 \
+    --hash=sha256:a3f3654d5734a3ece152636aad89f58afc9213c6520062db3978239db122f03c \
+    --hash=sha256:a82b92b04a23d3c8a581fc049228bafde988abacba397d57ce95fe95e0338ab4 \
+    --hash=sha256:acf3763ed01af8410fc36afea23707d4ea58ba7e86a8ee915dfb9ceff9ef69d0 \
+    --hash=sha256:adeb4c5b608574a3d647011af36f7586811a2c1197c861aedb548dd2453b41cd \
+    --hash=sha256:b83835506dfc185a319031cf853fa4bb1b3974b1f913f5bb1a0f3d98bdcded04 \
+    --hash=sha256:bb28a7245de68bf29f6fb199545d072d1036a1917dca17a1e75bbb919e14ee8e \
+    --hash=sha256:bf9cb9a9fd8891e7efd2d44deb24b86d647394b9705b744ff6f8261e6f29a730 \
+    --hash=sha256:c317eaf5ff46a34305b202e73404f55f7389ef834b8dbf4da09b9b9b37f76dd2 \
+    --hash=sha256:dbe8c6ae7534b5b024296464f387d57c13caa942f6d8e6e0346f27e509f0f768 \
+    --hash=sha256:de807ae933cfb7f0c7d9d981a053772452217df2bf38e7e6267c9cbf9545a796 \
+    --hash=sha256:dead2ddede4c7ba6cb3a721870f5141c97dc7d85a079edb4bd8d88c3ad5b20c7 \
+    --hash=sha256:dec5202bfe6f672d4511086e125db035a52b00f1648d6407cc8e526912c0353a \
+    --hash=sha256:e1ea316102ea1e1770724db01998d1603ed921c54a86a2efcb03428d5417e489 \
+    --hash=sha256:f90bfc4ad18450c80b024036eaf91e4a246ae287701aaa88eaebebf150868052 \
+    # via -r requirements/local.in, django-coverage-plugin
 defusedxml==0.6.0 \
     --hash=sha256:6687150770438374ab581bb7a1b327a847dd9c5749e396102de3fad4e8a3ef93 \
     --hash=sha256:f684034d135af4c6cbb949b8a4d2ed61634515257a67299e5f940fbaa34377f5 \
@@ -68,6 +105,9 @@ django-cors-headers==3.2.1 \
     --hash=sha256:a5960addecc04527ab26617e51b8ed42f0adab4594b24bb0f3c33e2bd3857c3f \
     --hash=sha256:a785b5f446f6635810776d9f5f5d23e6a2a2f728ea982648370afaf0dfdf2627 \
     # via -r requirements/base.txt
+django-coverage-plugin==1.8 \
+    --hash=sha256:d53cbf3828fd83d6b89ff7292c6805de5274e36411711692043e67bcde25ae0c \
+    # via -r requirements/local.in
 django-environ==0.4.5 \
     --hash=sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde \
     --hash=sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4 \
@@ -104,10 +144,18 @@ idna==2.9 \
     --hash=sha256:7588d1c14ae4c77d74036e8c22ff447b26d0fde8f007354fd48a7814db15b7cb \
     --hash=sha256:a068a21ceac8a4d63dbfd964670474107f541babbd2250d61922f029858365fa \
     # via -r requirements/base.txt, requests
+importlib-metadata==1.6.0 \
+    --hash=sha256:2a688cbaa90e0cc587f1df48bdc97a6eadccdcd9c35fb3f976a09e3b5016d90f \
+    --hash=sha256:34513a8a0c4962bc66d35b359558fd8a5e10cd472d37aec5f66858addef32c1e \
+    # via pluggy, pytest
 jmespath==0.9.3 \
     --hash=sha256:6a81d4c9aa62caf061cb517b4d9ad1dd300374cd4706997aff9cd6aedd61fc64 \
     --hash=sha256:f11b4461f425740a1d908e9a3f7365c3d2e569f6ca68a2ff8bc5bcd9676edd63 \
     # via -r requirements/base.txt, botocore
+more-itertools==8.2.0 \
+    --hash=sha256:5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c \
+    --hash=sha256:b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507 \
+    # via pytest
 oauthlib==3.1.0 \
     --hash=sha256:bee41cc35fcca6e988463cacc3bcb8a96224f470ca547e697b604cc697b2f889 \
     --hash=sha256:df884cd6cbe20e32633f1db1072e9356f53638e4361bef4e8b03c9127c9328ea \
@@ -116,10 +164,18 @@ oscrypto==1.2.0 \
     --hash=sha256:2f53f50813ecc5114fd126b89766fabdb9448e0bb080814451cc4bb92acafca4 \
     --hash=sha256:e9ea9401294b20ee17225502cc308660814ba8de386f94bc9b1dcf518d5399d9 \
     # via -r requirements/base.txt, validate-aws-sns-message
+packaging==20.3 \
+    --hash=sha256:3c292b474fda1671ec57d46d739d072bfd495a4f51ad01a055121d81e952b7a3 \
+    --hash=sha256:82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752 \
+    # via pytest
 phonenumbers==8.12.1 \
     --hash=sha256:59ae9cb25fb03027c9f2bf5584098e699be7eca12c443838b83752956be15cda \
     --hash=sha256:bebf881ef0e775b93062fbd107bf164b5baef877a7b8f702e93a9a5d24ae4065 \
     # via -r requirements/base.txt
+pluggy==0.13.1 \
+    --hash=sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0 \
+    --hash=sha256:966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d \
+    # via pytest
 psycopg2==2.8.4 \
     --hash=sha256:4212ca404c4445dc5746c0d68db27d2cbfb87b523fe233dc84ecd24062e35677 \
     --hash=sha256:47fc642bf6f427805daf52d6e52619fe0637648fe27017062d898f3bf891419d \
@@ -135,6 +191,10 @@ psycopg2==2.8.4 \
     --hash=sha256:ef6df7e14698e79c59c7ee7cf94cd62e5b869db369ed4b1b8f7b729ea825712a \
     --hash=sha256:f898e5cc0a662a9e12bde6f931263a1bbd350cfb18e1d5336a12927851825bb6 \
     # via -r requirements/base.txt
+py==1.8.1 \
+    --hash=sha256:5e27081401262157467ad6e7f851b7aa402c5852dbcb3dae06768434de5752aa \
+    --hash=sha256:c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0 \
+    # via pytest
 pycparser==2.19 \
     --hash=sha256:a988718abfad80b6b157acce7bf130a30876d27603738ac39f140993246b25b3 \
     # via -r requirements/base.txt, cffi
@@ -142,6 +202,18 @@ pyjwt==1.7.1 \
     --hash=sha256:5c6eca3c2940464d106b99ba83b00c6add741c9becaec087fb7ccdefea71350e \
     --hash=sha256:8d59a976fb773f3e6a39c85636357c4f0e242707394cadadd9814f5cbaa20e96 \
     # via -r requirements/base.txt, djangorestframework-simplejwt
+pyparsing==2.4.7 \
+    --hash=sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1 \
+    --hash=sha256:ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b \
+    # via packaging
+pytest-django==3.9.0 \
+    --hash=sha256:64f99d565dd9497af412fcab2989fe40982c1282d4118ff422b407f3f7275ca5 \
+    --hash=sha256:664e5f42242e5e182519388f01b9f25d824a9feb7cd17d8f863c8d776f38baf9 \
+    # via -r requirements/local.in
+pytest==5.4.1 \
+    --hash=sha256:0e5b30f5cb04e887b91b1ee519fa3d89049595f428c1db76e73bd7f17b09b172 \
+    --hash=sha256:84dde37075b8805f3d1f392cc47e38a0e59518fb46a431cfdaf7cf1ce805f970 \
+    # via pytest-django
 python-dateutil==2.6.1 \
     --hash=sha256:891c38b2a02f5bb1be3e4793866c8df49c7d19baabf9c1bad62547e0b4866aca \
     --hash=sha256:95511bae634d69bc7329ba55e646499a842bc4ec342ad54a8cdb65645a0aad3c \
@@ -165,7 +237,7 @@ requests==2.23.0 \
 six==1.14.0 \
     --hash=sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a \
     --hash=sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c \
-    # via -r requirements/base.txt, python-dateutil, validate-aws-sns-message
+    # via -r requirements/base.txt, django-coverage-plugin, packaging, python-dateutil, validate-aws-sns-message
 sqlparse==0.3.0 \
     --hash=sha256:40afe6b8d4b1117e7dff5504d7a8ce07d9a1b15aeeade8a2d10f130a834f8177 \
     --hash=sha256:7c3dca29c022744e95b547e867cee89f4fce4373f3549ccd8797d8eb52cdb873 \
@@ -178,6 +250,14 @@ validate_aws_sns_message==0.9.0 \
     --hash=sha256:099e073c0aaf66a5e294ff71c91dbdbc32583addb1b761ee42ea8ea2de1339cc \
     --hash=sha256:3da7364c18ae54014b741e8d0ea854fb9a6966212ea96f6676a380df2d6fa98f \
     # via -r requirements/base.txt
+wcwidth==0.1.9 \
+    --hash=sha256:cafe2186b3c009a04067022ce1dcd79cb38d8d65ee4f4791b8888d6599d1bbe1 \
+    --hash=sha256:ee73862862a156bf77ff92b09034fc4825dd3af9cf81bc5b360668d425f3c5f1 \
+    # via pytest
+zipp==3.1.0 \
+    --hash=sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b \
+    --hash=sha256:c599e4d75c98f6798c509911d08a22e6c021d074469042177c8c86fb92eefd96 \
+    # via importlib-metadata
 
 # WARNING: The following packages were not pinned, but pip requires them to be
 # pinned when the requirements file includes hashes. Consider using the --allow-unsafe flag.
