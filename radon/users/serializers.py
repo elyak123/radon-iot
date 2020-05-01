@@ -20,7 +20,7 @@ User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
     dispositivo_set = NestedDispositivoSerializer(many=True, read_only=True)
-    password = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    password = serializers.CharField(style={'input_type': 'password'}, write_only=True, required=False)
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)
@@ -69,6 +69,8 @@ class ExpirationRefreshJWTSerializer(TokenRefreshSerializer):
             refresh.set_jti()
             refresh.set_exp()
             data['refresh'] = {'token': str(refresh), 'exp': refresh['exp']}
+        else:
+            data = {'refresh': {**data['access'], 'type': 'access'}}
         return data
 
 

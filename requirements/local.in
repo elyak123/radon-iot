@@ -5,3 +5,5 @@ coverage==5.1
 django-coverage-plugin==1.8
 pytest-cov==2.8.1
 pytest-xdist==1.31.0
+pytest-mock==3.1.0
+django-test-plus==1.4.0

@@ -13,7 +13,7 @@ def get_default_gasera():
 
 def create_user_and_dispositivo(user_data, disp_data):
     from radon.iot.models import Dispositivo
-    user = get_user_model()(**user_data)
+    user = get_user_model().objects.create_user(**user_data)
     user.save()
     disp_data['usuario'] = user
     disp = Dispositivo.objects.create(**disp_data)
