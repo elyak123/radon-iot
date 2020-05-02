@@ -227,3 +227,4 @@ class ActivateUsers(WisolValidation):
         self.user.pwdtemporal = False
         self.user.is_active = True
         self.user.save()
+        return self.user

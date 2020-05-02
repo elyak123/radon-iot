@@ -1,8 +1,7 @@
 import pytest
-from pytest_django import asserts
 from dj_rest_auth.utils import jwt_encode
 from radon.iot.models import Dispositivo, Wisol, DeviceType
-from radon.users import serializers
+from radon.users import serializers, utils
 from radon.users.models import User, Gasera
 
 
@@ -425,3 +424,43 @@ def test_ActivateUsers_save(mocker):
     ser.save()
     set_password.assert_called_once_with('password!!')
     save.assert_called_once_with()
+
+
+@pytest.mark.django_db
+def test_Activate_users_integration_test_db():
+    dt = DeviceType.objects.create(key='bla', name='lnkasn')
+    wisol = serializers.Wisol.objects.create(serie='41245', pac='kalks', deviceTypeId=dt)
+    control_user = User.objects.create_user(username='yo', email='yo@micorreo.com', pwdtemporal=True)
+    data = {
+        'wisol': wisol.serie,
+        'email': control_user.email,
+        'password1': 'pass1#@',
+        'password2': 'pass1#@'
+    }
+    ser = serializers.ActivateUsers(data=data)
+    assert ser.is_valid() is True, ser.errors
+    usr = ser.save()
+    assert isinstance(usr, User) is True
+    assert usr.is_active is True
+    assert usr.pwdtemporal is False
+    assert isinstance(usr.pk, int) is True
+
+
+def test_get_default_user_other(mocker, settings):
+    settings.DEFAULT_USERNAME = 'foo'
+    attrs = {
+        'objects.get_or_create.return_value': (mocker.MagicMock(spec=User, pk=2), True)
+    }
+    mock_user_klass = mocker.MagicMock(**attrs)
+    mocker.patch('radon.users.utils.get_user_model', return_value=mock_user_klass)
+    assert utils.get_default_user() == 2
+    mock_user_klass.objects.get_or_create.assert_called_once_with(username='foo')
+
+
+def test_get_default_gasera(mocker, settings):
+    settings.DEFAULT_GASERA = 'RADON, S.A.'
+    attrs = {'objects.get_or_create.return_value': (mocker.MagicMock(spec=Gasera, pk=2), True)}
+    gasera_klass = mocker.patch('radon.users.models.Gasera')
+    gasera_klass.configure_mock(**attrs)
+    assert utils.get_default_gasera() == 2
+    gasera_klass.objects.get_or_create.assert_called_once_with(nombre='RADON, S.A.')
