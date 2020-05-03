@@ -31,3 +31,15 @@ def test_WisolValidation_validate_wisol_ocupado(mocker):
         ser.validate_wisol(serie)
     assert error_message in str(err.value)
     get_wisol_or_error.assert_called_with(serie)
+
+
+def test_DeviceTypeSerializer_Meta():
+    ser = serializers.DeviceTypeSerializer()
+    assert ser.Meta.fields == ['pk', 'key', 'name']
+    assert ser.Meta.model == models.DeviceType
+
+
+def test_WisolSerializer_Meta():
+    ser = serializers.WisolSerializer()
+    assert ser.Meta.fields == ['pk', 'serie', 'pac', 'deviceTypeId', 'prototype', ]
+    assert ser.Meta.model == models.Wisol

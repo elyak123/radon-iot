@@ -47,7 +47,7 @@ class WisolValidation(serializers.Serializer):
 
 
 class DispositivoSerializer(GeoFeatureModelSerializer):
-    usuario = serializers.PrimaryKeyRelatedField(queryset=models.User.objects.all())
+    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     # buscar limitar los querysets o revisar la implicacion de querysets abiertos.
     wisol = serializers.SlugRelatedField(queryset=models.Wisol.objects.all(), slug_field='serie')
     ultima_lectura = serializers.IntegerField(source='get_ultima_lectura', read_only=True)
@@ -75,8 +75,8 @@ class LecturaSerializer(serializers.ModelSerializer):
 
 
 class InstalacionSerializer(serializers.ModelSerializer):
-    operario = serializers.SlugRelatedField(queryset=models.User.objects.filter(tipo='OPERARIO'), slug_field='username')
-    consumidor = serializers.SlugRelatedField(queryset=models.User.objects.filter(tipo='CONSUMIDOR'), slug_field='username')
+    operario = serializers.SlugRelatedField(queryset=User.objects.filter(tipo='OPERARIO'), slug_field='username')
+    consumidor = serializers.SlugRelatedField(queryset=User.objects.filter(tipo='CONSUMIDOR'), slug_field='username')
     fecha = serializers.DateTimeField(read_only=True)
 
     class Meta:
