@@ -24,6 +24,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserSerializer
     permission_classes = [permissions.IsAdminUser]
     lookup_field = 'username'
+    lookup_value_regex = '[^/]+'
 
     def get_queryset(self):
         return User.objects.all().order_by('-date_joined')
