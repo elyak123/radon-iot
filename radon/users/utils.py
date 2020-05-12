@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.utils import ProgrammingError
 from django.contrib.auth import get_user_model
 
 
@@ -9,7 +10,10 @@ def get_default_user():
 
 def get_default_gasera():
     from radon.users.models import Gasera
-    return Gasera.objects.get_or_create(nombre=settings.DEFAULT_GASERA)[0].pk
+    try:
+        return Gasera.objects.get_or_create(nombre=settings.DEFAULT_GASERA)[0].pk
+    except ProgrammingError:
+        return 1
 
 
 def create_user_and_dispositivo(user_data, disp_data):
