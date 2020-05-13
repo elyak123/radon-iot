@@ -30,6 +30,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('radon.users.urls')),
     path('iot/', include('radon.iot.urls')),
+    path('accounts/', include('radon.accounts.urls')),
+    path('dashboard/', include('radon.dashboard.urls')),
     re_path(r'^accounts/', include('allauth.urls')),
 ]
 if settings.DEBUG:

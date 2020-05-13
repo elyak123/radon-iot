@@ -42,6 +42,9 @@ if READ_DOT_ENV_FILE:
 
 ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 
+# checar estos settings:
+FAVICON_URL = ''
+ACCOUNT_ALLOW_REGISTRATION = False
 
 # Application definition
 
@@ -49,6 +52,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'radon.iot.apps.IotConfig',
     'radon.users.apps.UsersConfig',
+    'radon.accounts.apps.AccountsConfig',
+    'radon.dashboard.apps.DashboardConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.sites',
@@ -58,6 +63,7 @@ INSTALLED_APPS = [
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
+    'bootstrap4',
     'dj_rest_auth',
     'django.contrib.auth',
     'django.contrib.admin',
