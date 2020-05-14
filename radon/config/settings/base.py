@@ -50,8 +50,8 @@ LOGOUT_REDIRECT_URL = 'accounts:account_login'
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
     'radon.iot.apps.IotConfig',
+    'radon.rutas.apps.RutasConfig',
     'radon.users.apps.UsersConfig',
     'radon.accounts.apps.AccountsConfig',
     'radon.dashboard.apps.DashboardConfig',
