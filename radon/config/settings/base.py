@@ -47,6 +47,7 @@ ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 
 INSTALLED_APPS = [
     'radon.iot.apps.IotConfig',
+    'radon.rutas.apps.RutasConfig',
     'radon.users.apps.UsersConfig',
     'rest_framework',
     'rest_framework.authtoken',
