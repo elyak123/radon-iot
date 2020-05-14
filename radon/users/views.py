@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
+from django.urls import reverse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
@@ -8,13 +9,42 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenRefreshView
 from dj_rest_auth.views import LoginView
 from dj_rest_auth.registration.views import RegisterView
+from django.views.generic import CreateView, ListView
 from radon.users import serializers
+from radon.users import forms as uf
 
 User = get_user_model()
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters('location')
 )
+
+
+class UserCreateView(CreateView):
+    form_class = uf.UserForm
+    model = User
+    template_name = "users/user_create.html"
+
+    def form_valid(self, form):
+        user = self.request.user
+        form.instance.gasera = self.request.user.gasera
+        form.instance.pwdtemporal = False
+        return super(UserCreateView, self).form_valid(form)
+    
+    def get_success_url(self):
+        return reverse('dashboard:inicio')
+
+
+
+class UserListView(ListView):
+    model = User
+    template_name = "users/user_list.html"
+
+    def get_queryset(self):
+        query = self.model.objects.filter(
+            gasera=self.request.user.gasera
+        )
+        return query
 
 
 class UserViewSet(viewsets.ModelViewSet):

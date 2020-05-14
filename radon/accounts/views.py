@@ -36,8 +36,7 @@ class _LoginView(BaseContext, LoginView):
 
 
 class _LogoutView(BaseContext, LogoutView):
-    def get_success_url(self):
-        return reverse('accounts:account_login')
+    pass
 
 
 # original: BaseContext, AuthenticationTestMixin, PasswordChangeView
