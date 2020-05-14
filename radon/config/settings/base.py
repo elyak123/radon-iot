@@ -46,7 +46,6 @@ ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
     'radon.iot.apps.IotConfig',
     'radon.users.apps.UsersConfig',
     'rest_framework',
