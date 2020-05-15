@@ -108,6 +108,10 @@ django-allauth==0.41.0 \
 django-coverage-plugin==1.8 \
     --hash=sha256:d53cbf3828fd83d6b89ff7292c6805de5274e36411711692043e67bcde25ae0c \
     # via -r requirements/test.in
+django-dynamic-model-validation==0.1.13 \
+    --hash=sha256:937850555eef29df56cdff567e55ba523dec874d73bf388a353c9f50fa01967a \
+    --hash=sha256:e63870a3de6b874099b4fb3d2e99bfbba2d6fee348c5d7f0cf2676c507f1c007 \
+    # via -r requirements/base.txt
 django-environ==0.4.5 \
     --hash=sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde \
     --hash=sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4 \
@@ -143,6 +147,9 @@ execnet==1.7.1 \
     --hash=sha256:cacb9df31c9680ec5f95553976c4da484d407e85e41c83cb812aa014f0eddc50 \
     --hash=sha256:d4efd397930c46415f62f8a31388d6be4f27a91d7550eb79bc64a756e0056547 \
     # via pytest-xdist
+future==0.17.1 \
+    --hash=sha256:67045236dcfd6816dc439556d009594abf643e5eb48992e36beac09c2ca659b8 \
+    # via -r requirements/base.txt, django-dynamic-model-validation
 gunicorn==20.0.4 \
     --hash=sha256:1904bb2b8a43658807108d59c3f3d56c2b6121a701161de0ddf9ad140073c626 \
     --hash=sha256:cd4a810dd51bf497552cf3f863b575dabd73d6ad6a91075b65936b151cbf4f9c \
@@ -264,7 +271,7 @@ requests==2.23.0 \
 six==1.14.0 \
     --hash=sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a \
     --hash=sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c \
-    # via -r requirements/base.txt, django-coverage-plugin, packaging, pytest-xdist, python-dateutil, validate-aws-sns-message
+    # via -r requirements/base.txt, django-coverage-plugin, django-dynamic-model-validation, packaging, pytest-xdist, python-dateutil, validate-aws-sns-message
 sqlparse==0.3.0 \
     --hash=sha256:40afe6b8d4b1117e7dff5504d7a8ce07d9a1b15aeeade8a2d10f130a834f8177 \
     --hash=sha256:7c3dca29c022744e95b547e867cee89f4fce4373f3549ccd8797d8eb52cdb873 \
