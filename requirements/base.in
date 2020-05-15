@@ -2,6 +2,7 @@ botocore==1.14.9
 validate_aws_sns_message==0.9.0
 requests==2.23.0
 Django==2.2.10
+django-dynamic-model-validation==0.1.13
 djangorestframework>=3.10, <3.11
 djangorestframework-gis==0.15
 openrouteservice==2.3.0
