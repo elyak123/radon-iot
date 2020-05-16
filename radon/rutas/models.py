@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
+from dynamic_validator import ModelFieldRequiredMixin
 from radon.users.models import Gasera
 from radon.iot.models import Dispositivo
 
@@ -34,7 +35,6 @@ class Vehiculo(models.Model):
 class Ruta(models.Model):
     jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE)
     geometry = models.LineStringField()
-    dispositivo = models.ManyToManyField(Dispositivo, through='DispositivoRuta')
     vehiculo = models.ManyToManyField(Vehiculo)
 
     class Meta:
@@ -45,14 +45,22 @@ class Ruta(models.Model):
         pass
 
 
-class DispositivoRuta(models.Model):
+class Pedido(ModelFieldRequiredMixin, models.Model):
+    fecha_creacion = models.DateTimeField(auto_now=True)
+    cantidad = models.DecimalField(max_digits=12, decimal_places=2)
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
-    ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE)
-    orden = models.IntegerField('Orden del dispositivo dentro de una ruta.')
+    ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE, null=True)
+    orden = models.IntegerField('Orden del dispositivo dentro de una ruta.', null=True)
+
+    CONDITIONAL_REQUIRED_FIELDS = [
+        (
+            lambda instance: bool(instance.ruta), ['orden'],
+        ),
+    ]
 
     class Meta:
-        verbose_name = "DispositivoRuta"
-        verbose_name_plural = "DispositivoRutas"
+        verbose_name = "Pedido"
+        verbose_name_plural = "Pedidos"
 
     def __str__(self):
         pass

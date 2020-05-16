@@ -18,8 +18,8 @@ class DeviceType(models.Model):
 
 
 class Wisol(models.Model):
-    serie = models.CharField(max_length=45, unique=True)
-    pac = models.CharField(max_length=80)
+    serie = models.CharField(max_length=8, unique=True)
+    pac = models.CharField(max_length=16)
     prototype = models.BooleanField(default=True)
     deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
 

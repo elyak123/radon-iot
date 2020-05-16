@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.gis',
     'rest_framework_gis',
+    'dynamic_validator',
     'phonenumber_field',
     'allauth',  # registration
     'allauth.account',  # registration
