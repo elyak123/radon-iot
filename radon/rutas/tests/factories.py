@@ -10,7 +10,7 @@ fake = Faker(['es_MX'])
 
 
 class JornadaFactory(factory.django.DjangoModelFactory):
-    fecha = fake.date_this_month()
+    fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
     gasera = factory.SubFactory(GaseraFactory)
 
     class Meta:
@@ -18,9 +18,10 @@ class JornadaFactory(factory.django.DjangoModelFactory):
 
 
 class VehiculoFactory(factory.django.DjangoModelFactory):
-    placa = fake.license_plate()
-    n_economico = fake.bothify(text='?? ##')
+    placa = factory.LazyAttribute(lambda o: fake.license_plate())
+    n_economico = factory.LazyAttribute(lambda o: fake.bothify(text='?? ##'))
     operador = factory.SubFactory(UserFactory, tipo='OPERADOR')
+    gasera = factory.SubFactory(GaseraFactory)
 
     class Meta:
         model = models.Vehiculo
@@ -45,8 +46,8 @@ class RutaFactory(factory.django.DjangoModelFactory):
 
 
 class PedidoFactory(factory.django.DjangoModelFactory):
-    fecha_creacion = fake.date_this_month()
-    cantidad = fake.random_int(min=30, max=100)
+    fecha_creacion = factory.LazyAttribute(lambda o: fake.date_this_month())
+    cantidad = factory.LazyAttribute(lambda o: fake.random_int(min=30, max=100))
     dispositivo = factory.SubFactory(DispositivoFactory)
 
     class Meta:

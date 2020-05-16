@@ -18,8 +18,8 @@ class GaseraFactory(factory.django.DjangoModelFactory):
 
 class UserFactory(factory.django.DjangoModelFactory):
     username = factory.LazyAttribute(lambda o: o.first_name.split(' ')[0].lower())
-    first_name = fake.first_name()
-    last_name = fake.last_name()
+    first_name = factory.LazyAttribute(lambda o: fake.first_name())
+    last_name = factory.LazyAttribute(lambda o: fake.last_name())
     email = factory.LazyAttribute(lambda o: '{}@{}'.format(o.username, fake.domain_name()))
     password = factory.PostGenerationMethodCall('set_password', 'password')
     gasera = factory.SubFactory(GaseraFactory)

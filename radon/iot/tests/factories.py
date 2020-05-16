@@ -9,8 +9,8 @@ fake = Faker(['es_MX'])
 
 
 class DeviceTypeFactory(factory.django.DjangoModelFactory):
-    key = fake.hexify()
-    name = fake.bothify('????-########')
+    key = factory.LazyAttribute(lambda o: fake.hexify())
+    name = factory.LazyAttribute(lambda o: fake.bothify('????-########'))
 
     class Meta:
         model = models.DeviceType
@@ -19,8 +19,9 @@ class DeviceTypeFactory(factory.django.DjangoModelFactory):
 
 class WisolFactory(factory.django.DjangoModelFactory):
     serie = fake.numerify(text='43#####')
-    pac = fake.hexify(text='^^^^^^^^^^^^^^^^', upper=True)
-    prototype = fake.boolean()
+    serie = factory.LazyAttribute(lambda o: fake.numerify(text='43#####'))
+    pac = factory.LazyAttribute(lambda o: fake.hexify(text='^^^^^^^^^^^^^^^^', upper=True))
+    prototype = factory.LazyAttribute(lambda o: fake.boolean())
     deviceTypeId = factory.SubFactory(DeviceTypeFactory)
 
     class Meta:
@@ -30,9 +31,9 @@ class WisolFactory(factory.django.DjangoModelFactory):
 
 class DispositivoFactory(factory.django.DjangoModelFactory):
     wisol = factory.SubFactory(WisolFactory)
-    capacidad = fake.random_element(
+    capacidad = factory.LazyAttribute(lambda o: fake.random_element(
         elements=[120, 300, 500, 1000, 1600, 2200, 2800, 3400, 5000]
-    )
+    ))
     usuario = factory.SubFactory(UserFactory)
     location = factory.LazyAttribute(
         lambda o: 'POINT({} {})'.format(
@@ -46,7 +47,7 @@ class DispositivoFactory(factory.django.DjangoModelFactory):
 
 
 class InstalacionFactory(factory.django.DjangoModelFactory):
-    fecha = fake.date_this_month()
+    fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
     operario = factory.SubFactory(UserFactory, tipo='OPERARIO')
     consumidor = factory.SubFactory(UserFactory, tipo='CONSUMIDOR')
 
@@ -55,8 +56,8 @@ class InstalacionFactory(factory.django.DjangoModelFactory):
 
 
 class LecturaFactory(factory.django.DjangoModelFactory):
-    fecha = fake.date_this_month()
-    nivel = fake.random_int(min=15, max=87)
+    fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
+    nivel = factory.LazyAttribute(lambda o: fake.random_int(min=15, max=87))
     dispositivo = factory.SubFactory(DispositivoFactory)
 
     class Meta:

@@ -23,6 +23,7 @@ class Vehiculo(models.Model):
     placa = models.CharField(max_length=12)
     n_economico = models.CharField(max_length=12, blank=True)
     operador = models.ForeignKey(User, on_delete=models.CASCADE)
+    gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Vehiculo"
