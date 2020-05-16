@@ -16,7 +16,7 @@ class Jornada(models.Model):
         verbose_name_plural = "Jornadas"
 
     def __str__(self):
-        pass
+        return 'Jornada: {}'.format(self.fecha)
 
 
 class Vehiculo(models.Model):
@@ -29,7 +29,7 @@ class Vehiculo(models.Model):
         verbose_name_plural = "Vehiculos"
 
     def __str__(self):
-        pass
+        return self.placa
 
 
 class Ruta(models.Model):
@@ -37,12 +37,15 @@ class Ruta(models.Model):
     geometry = models.LineStringField()
     vehiculo = models.ManyToManyField(Vehiculo)
 
+    def cantidad_pedidos(self):
+        return self.pedido_set.all().count()
+
     class Meta:
         verbose_name = "Ruta"
         verbose_name_plural = "Rutas"
 
     def __str__(self):
-        pass
+        return 'Ruta: {}'.format(self.jornada.fecha)
 
 
 class Pedido(ModelFieldRequiredMixin, models.Model):
@@ -63,4 +66,4 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
         verbose_name_plural = "Pedidos"
 
     def __str__(self):
-        pass
+        return 'Pedido: {}'.format(self.cantidad)

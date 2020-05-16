@@ -42,6 +42,7 @@ class DispositivoFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = models.Dispositivo
+        django_get_or_create = ('wisol',)
 
 
 class InstalacionFactory(factory.django.DjangoModelFactory):
