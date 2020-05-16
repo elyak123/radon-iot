@@ -255,6 +255,10 @@ MEDIA_URL = '/media/'
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
+STATICFILES_DIRS = [
+    str(ROOT_DIR('radon/static'))
+]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_URL = '/static/'

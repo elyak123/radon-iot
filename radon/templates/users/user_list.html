@@ -1,15 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Listado de usuarios</h2>
-<div>
+<div class="row">
+    <div class="col-sm-8">
+        <h2>Listado de usuarios</h2>
+    </div>
+    <div class="col-sm-4 text-right">
+        <a href="{% url 'users:user_creation' %}" class="btn btn-primary">Crear Usuario</a>
+    </div>
+</div>
+
 {% if object_list %}
-    {% for dispositivo in object_list %}
-        <h2>{{ user.username }}</h2>
+<div class="list-group">
+    {% for user in object_list %}
+    <div class="list-group-item list-group-item-action flex-column align-items-start my-2">
+        <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ user.username }}</h5>
+        <small>{{ user.tipo }}</small>
+        </div>
+        <p class="mb-1">{{ user.email }}</p>
+        <a href="{% url 'users:user_detail' user.pk %}" class="badge badge-pill badge-primary">Detalles</a>
+        <a href="{% url 'users:user_update' user.pk %}" class="badge badge-pill badge-primary">Editar Usuario</a>
+        <a href="{% url 'users:user_delete' user.pk %}" class="badge badge-pill badge-danger">Eliminar Usuario</a>
+    </div>
     {% endfor %}
+</div>
 {% else %}
 <h4>¡Lo sentimos!</h4><h5>Usted aún no cuenta con usuarios registrados.</h5>
 {% endif %}
-</div>
+
 {% endblock content %}
 

@@ -9,9 +9,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenRefreshView
 from dj_rest_auth.views import LoginView
 from dj_rest_auth.registration.views import RegisterView
-from django.views.generic import CreateView, ListView
+from django.views.generic import (CreateView, ListView, DetailView, DeleteView,
+    UpdateView)
 from radon.users import serializers
 from radon.users import forms as uf
+from radon.users.auth import AuthenticationTestMixin
+
 
 User = get_user_model()
 
@@ -20,7 +23,7 @@ sensitive_post_parameters_m = method_decorator(
 )
 
 
-class UserCreateView(CreateView):
+class UserCreateView(CreateView, AuthenticationTestMixin):
     form_class = uf.UserForm
     model = User
     template_name = "users/user_create.html"
@@ -35,8 +38,7 @@ class UserCreateView(CreateView):
         return reverse('dashboard:inicio')
 
 
-
-class UserListView(ListView):
+class UserListView(ListView, AuthenticationTestMixin):
     model = User
     template_name = "users/user_list.html"
 
@@ -45,6 +47,49 @@ class UserListView(ListView):
             gasera=self.request.user.gasera
         )
         return query
+
+
+class UserDetailView(DetailView, AuthenticationTestMixin):
+    model = User
+    template_name = "users/user_detail.html"
+
+    def get_object(self, queryset=None):
+        self.object = User.objects.get(
+            pk=self.kwargs['pk'],
+            gasera=self.request.user.gasera
+        )
+        return self.object
+
+
+class UserDeleteView(DeleteView):
+    model = User
+    template_name = "users/user_delete.html"
+
+    def get_object(self, queryset=None):
+        self.object = User.objects.get(
+            pk=self.kwargs['pk'],
+            gasera=self.request.user.gasera
+        )
+        return self.object
+    
+    def get_success_url(self):
+        return reverse('users:user_list')
+
+
+class UserUpdateView(UpdateView):
+    model = User
+    template_name = "users/user_update.html"
+    form_class = uf.UserUpdateForm
+
+    def get_object(self, queryset=None):
+        self.object = User.objects.get(
+            pk=self.kwargs['pk'],
+            gasera=self.request.user.gasera
+        )
+        return self.object
+
+    def get_success_url(self):
+        return reverse('users:user_detail', kwargs={'pk': self.object.pk})
 
 
 class UserViewSet(viewsets.ModelViewSet):

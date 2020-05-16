@@ -1,3 +1,4 @@
+{% load static %}
 {% load bootstrap4 %}
 <!DOCTYPE html>
 <html>
@@ -7,13 +8,14 @@
     {% endblock %}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
+    <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand" href="#!">Navbar</a>
+      <a class="navbar-brand" href="#!">Radargas</a>
 
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto mt-2 mt-md-0">
@@ -32,7 +34,7 @@
         <button class="btn btn-secondary dropdown-toggle"
                 type="button" id="dropdownMenu1" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-          Bienvenido {% if user.is_authenticated %}{{ user.username }}{% endif %}
+          Bienvenido {% if user.is_authenticated %}{{ request.user.username }}{% endif %}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
           {% if user.is_authenticated %}
