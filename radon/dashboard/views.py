@@ -10,13 +10,12 @@ class DashboardView(TemplateView, AuthenticationTestMixin):
     template_name = "dashboard/index.html"
 
 
-
 class DispositivoListView(ListView):
     model = Dispositivo
     template_name = "dashboard/dispositivo_list.html"
 
     def get_queryset(self):
         query = self.model.objects.filter(
-            usuario=self.request.user
+            usuario__gasera=self.request.user.gasera
         )
         return query

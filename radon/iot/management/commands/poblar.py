@@ -14,14 +14,17 @@ class Command(BaseCommand):
             call_command('flush')
             gaseras = user_factories.GaseraFactory.create_batch(10)
             for index, gasera in enumerate(gaseras):
-                usrs = user_factories.UserFactory.create_batch(40, gasera=gasera, tipo='CONSUMIDOR')
+                usrs = user_factories.UserFactory.create_batch(15, gasera=gasera, tipo='CONSUMIDOR')
+                usuario_cliente = user_factories.UserFactory(gasera=gasera, tipo='CLIENTE')
                 self.stdout.write(self.style.SUCCESS(
-                    f'username: {usrs[0].username}\nGasera: {gasera.nombre}'
-                    '\n--------------\n')
+                    f'Usuario consumidor: {usrs[0].username}\n'
+                    f'Usuario cliente: {usuario_cliente.username}\n'
+                    f'Gasera: {gasera.nombre}\n'
+                    '------------------------------------\n')
                 )
                 usrs[0].set_password('password')
                 dt = iot_factories.DeviceTypeFactory()
-                ws = iot_factories.WisolFactory.create_batch(40, deviceTypeId=dt)
+                ws = iot_factories.WisolFactory.create_batch(15, deviceTypeId=dt)
                 for usr, wisol in zip(usrs, ws):
                     iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
                 rutas_factories.VehiculoFactory.create_batch(12, gasera=gasera)

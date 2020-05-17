@@ -20,7 +20,7 @@ class JornadaFactory(factory.django.DjangoModelFactory):
 class VehiculoFactory(factory.django.DjangoModelFactory):
     placa = factory.LazyAttribute(lambda o: fake.license_plate())
     n_economico = factory.LazyAttribute(lambda o: fake.bothify(text='?? ##'))
-    operador = factory.SubFactory(UserFactory, tipo='OPERADOR')
+    operador = factory.SubFactory(UserFactory, tipo='OPERARIO')
     gasera = factory.SubFactory(GaseraFactory)
 
     class Meta:

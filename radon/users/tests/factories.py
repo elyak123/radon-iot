@@ -6,6 +6,7 @@ from radon.users.models import Gasera
 
 User = get_user_model()
 fake = Faker(['es_MX'])
+faker = Faker(['es_MX', 'en_US', 'it_IT', 'fr_FR'])
 
 
 class GaseraFactory(factory.django.DjangoModelFactory):
@@ -17,9 +18,11 @@ class GaseraFactory(factory.django.DjangoModelFactory):
 
 
 class UserFactory(factory.django.DjangoModelFactory):
-    username = factory.LazyAttribute(lambda o: o.first_name.split(' ')[0].lower())
-    first_name = factory.LazyAttribute(lambda o: fake.first_name())
-    last_name = factory.LazyAttribute(lambda o: fake.last_name())
+    username = factory.LazyAttribute(
+        lambda o: faker.first_name().split(' ')[0].lower() + '.' + o.last_name.lower())
+    # lambda o: fake.first_name().split(' ')[0].lower() + '_' + fake.lexify())
+    first_name = factory.LazyAttribute(lambda o: faker.first_name())
+    last_name = factory.LazyAttribute(lambda o: faker.last_name())
     email = factory.LazyAttribute(lambda o: '{}@{}'.format(o.username, fake.domain_name()))
     password = factory.PostGenerationMethodCall('set_password', 'password')
     gasera = factory.SubFactory(GaseraFactory)
@@ -27,4 +30,4 @@ class UserFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = User
-        django_get_or_create = ('username',)
+        # django_get_or_create = ('username',)
