@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<h2>Crear Usuario</h2>
+<form class="form" method="POST">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary">Crear Usuario</button>
+</form>
+
+{% endblock content %}
+

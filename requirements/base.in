@@ -5,6 +5,7 @@ Django==2.2.10
 django-dynamic-model-validation==0.1.13
 djangorestframework>=3.10, <3.11
 djangorestframework-gis==0.15
+django-bootstrap4==1.1.1
 openrouteservice==2.3.0
 djangorestframework-simplejwt==4.4.0
 dj-rest-auth==1.0.1

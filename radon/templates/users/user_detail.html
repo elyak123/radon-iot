@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 text-center">
+        <h2>{{ object.username }}</h2>
+        <img src="https://www.ing.uc.cl/wp-content/themes/inguc/img/default_profile.png" alt="" width="50%" class="mx-auto mt-3">
+        <p class="text-muted">{{ object.tipo }}</p>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <h5 class="card-header">Información general:</h5>
+            <div class="card-body">
+                <p class="card-text"><b>{{ object.first_name }} {{ object.last_name }}</b></p>
+                <p class="card-text">{{ object.email }}</p>
+                <p class="card-text">{{ object.telefono }}</p>
+                <a href="{% url 'users:user_update' object.pk %}" class="btn btn-primary btn-block">Editar Usuario</a>
+                <a href="{% url 'users:user_delete' object.pk %}" class="btn btn-danger btn-block">Eliminar Usuario</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+

@@ -42,6 +42,10 @@ if READ_DOT_ENV_FILE:
 
 ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 
+# checar estos settings:
+FAVICON_URL = ''
+ACCOUNT_ALLOW_REGISTRATION = False
+LOGOUT_REDIRECT_URL = 'accounts:account_login'
 
 # Application definition
 
@@ -49,6 +53,8 @@ INSTALLED_APPS = [
     'radon.iot.apps.IotConfig',
     'radon.rutas.apps.RutasConfig',
     'radon.users.apps.UsersConfig',
+    'radon.accounts.apps.AccountsConfig',
+    'radon.dashboard.apps.DashboardConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.sites',
@@ -56,6 +62,7 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     'dynamic_validator',
     'phonenumber_field',
+    'bootstrap4',
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
@@ -71,7 +78,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -248,6 +254,10 @@ MEDIA_URL = '/media/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#static-root
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+
+STATICFILES_DIRS = [
+    str(ROOT_DIR('radon/static'))
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

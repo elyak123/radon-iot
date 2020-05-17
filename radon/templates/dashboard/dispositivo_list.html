@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Listado de dispositivos</h2>
+<div>
+{% if object_list %}
+    {% for dispositivo in object_list %}
+        <h2>Hola</h2>
+    {% endfor %}
+{% else %}
+<h4>¡Lo sentimos!</h4><h5>Usted aún no cuenta con dispositivos registrados.</h5>
+{% endif %}
+</div>
+{% endblock content %}
+

@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from radon.users.views import UsersLoginView, RefreshUsersView
@@ -30,9 +31,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('radon.users.urls')),
     path('iot/', include('radon.iot.urls')),
+    path('accounts/', include('radon.accounts.urls')),
+    path('dashboard/', include('radon.dashboard.urls')),
     re_path(r'^accounts/', include('allauth.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += [
         path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-    ]
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
