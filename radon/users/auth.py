@@ -34,7 +34,7 @@ class AuthenticationTestMixin(UserPassesTestMixin, ContextManager):
         # self.nivel_permiso_vista = self.get_nivel_permiso()
         # if self.app_label_name.lower() in self.user_groups and self.nivel_permiso_usuario >= self.nivel_permiso_vista:
         #     return True
-        if self.request.user.tipo == "CLIENTE":
+        if self.request.user.is_authenticated and self.request.user.tipo == "CLIENTE":
             return True
         else:
             raise PermissionDenied(

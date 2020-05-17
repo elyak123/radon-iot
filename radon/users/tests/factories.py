@@ -22,6 +22,7 @@ class UserFactory(factory.django.DjangoModelFactory):
         lambda o: faker.first_name().split(' ')[0].lower() + '.' + o.last_name.lower())
     # lambda o: fake.first_name().split(' ')[0].lower() + '_' + fake.lexify())
     first_name = factory.LazyAttribute(lambda o: faker.first_name())
+    telefono = factory.LazyAttribute(lambda o: fake.numerify(fake.random_element(('###-###-###',))))
     last_name = factory.LazyAttribute(lambda o: faker.last_name())
     email = factory.LazyAttribute(lambda o: '{}@{}'.format(o.username, fake.domain_name()))
     password = factory.PostGenerationMethodCall('set_password', 'password')
