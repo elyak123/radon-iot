@@ -20,6 +20,9 @@ babel==2.8.0 \
     --hash=sha256:1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38 \
     --hash=sha256:d670ea0b10f8b723672d3a6abeb87b565b244da220d76b4dba1b66269ec152d4 \
     # via -r requirements/base.txt, django-phonenumber-field
+bootstrap4==0.1.0 \
+    --hash=sha256:f768f9a2760c4765682a7cd26f2d1662e8f82d5e773e325c386709abeb2dd3ae \
+    # via -r requirements/base.txt
 botocore==1.14.9 \
     --hash=sha256:1909424c9544f92142c8e551888731e32a99f9c99cfe8d21fea3ec0c32981dae \
     --hash=sha256:e3e3c0f59dc30c86dd2116aece3bd554f8476446cf1c5770bbf5111993d676c8 \
