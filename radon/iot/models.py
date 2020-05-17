@@ -1,3 +1,4 @@
+from django.db.models import OuterRef, Subquery, F
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from radon.users.utils import get_default_user
@@ -35,11 +36,25 @@ class Wisol(models.Model):
         return hasattr(self, 'dispositivo')
 
 
+class DispositivoSet(models.QuerySet):
+
+    def anotar_lecturas(self):
+        qs = Lectura.objects.filter(dispositivo=OuterRef('pk')).order_by('-fecha').first()
+        return self.annotate(ultima_lectura=Subquery(qs.values('nivel'), output_field=models.IntegerField()))
+
+    def calendarizables(self, gasera):
+        return self.filter(ultima_lectura__lte=F(20), calendarizado=False, gasera=gasera).anotar_lecturas()
+
+
 class Dispositivo(models.Model):
     wisol = models.OneToOneField(Wisol, on_delete=models.CASCADE)
     capacidad = models.IntegerField('Capacidad del tanque', null=True)
     usuario = models.ForeignKey(User, default=get_default_user, on_delete=models.SET(get_default_user))
     location = models.PointField(null=True)
+    calendarizado = models.BooleanField('Indica si se esta a la espera de ser surtido.', default=False)
+
+    objects = models.Manager()
+    especial = DispositivoSet.as_manager()
 
     def get_ultima_lectura(self):
         return self.lectura_set.order_by('-fecha').first()
