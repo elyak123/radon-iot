@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 from . import views
 
-app_name = 'accounts'
+#app_name = 'accounts'
 
 urlpatterns = [
     path(r'signup/', views._SignupView.as_view(), name='account_signup'),

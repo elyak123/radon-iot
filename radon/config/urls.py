@@ -22,6 +22,7 @@ from radon.users.views import UsersLoginView, RefreshUsersView
 
 
 urlpatterns = [
+    path('', include('radon.dashboard.urls')),
     re_path(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
             TemplateView.as_view(template_name="account/password_reset_confirm.html"),
             name='password_reset_confirm'),
@@ -29,11 +30,9 @@ urlpatterns = [
     re_path(r'^auth/refresh/$', RefreshUsersView.as_view(), name='token_refresh'),
     re_path(r'^auth/', include('dj_rest_auth.urls')),
     path('admin/', admin.site.urls),
-    path('users/', include('radon.users.urls')),
+    path('usuarios/', include('radon.accounts.urls')),
+    path('usuarios/', include('radon.users.urls')),
     path('iot/', include('radon.iot.urls')),
-    path('accounts/', include('radon.accounts.urls')),
-    path('dashboard/', include('radon.dashboard.urls')),
-    re_path(r'^accounts/', include('allauth.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += [

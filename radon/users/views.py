@@ -33,7 +33,7 @@ class UserCreateView(CreateView, AuthenticationTestMixin):
         form.instance.gasera = self.request.user.gasera
         form.instance.pwdtemporal = False
         return super(UserCreateView, self).form_valid(form)
-    
+
     def get_success_url(self):
         return reverse('dashboard:inicio')
 
@@ -55,7 +55,7 @@ class UserDetailView(DetailView, AuthenticationTestMixin):
 
     def get_object(self, queryset=None):
         self.object = User.objects.get(
-            pk=self.kwargs['pk'],
+            username=self.kwargs['username'],
             gasera=self.request.user.gasera
         )
         return self.object
@@ -67,11 +67,11 @@ class UserDeleteView(DeleteView):
 
     def get_object(self, queryset=None):
         self.object = User.objects.get(
-            pk=self.kwargs['pk'],
+            username=self.kwargs['username'],
             gasera=self.request.user.gasera
         )
         return self.object
-    
+
     def get_success_url(self):
         return reverse('users:user_list')
 
@@ -81,15 +81,20 @@ class UserUpdateView(UpdateView):
     template_name = "users/user_update.html"
     form_class = uf.UserUpdateForm
 
+    def get_form_kwargs(self):
+        kwargs = super(UserUpdateView, self).get_form_kwargs()
+        kwargs['user'] = self.object
+        return kwargs
+
     def get_object(self, queryset=None):
         self.object = User.objects.get(
-            pk=self.kwargs['pk'],
+            username=self.kwargs['username'],
             gasera=self.request.user.gasera
         )
         return self.object
 
     def get_success_url(self):
-        return reverse('users:user_detail', kwargs={'pk': self.object.pk})
+        return reverse('users:user_detail', kwargs={'username': self.object.username})
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -119,7 +124,7 @@ class RefreshUsersView(TokenRefreshView):
 
 class RegisterUsersView(RegisterView):
     serializer_class = serializers.AsistedUserDispositivoCreation
-    permission_classes = [permissions.IsAuthenticated] # por lo pronto....
+    permission_classes = [permissions.IsAuthenticated]  # por lo pronto....
 
     @sensitive_post_parameters_m
     def dispatch(self, *args, **kwargs):

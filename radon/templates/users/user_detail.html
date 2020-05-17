@@ -14,8 +14,8 @@
                 <p class="card-text"><b>{{ object.first_name }} {{ object.last_name }}</b></p>
                 <p class="card-text">{{ object.email }}</p>
                 <p class="card-text">{{ object.telefono }}</p>
-                <a href="{% url 'users:user_update' object.pk %}" class="btn btn-primary btn-block">Editar Usuario</a>
-                <a href="{% url 'users:user_delete' object.pk %}" class="btn btn-danger btn-block">Eliminar Usuario</a>
+                <a href="{% url 'users:user_update' object.username %}" class="btn btn-primary btn-block">Editar Usuario</a>
+                <a href="{% url 'users:user_delete' object.username %}" class="btn btn-danger btn-block">Eliminar Usuario</a>
             </div>
         </div>
     </div>

@@ -19,9 +19,9 @@
         <small>{{ user.tipo }}</small>
         </div>
         <p class="mb-1">{{ user.email }}</p>
-        <a href="{% url 'users:user_detail' user.pk %}" class="badge badge-pill badge-primary">Detalles</a>
-        <a href="{% url 'users:user_update' user.pk %}" class="badge badge-pill badge-primary">Editar Usuario</a>
-        <a href="{% url 'users:user_delete' user.pk %}" class="badge badge-pill badge-danger">Eliminar Usuario</a>
+        <a href="{% url 'users:user_detail' user.username %}" class="badge badge-pill badge-primary">Detalles</a>
+        <a href="{% url 'users:user_update' user.username %}" class="badge badge-pill badge-primary">Editar Usuario</a>
+        <a href="{% url 'users:user_delete' user.username %}" class="badge badge-pill badge-danger">Eliminar Usuario</a>
     </div>
     {% endfor %}
 </div>
