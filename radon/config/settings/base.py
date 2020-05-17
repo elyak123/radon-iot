@@ -62,10 +62,10 @@ INSTALLED_APPS = [
     'rest_framework_gis',
     'dynamic_validator',
     'phonenumber_field',
+    'bootstrap4',
     'allauth',  # registration
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
-    'bootstrap4',
     'dj_rest_auth',
     'django.contrib.auth',
     'django.contrib.admin',
@@ -78,7 +78,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
