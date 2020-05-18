@@ -9,7 +9,6 @@
     <div class="list-group-item list-group-item-action flex-column align-items-start my-2" style="cursor: pointer;" data-x="{{ dispositivo.location.x }}" data-y="{{ dispositivo.location.y }}">
         <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">Dispositivo: {{ dispositivo.wisol.serie }}</h5>
-        <p>{{ dispositivo.location.x }}, {{ dispositivo.location.y }}</p>
         <small><a href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
         </div>
         <a href="{% url 'users:user_detail' user.username %}" class="badge badge-pill badge-primary">Detalles</a>
@@ -71,10 +70,13 @@
             document.body.appendChild(script);
             map.dataset["expanded"] = "true";
         } else {
-            map.innerHTML = "";
-            map.dataset["expanded"] = "false"
-            $(evt.currentTarget).animate({"height": 100}, 200);
-            map.style["height"] = "0px";
+            if(evt.target == evt.currentTarget){
+                map.innerHTML = "";
+                map.dataset["expanded"] = "false"
+                $(evt.currentTarget).animate({"height": 100}, 200);
+                map.style["height"] = "0px";
+            }
+            
         }
     });
     function initMap() {
