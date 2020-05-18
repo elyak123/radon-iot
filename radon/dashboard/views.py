@@ -11,6 +11,7 @@ class DashboardView(TemplateView, AuthenticationTestMixin):
 
 
 class DispositivoListView(ListView):
+    paginate_by = 10
     model = Dispositivo
     template_name = "dashboard/dispositivo_list.html"
 
