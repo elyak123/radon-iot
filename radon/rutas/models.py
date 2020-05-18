@@ -49,6 +49,12 @@ class Ruta(models.Model):
         return 'Ruta: {}'.format(self.jornada.fecha)
 
 
+class PedidoSet(models.QuerySet):
+
+    def pedidos_por_dia(self):
+        pass
+
+
 class Pedido(ModelFieldRequiredMixin, models.Model):
     fecha_creacion = models.DateTimeField(auto_now=True)
     cantidad = models.DecimalField(max_digits=12, decimal_places=2)
