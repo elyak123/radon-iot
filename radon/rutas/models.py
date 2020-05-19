@@ -1,5 +1,7 @@
+import datetime
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
+from django.db import connection
 from dynamic_validator import ModelFieldRequiredMixin
 from radon.users.models import Gasera
 from radon.iot.models import Dispositivo
@@ -51,8 +53,19 @@ class Ruta(models.Model):
 
 class PedidoSet(models.QuerySet):
 
-    def pedidos_por_dia(self):
-        pass
+    def pedidos_por_dia(self, gasera, semana):
+        # "2013-W26 (se espera aaaa-Wss)
+        fecha_inicial = datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w")
+        fecha_final = datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w")
+        sql = '''
+        SELECT DATE(fecha_creacion) AS fecha, SUM(cantidad) AS cantidad
+        FROM rutas_pedido
+        WHERE DATE(fecha_creacion) BETWEEN %(fecha_inicial)s AND %(fecha_final)s GROUP BY fecha;
+        '''
+        with connection.cursor() as cursor:
+            cursor.execute(sql, {'fecha_inicial': fecha_inicial, 'fecha_final': fecha_final})
+            qs = cursor.fetchall()
+        return qs
 
 
 class Pedido(ModelFieldRequiredMixin, models.Model):
@@ -61,6 +74,9 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE, null=True)
     orden = models.IntegerField('Orden del dispositivo dentro de una ruta.', null=True)
+
+    objects = models.Manager()
+    especial = PedidoSet.as_manager()
 
     CONDITIONAL_REQUIRED_FIELDS = [
         (
