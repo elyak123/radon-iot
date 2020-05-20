@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 p-1">
+        <h4>Número de Serie:</h4>
+        <p>{{ object.wisol.serie }}</p>
+        <div id="mapa" class="mx-auto" style="height: 500px; width: 100%;"></div>
+    </div>
+    <div class="col-md-6 p-5">
+        <div class="card">
+            <h5 class="card-header">Información general:</h5>
+            <div class="card-body">
+                <p class="card-text"><b>{{ object.usuario.first_name }} {{ object.usuario.last_name }}</b></p>
+                <p class="card-text">{{ object.usuario.email }}</p>
+                <p class="card-text">{{ object.usuario.telefono }}</p>
+                <p class="card-text"><b>Nivel actual: </b> {{ object.get_ultima_lectura.nivel }} </p>
+                <a href="{% url 'dashboard:dispositivo_update' object.pk %}" class="btn btn-primary btn-block">Editar Dispositivo</a>
+                <a href="{% url 'dashboard:dispositivo_delete' object.pk %}" class="btn btn-danger btn-block">Eliminar Dispositivo</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mt-5">
+    <h3>Lecturas del dispositivo:</h3>
+    {% for lectura in dispositivo.lectura_set.all %}
+        <p>LECTURA</p>
+    {% endfor %}
+</div>
+{% endblock content %}
+{% block scripts%}
+<script>
+    var lat, lng;
+    $(window).on("load", function(){
+        var script = document.createElement('script');
+        script.src = 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=initMap&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
+        document.body.appendChild(script);
+        lat = {{ object.location.x }};
+        lng = {{ object.location.y }};
+    });
+    function initMap() {
+        nuevo_mapa = new google.maps.Map(document.getElementById("mapa"), {
+            zoom: 15,
+            center: {lng: parseFloat(lng), lat: parseFloat(lat)}
+        });
+
+        marker = new google.maps.Marker({
+            position: new google.maps.LatLng(parseFloat(lat), parseFloat(lng)),
+            map: nuevo_mapa,
+            title: "Ubicación"
+        });
+    }
+</script>
+{% endblock %}
