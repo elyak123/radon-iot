@@ -57,13 +57,22 @@ class PedidoSet(models.QuerySet):
         # "2013-W26 (se espera aaaa-Wss)
         fecha_inicial = datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w")
         fecha_final = datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w")
+        gasera_id = gasera.id
         sql = '''
         SELECT DATE(fecha_creacion) AS fecha, SUM(cantidad) AS cantidad
         FROM rutas_pedido
-        WHERE DATE(fecha_creacion) BETWEEN %(fecha_inicial)s AND %(fecha_final)s GROUP BY fecha;
+        INNER JOIN "rutas_pedido" ON "rutas_pedido.dispositivo" = "iot_dispositivo.id"
+        INNER JOIN "iot_dispositivo" ON "iot_dispositivo.usuario" = "users_user.id"
+        INNER JOIN "users_user" ON "users_user.gasera" = "users_gasera.id"
+        WHERE DATE(fecha_creacion) BETWEEN %(fecha_inicial)s AND %(fecha_final)s
+        AND "users_gasera.id" = %(gasera_id)s
+        GROUP BY fecha;
         '''
         with connection.cursor() as cursor:
-            cursor.execute(sql, {'fecha_inicial': fecha_inicial, 'fecha_final': fecha_final})
+            cursor.execute(sql, {
+                'fecha_inicial': fecha_inicial,
+                'fecha_final': fecha_final,
+                'gasera_id': gasera_id})
             qs = cursor.fetchall()
         return qs
 
