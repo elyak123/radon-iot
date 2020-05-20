@@ -54,18 +54,18 @@ class Ruta(models.Model):
 class PedidoSet(models.QuerySet):
 
     def pedidos_por_dia_global(self, semana):
-        # "2013-W26 (se espera aaaa-Wss)
+        # "2020-W26 (se espera aaaa-Wss)
         start_date = str(datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w"))
         finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
         sql = '''
-        SELECT DATE(fecha_creacion) AS fecha, SUM(cantidad) AS cantidad
+        SELECT DATE(fecha_creacion) AS fecha, SUM(cantidad) AS cantidad, "users_gasera"."id" AS gasera
         FROM rutas_pedido
         INNER JOIN "iot_dispositivo" ON "rutas_pedido"."dispositivo_id" = "iot_dispositivo"."id"
         INNER JOIN "users_user" ON "iot_dispositivo"."usuario_id" = "users_user"."id"
         INNER JOIN "users_gasera" ON "users_user"."gasera_id" = "users_gasera"."id"
         WHERE DATE(fecha_creacion) BETWEEN %(start_date)s AND %(finish_date)s
         GROUP BY fecha, "users_gasera"."id"
-        ORDER BY fecha DESC;
+        ORDER BY fecha DESC, gasera DESC;
         '''
         with connection.cursor() as cursor:
             cursor.execute(sql, {
@@ -75,7 +75,7 @@ class PedidoSet(models.QuerySet):
         return qs
 
     def pedidos_por_dia_por_gasera(self, gasera, semana):
-        # "2013-W26 (se espera aaaa-Wss)
+        # "2020-W26 (se espera aaaa-Wss)
         start_date = str(datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w"))
         finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
         gasera_id = gasera.id
@@ -86,7 +86,7 @@ class PedidoSet(models.QuerySet):
         INNER JOIN "users_user" ON "iot_dispositivo"."usuario_id" = "users_user"."id"
         INNER JOIN "users_gasera" ON "users_user"."gasera_id" = "users_gasera"."id"
         WHERE DATE(fecha_creacion) BETWEEN %(start_date)s AND %(finish_date)s
-        AND "users_gasera"."id" = 1
+        AND "users_gasera"."id" = %(gasera_id)s
         GROUP BY fecha
         ORDER BY fecha DESC;
         '''

@@ -46,7 +46,7 @@ class RutaFactory(factory.django.DjangoModelFactory):
 
 
 class PedidoFactory(factory.django.DjangoModelFactory):
-    fecha_creacion = factory.LazyAttribute(lambda o: fake.date_this_month())
+    fecha_creacion = factory.LazyAttribute(lambda o: fake.date_time_this_month())
     cantidad = factory.LazyAttribute(lambda o: fake.random_int(min=30, max=100))
     dispositivo = factory.SubFactory(DispositivoFactory)
 
