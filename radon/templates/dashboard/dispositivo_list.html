@@ -70,13 +70,12 @@
             document.body.appendChild(script);
             map.dataset["expanded"] = "true";
         } else {
-            if(evt.target == evt.currentTarget){
+            if(!evt.currentTarget.querySelector('.gm-style').contains(event.target)){
                 map.innerHTML = "";
                 map.dataset["expanded"] = "false"
                 $(evt.currentTarget).animate({"height": 100}, 200);
                 map.style["height"] = "0px";
             }
-            
         }
     });
     function initMap() {
