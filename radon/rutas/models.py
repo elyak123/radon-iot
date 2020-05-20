@@ -53,25 +53,47 @@ class Ruta(models.Model):
 
 class PedidoSet(models.QuerySet):
 
-    def pedidos_por_dia(self, gasera, semana):
+    def pedidos_por_dia_global(self, semana):
         # "2013-W26 (se espera aaaa-Wss)
-        fecha_inicial = datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w")
-        fecha_final = datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w")
+        start_date = str(datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w"))
+        finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
+        sql = '''
+        SELECT DATE(fecha_creacion) AS fecha, SUM(cantidad) AS cantidad
+        FROM rutas_pedido
+        INNER JOIN "iot_dispositivo" ON "rutas_pedido"."dispositivo_id" = "iot_dispositivo"."id"
+        INNER JOIN "users_user" ON "iot_dispositivo"."usuario_id" = "users_user"."id"
+        INNER JOIN "users_gasera" ON "users_user"."gasera_id" = "users_gasera"."id"
+        WHERE DATE(fecha_creacion) BETWEEN %(start_date)s AND %(finish_date)s
+        GROUP BY fecha, "users_gasera"."id"
+        ORDER BY fecha DESC;
+        '''
+        with connection.cursor() as cursor:
+            cursor.execute(sql, {
+                'start_date': start_date,
+                'finish_date': finish_date})
+            qs = cursor.fetchall()
+        return qs
+
+    def pedidos_por_dia_por_gasera(self, gasera, semana):
+        # "2013-W26 (se espera aaaa-Wss)
+        start_date = str(datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w"))
+        finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
         gasera_id = gasera.id
         sql = '''
         SELECT DATE(fecha_creacion) AS fecha, SUM(cantidad) AS cantidad
         FROM rutas_pedido
-        INNER JOIN "rutas_pedido" ON "rutas_pedido.dispositivo" = "iot_dispositivo.id"
-        INNER JOIN "iot_dispositivo" ON "iot_dispositivo.usuario" = "users_user.id"
-        INNER JOIN "users_user" ON "users_user.gasera" = "users_gasera.id"
-        WHERE DATE(fecha_creacion) BETWEEN %(fecha_inicial)s AND %(fecha_final)s
-        AND "users_gasera.id" = %(gasera_id)s
-        GROUP BY fecha;
+        INNER JOIN "iot_dispositivo" ON "rutas_pedido"."dispositivo_id" = "iot_dispositivo"."id"
+        INNER JOIN "users_user" ON "iot_dispositivo"."usuario_id" = "users_user"."id"
+        INNER JOIN "users_gasera" ON "users_user"."gasera_id" = "users_gasera"."id"
+        WHERE DATE(fecha_creacion) BETWEEN %(start_date)s AND %(finish_date)s
+        AND "users_gasera"."id" = 1
+        GROUP BY fecha
+        ORDER BY fecha DESC;
         '''
         with connection.cursor() as cursor:
             cursor.execute(sql, {
-                'fecha_inicial': fecha_inicial,
-                'fecha_final': fecha_final,
+                'start_date': start_date,
+                'finish_date': finish_date,
                 'gasera_id': gasera_id})
             qs = cursor.fetchall()
         return qs
