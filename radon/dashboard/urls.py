@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 app_name = 'dashboard'
@@ -9,4 +9,5 @@ urlpatterns = [
     path(r'dispositivos/<pk>', views.DispositivoDetailView.as_view(), name='dispositivo_detail'),
     path(r'dispositivos/eliminar/<pk>', views.DispositivoDeleteView.as_view(), name='dispositivo_delete'),
     path(r'dispositivos/editar/<pk>', views.DispositivoUpdateView.as_view(), name='dispositivo_update'),
+    re_path(r'^pedidos/(?:(?P<week>\d+)/)?$', views.PedidoView.as_view())
 ]

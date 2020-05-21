@@ -2,7 +2,9 @@ from django.urls import reverse
 from django.views import generic
 from radon.users.auth import AuthenticationTestMixin
 from radon.iot.models import Dispositivo
+from radon.rutas.models import Pedido
 from radon.iot.forms import DispositivoForm
+from datetime import datetime
 
 # Create your views here.
 
@@ -67,3 +69,21 @@ class DispositivoDeleteView(generic.DeleteView):
 
     def get_success_url(self):
         return reverse('dashboard:dispositivo_list', kwargs={'pk': self.object.pk})
+
+
+class PedidoView(generic.TemplateView):
+    template_name = "dashboard/pedidos.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        now = datetime.now()
+        if not kwargs["week"]:
+            context["semana"] = f"{now.year}-W{now.isocalendar()[1]}"
+        else:
+            semana = kwargs["week"]
+            context["semana"] = f"{now.year}-W{semana}"
+        context["pedidos"] = Pedido.especial.pedidos_por_dia_por_gasera(
+            gasera=self.request.user.gasera,
+            semana=context["semana"]
+        )
+        return context
