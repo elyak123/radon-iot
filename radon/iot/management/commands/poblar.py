@@ -29,10 +29,12 @@ class Command(BaseCommand):
                 dt = iot_factories.DeviceTypeFactory()
                 ws = iot_factories.WisolFactory.create_batch(15, deviceTypeId=dt)
                 for usr, wisol in zip(usrs, ws):
-                    iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
-                    rutas_factories.PedidoFactory.create_batch(20, dispositivo__usuario=usr)
-                    Pedido.objects.filter(dispositivo__usuario=usr).update(
-                        fecha_creacion=rutas_factories.fake.date_time_this_month(tzinfo=tz))
+                    disp = iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
+                    pds = rutas_factories.PedidoFactory.create_batch(20, dispositivo=disp)
+                    for pedido in pds:
+                        Pedido.objects.filter(pk=pedido.pk).update(
+                            fecha_creacion=rutas_factories.fake.date_time_this_month(tzinfo=tz)
+                        )
                 rutas_factories.VehiculoFactory.create_batch(12, gasera=gasera)
         else:
             raise ImproperlyConfigured('No tienes settings.DEBUG activado, la operación no se puede completar.')
