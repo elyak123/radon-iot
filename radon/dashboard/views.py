@@ -4,7 +4,7 @@ from django.views.generic import (TemplateView, ListView, DetailView, UpdateView
     DeleteView, FormView)
 from radon.users.auth import AuthenticationTestMixin
 from radon.iot.models import Dispositivo
-from radon.iot.forms import GeoForm
+from radon.iot.forms import DispositivoForm
 
 # Create your views here.
 
@@ -40,10 +40,17 @@ class DispositivoDetailView(DetailView):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoUpdateView(FormView):
-    form_class = GeoForm
+class DispositivoUpdateView(UpdateView):
+    form_class = DispositivoForm
+    model = Dispositivo
     template_name = "dashboard/dispositivo_update.html"
 
+    def get_object(self, queryset=None):
+        self.object = self.model.objects.get(
+            pk=self.kwargs['pk'],
+            usuario__gasera=self.request.user.gasera
+        )
+        return self.object
 
     def get_success_url(self):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
@@ -62,4 +69,3 @@ class DispositivoDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('dashboard:dispositivo_list', kwargs={'pk': self.object.pk})
-
