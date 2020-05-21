@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'radon.users.apps.UsersConfig',
     'radon.accounts.apps.AccountsConfig',
     'radon.dashboard.apps.DashboardConfig',
+    'floppyforms',
     'rest_framework',
     'rest_framework.authtoken',
     'django.contrib.sites',
