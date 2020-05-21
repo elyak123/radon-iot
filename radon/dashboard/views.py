@@ -1,7 +1,5 @@
 from django.urls import reverse
-from django.shortcuts import render
-from django.views.generic import (TemplateView, ListView, DetailView, UpdateView,
-    DeleteView, FormView)
+from django.views import generic
 from radon.users.auth import AuthenticationTestMixin
 from radon.iot.models import Dispositivo
 from radon.iot.forms import DispositivoForm
@@ -9,11 +7,11 @@ from radon.iot.forms import DispositivoForm
 # Create your views here.
 
 
-class DashboardView(TemplateView, AuthenticationTestMixin):
+class DashboardView(generic.TemplateView, AuthenticationTestMixin):
     template_name = "dashboard/index.html"
 
 
-class DispositivoListView(ListView):
+class DispositivoListView(generic.ListView):
     paginate_by = 10
     model = Dispositivo
     template_name = "dashboard/dispositivo_list.html"
@@ -25,7 +23,7 @@ class DispositivoListView(ListView):
         return query
 
 
-class DispositivoDetailView(DetailView):
+class DispositivoDetailView(generic.DetailView):
     model = Dispositivo
     template_name = "dashboard/dispositivo_detail.html"
 
@@ -40,7 +38,7 @@ class DispositivoDetailView(DetailView):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoUpdateView(UpdateView):
+class DispositivoUpdateView(generic.UpdateView):
     form_class = DispositivoForm
     model = Dispositivo
     template_name = "dashboard/dispositivo_update.html"
@@ -56,7 +54,7 @@ class DispositivoUpdateView(UpdateView):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoDeleteView(DeleteView):
+class DispositivoDeleteView(generic.DeleteView):
     model = Dispositivo
     template_name = "dashboard/dispositivo_delete.html"
 
