@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load l10n %}
 {% block content %}
 <div>
     <canvas id="myChart"></canvas>
@@ -28,7 +28,7 @@
                 borderColor: 'rgb(0,0,0)',
                 data: [
                     {% for pedido in pedidos %}
-                        {{ pedido.1 }},
+                        {{ pedido.1|unlocalize }},
                     {% endfor %}
                 ]
             }]
