@@ -5,13 +5,12 @@
 
 <h2>Actualizar Dispositivo</h2>
 <form class="form" method="POST">
+    {{ form.media }}
     {% csrf_token %}
     {% bootstrap_form form %}
     <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
-
 {% endblock content %}
 {% block scripts %}
-<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList"></script>
+
 {% endblock %}
