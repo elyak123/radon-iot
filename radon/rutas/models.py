@@ -53,7 +53,7 @@ class Ruta(models.Model):
 
 class PedidoSet(models.QuerySet):
 
-    def pedidos_por_dia_global(self, semana):
+    def pedidos_por_fecha_creacion_global(self, semana):
         # "2020-W26 (se espera aaaa-Wss)
         start_date = str(datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w"))
         finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
@@ -75,6 +75,29 @@ class PedidoSet(models.QuerySet):
         return qs
 
     def pedidos_por_dia_por_gasera(self, gasera, semana):
+        # "2020-W26 (se espera aaaa-Wss)
+        start_date = str(datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w"))
+        finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
+        gasera_id = gasera.id
+        sql = '''
+        SELECT "rutas_jornada"."fecha" as fecha, SUM(cantidad) AS cantidad
+        FROM rutas_pedido
+        INNER JOIN "rutas_ruta" ON "rutas_pedido"."ruta_id" = "rutas_ruta"."id"
+        INNER JOIN "rutas_jornada" ON "rutas_ruta"."jornada_id" = "rutas_jornada"."id"
+        WHERE "rutas_jornada"."fecha" BETWEEN %(start_date)s AND %(finish_date)s
+        AND "rutas_jornada"."gasera_id" = %(gasera_id)s
+        GROUP BY fecha
+        ORDER BY fecha DESC;
+        '''
+        with connection.cursor() as cursor:
+            cursor.execute(sql, {
+                'start_date': start_date,
+                'finish_date': finish_date,
+                'gasera_id': gasera_id})
+            qs = cursor.fetchall()
+        return qs
+
+    def pedidos_por_fecha_creacion_por_gasera(self, gasera, semana):
         # "2020-W26 (se espera aaaa-Wss)
         start_date = str(datetime.datetime.strptime(semana + '-1', "%Y-W%W-%w"))
         finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
