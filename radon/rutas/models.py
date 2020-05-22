@@ -10,7 +10,7 @@ User = get_user_model()
 
 
 class Jornada(models.Model):
-    fecha = models.DateField(auto_now=True)
+    fecha = models.DateField(default=datetime.datetime.now)
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
 
     class Meta:

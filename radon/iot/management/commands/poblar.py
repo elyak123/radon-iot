@@ -15,41 +15,59 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if settings.DEBUG:
             call_command('flush')
-            cantidad_gaseras = 10
+            cantidad_gaseras = 1
             consumidores_por_gasera = 18
             vechiculos_por_gasera = 12
             jornadas_por_gasera = 30
-            pedidos_por_usuario = int((vechiculos_por_gasera * jornadas_por_gasera) / consumidores_por_gasera)
+            pedidos_por_ruta = 8
+            pedidos_por_usuario = int(
+                (jornadas_por_gasera * vechiculos_por_gasera * pedidos_por_ruta) / consumidores_por_gasera)
+            # pedidos_por_usuario = int((vechiculos_por_gasera * jornadas_por_gasera) / consumidores_por_gasera)
+            # pedidos_por_ruta = int((pedidos_por_usuario * consumidores_por_gasera) / vechiculos_por_gasera)
+
             tz = pytz.timezone(settings.TIME_ZONE)
             gaseras = user_factories.GaseraFactory.create_batch(cantidad_gaseras)
-            for index, gasera in enumerate(gaseras):
+            for index, gasera in enumerate(gaseras):  # 1
                 usrs = user_factories.UserFactory.create_batch(
                     consumidores_por_gasera, gasera=gasera, tipo='CONSUMIDOR'
                 )
                 usuario_cliente = user_factories.UserFactory(gasera=gasera, tipo='CLIENTE')
+                dt = iot_factories.DeviceTypeFactory()
+                ws = iot_factories.WisolFactory.create_batch(consumidores_por_gasera, deviceTypeId=dt)
+                for usr, wisol in zip(usrs, ws):  # 1 x 18 = 18
+                    disp = iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
+                    rutas_factories.PedidoFactory.create_batch(  # 18 x 160 = 2,880
+                        pedidos_por_usuario, dispositivo=disp, ruta=None, orden=None
+                    )
+                vehiculos = rutas_factories.VehiculoFactory.create_batch(vechiculos_por_gasera, gasera=gasera)
+                today = datetime.datetime.now()
+                for day in range(1, jornadas_por_gasera + 1):  # 1 x 30 = 30
+                    fecha = today + datetime.timedelta(days=-day)
+                    jornada = rutas_factories.JornadaFactory(gasera=gasera, fecha=fecha)
+                    for vehiculo in vehiculos:  # 30 x 12 = 360
+                        ruta = rutas_factories.RutaFactory(jornada=jornada)
+                        ruta.vehiculo.add(vehiculo)
+                        for idx in range(pedidos_por_ruta):  # 360 x 8 = 2,880
+                            ped = Pedido.objects.filter(
+                                dispositivo__usuario__gasera=gasera,
+                                ruta__isnull=True
+                                ).order_by('-fecha_creacion').first()
+                            if ped:
+                                ped.ruta = ruta
+                                ped.orden = idx
+                                ped.save()
+                                ped.dispositivo.calendarizado = True
+                                ped.dispositivo.save()
                 self.stdout.write(self.style.SUCCESS(
                     f'Usuario consumidor: {usrs[0].username}\n'
                     f'Usuario cliente: {usuario_cliente.username}\n'
                     f'Gasera: {gasera.nombre}\n'
                     '------------------------------------\n')
                 )
-                usrs[0].set_password('password')
-                dt = iot_factories.DeviceTypeFactory()
-                ws = iot_factories.WisolFactory.create_batch(consumidores_por_gasera, deviceTypeId=dt)
-                vehiculos = rutas_factories.VehiculoFactory.create_batch(vechiculos_por_gasera, gasera=gasera)
-                today = datetime.datetime.now()
-                for day in range(jornadas_por_gasera):
-                    fecha = today - datetime.timedelta(days=-day)
-                    jornada = rutas_factories.JornadaFactory(gasera=gasera, fecha=fecha)
-                    for vehiculo in vehiculos:
-                        ruta = rutas_factories.RutaFactory(jornada=jornada)
-                        ruta.vehiculo.add(vehiculo)
-                for usr, wisol in zip(usrs, ws):
-                    disp = iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
-                    pds = rutas_factories.PedidoFactory.create_batch(pedidos_por_usuario, dispositivo=disp)
-                    for pedido in pds:
-                        Pedido.objects.filter(pk=pedido.pk).update(
-                            fecha_creacion=rutas_factories.fake.date_time_this_month(tzinfo=tz)
-                        )
+            pedidos_global = Pedido.objects.all().values('pk')
+            for pd in pedidos_global:
+                Pedido.objects.filter(pk=pd['pk']).update(
+                    fecha_creacion=rutas_factories.fake.date_time_this_month(tzinfo=tz)
+                )
         else:
             raise ImproperlyConfigured('No tienes settings.DEBUG activado, la operación no se puede completar.')
