@@ -63,8 +63,8 @@
         if(map.dataset["expanded"] == "false") {
             $(evt.currentTarget).animate({"height": 300}, 200);
             map.style["height"] = "200px";
-            lat = evt.currentTarget.dataset["x"];
-            lng = evt.currentTarget.dataset["y"];
+            lat = evt.currentTarget.dataset["y"];
+            lng = evt.currentTarget.dataset["x"];
             var script = document.createElement('script');
             script.src = 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=initMap&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
             document.body.appendChild(script);

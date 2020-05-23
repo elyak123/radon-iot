@@ -7,7 +7,13 @@
 <form class="form" method="POST">
     {{ form.media }}
     {% csrf_token %}
-    {% bootstrap_form form %}
+    {% for field in form %}
+    <div class="row">
+        <div class="col-12 my-2">
+            {% bootstrap_field field %}
+        </div>
+    </div>
+    {% endfor %}
     <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
 {% endblock content %}

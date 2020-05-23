@@ -63,7 +63,7 @@ class DispositivoDeleteView(generic.DeleteView):
     def get_object(self, queryset=None):
         self.object = self.model.objects.get(
             pk=self.kwargs['pk'],
-            usuario__gasera=self.request.user.gaserac
+            usuario__gasera=self.request.user.gasera
         )
         return self.object
 

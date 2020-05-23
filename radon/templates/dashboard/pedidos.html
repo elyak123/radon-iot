@@ -33,7 +33,7 @@
         data: {
             labels: [
                 {% for pedido in pedidos %}
-                    "{{ pedido.0 }}",
+                    "{{ pedido.0 | date:'d/m/Y' }}",
                 {% endfor %}
             ],
             datasets: [{
@@ -49,7 +49,7 @@
         },
 
         // Configuration options go here
-        options: {}
+        options: { }
     });
 </script>
 {% endblock %}

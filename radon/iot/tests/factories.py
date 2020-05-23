@@ -37,7 +37,7 @@ class DispositivoFactory(factory.django.DjangoModelFactory):
     usuario = factory.SubFactory(UserFactory)
     location = factory.LazyAttribute(
         lambda o: 'POINT({} {})'.format(
-            fake.coordinate(center=21.882534, radius=0.07), fake.coordinate(center=-102.293363, radius=0.05)
+            fake.coordinate(center=-102.293363, radius=0.07), fake.coordinate(center=21.882534, radius=0.05)
             )
         )
 

@@ -4,7 +4,7 @@
 {% block content %}
 <h2>Eliminar Usuario</h2>
 <form class="form" method="POST">
-    <p>¿Estás seguro de eliminar a {{ object.pk }} y todo el contenido relacionado?</p>
+    <p>¿Estás seguro de eliminar el dispositivo {{ object.wisol.serie }} y todo el contenido relacionado?</p>
     {% csrf_token %}
     <input type="submit" class="btn btn-danger" value="Sí, Eliminar">
 </form>
