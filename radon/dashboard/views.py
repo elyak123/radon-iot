@@ -6,6 +6,8 @@ from radon.rutas.models import Pedido
 from radon.iot.forms import DispositivoForm
 from datetime import datetime
 
+from radon.rutas.forms import PedidoCreationForm
+
 # Create your views here.
 
 
@@ -87,3 +89,9 @@ class PedidoView(generic.TemplateView):
             semana=context["semana"]
         )
         return context
+
+
+class PedidoCreateView(generic.CreateView):
+    model = Pedido
+    form_class = PedidoCreationForm
+    template_name = "dashboard/pedido_creation.html"
