@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<h2>Creción de Pedido</h2>
+<form class="form" method="POST">
+    {% csrf_token %}
+    <h3>Disponibilidad</h3>
+    <div class="owl-carousel owl-theme">
+        <div class="item" data-nivel="1000">
+            <div class="p-3">
+                <h5>Sábado 23-05 (hoy)</h5>
+            </div>
+        </div>
+        <div class="item">
+            <div class="p-3">
+                <h5>Domingo 24-05</h5>
+            </div>
+        </div>
+        <div class="item">
+            <div class="p-3">
+                <h5>Lunes 25-05</h5>
+            </div>
+        </div>
+        <div class="item">
+            <div class="p-3">
+                <h5>Martes 26-05</h5>
+            </div>
+        </div>
+        <div class="item">
+            <div class="p-3">
+                <h5>Miercoles 27-05</h5>
+            </div>
+        </div>
+        <div class="item">
+            <div class="p-3">
+                <h5>Jueves 28-05</h5>
+            </div>
+        </div>
+        <div class="item">
+            <div class="p-3">
+                <h5>Viernes 29-05</h5>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+</form>
+
+{% endblock content %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script type="text/javascript">
+$('.owl-carousel').owlCarousel({
+    loop:true,
+    margin:10,
+    responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:3
+        },
+        1000:{
+            items:5
+        }
+    }
+})
+var dist = 1000;
+var items = $(".item");
+for(let i = 0; i < items.length; i++) {
+    if(!items[i].dataset["nivel"])
+        items[i].dataset["nivel"] = Math.floor(Math.random()*1000);
+    var color = getColor (
+        (parseInt(items[i].dataset["nivel"]))/dist
+    );
+    items[i].style["background-color"] = color;
+}
+
+function getColor (disponible) {
+    var regla = parseInt(disponible*510);
+    var azul = 0;
+    var verde = regla < 255 ? 255 : (510 - regla);
+    var rojo = regla < 255 ? regla : 255;
+    return regla == 510 ? "#000000" :
+    `#${rojo.toString(16).padStart(2).replace(/ /g,0)}${verde.toString(16).padStart(2).replace(/ /g,0)}${azul.toString(16).padStart(2).replace(/ /g,0)}`;
+};
+
+</script>
+{% endblock scripts %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+<style>
+    .item {
+        background-color: #c62828;
+        color: black;
+        border-radius: 5px;
+        min-height: 100px;
+    }
+</style>
+{% endblock extra_head %}
