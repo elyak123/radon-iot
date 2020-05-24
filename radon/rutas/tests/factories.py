@@ -1,7 +1,7 @@
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
-from radon.users.tests.factories import UserFactory, GaseraFactory
+from radon.users.tests.factories import UserFactory, GaseraFactory, PrecioFactory
 from radon.iot.tests.factories import DispositivoFactory
 from radon.rutas import models
 
@@ -49,6 +49,7 @@ class PedidoFactory(factory.django.DjangoModelFactory):
     fecha_creacion = factory.LazyAttribute(lambda o: fake.date_time_this_month())
     cantidad = factory.LazyAttribute(lambda o: fake.random_int(min=30, max=100))
     dispositivo = factory.SubFactory(DispositivoFactory)
+    precio = factory.SubFactory(PrecioFactory)
 
     class Meta:
         model = models.Pedido

@@ -25,6 +25,7 @@ class Command(BaseCommand):
             tz = pytz.timezone(settings.TIME_ZONE)
             gaseras = user_factories.GaseraFactory.create_batch(cantidad_gaseras)
             for index, gasera in enumerate(gaseras):
+                precio = user_factories.PrecioFactory(gasera=gasera)
                 usrs = user_factories.UserFactory.create_batch(
                     consumidores_por_gasera, gasera=gasera, tipo='CONSUMIDOR'
                 )
@@ -34,7 +35,7 @@ class Command(BaseCommand):
                 for usr, wisol in zip(usrs, ws):
                     disp = iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
                     rutas_factories.PedidoFactory.create_batch(
-                        pedidos_por_usuario, dispositivo=disp, ruta=None, orden=None
+                        pedidos_por_usuario, dispositivo=disp, ruta=None, orden=None, precio=precio
                     )
                 vehiculos = rutas_factories.VehiculoFactory.create_batch(vechiculos_por_gasera, gasera=gasera)
                 today = datetime.datetime.now()

@@ -2,7 +2,7 @@ import factory
 from factory.fuzzy import FuzzyChoice
 from faker import Faker
 from django.contrib.auth import get_user_model
-from radon.users.models import Gasera
+from radon.users.models import Gasera, Precio
 
 User = get_user_model()
 fake = Faker(['es_MX'])
@@ -15,6 +15,16 @@ class GaseraFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Gasera
         django_get_or_create = ('nombre',)
+
+
+class PrecioFactory(factory.django.DjangoModelFactory):
+    precio = factory.LazyAttribute(lambda o: fake.random_int(min=9, max=18))
+    gasera = factory.SubFactory(GaseraFactory)
+    actual = factory.LazyAttribute(lambda o: fake.boolean())
+
+    class Meta:
+        model = Precio
+        django_get_or_create = ('precio', 'gasera')
 
 
 class UserFactory(factory.django.DjangoModelFactory):
