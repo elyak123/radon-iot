@@ -23,6 +23,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('nombre', models.CharField(max_length=80, unique=True)),
+                ('capacidad_total', models.IntegerField(null=True, verbose_name='Capacidad total de distribucion')),
             ],
         ),
         migrations.CreateModel(

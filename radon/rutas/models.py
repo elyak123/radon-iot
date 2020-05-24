@@ -3,7 +3,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from django.db import connection
 from dynamic_validator import ModelFieldRequiredMixin
-from radon.users.models import Gasera
+from radon.users.models import Gasera, Precio
 from radon.iot.models import Dispositivo
 
 User = get_user_model()
@@ -12,6 +12,10 @@ User = get_user_model()
 class Jornada(models.Model):
     fecha = models.DateField(default=datetime.datetime.now)
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
+
+    def validar_rutas_vs_pedidos(self):
+        pedidos = self.pedido_set.all()
+        pedidos_ruta = Pedido.objects.filter(ruta__jornada=self)
 
     class Meta:
         verbose_name = "Jornada"
@@ -149,6 +153,7 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE, null=True)
     orden = models.IntegerField('Orden del dispositivo dentro de una ruta.', null=True)
+    precio = models.ForeignKey(Precio, on_delete=models.CASCADE)
 
     objects = models.Manager()
     especial = PedidoSet.as_manager()
