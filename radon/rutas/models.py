@@ -152,7 +152,7 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
     cantidad = models.DecimalField(max_digits=12, decimal_places=2)
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
     ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE, null=True)
-    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE)
+    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE, null=True)
     orden = models.IntegerField('Orden del dispositivo dentro de una ruta.', null=True)
     precio = models.ForeignKey(Precio, on_delete=models.CASCADE)
 
