@@ -95,23 +95,21 @@ class PedidoCreateView(generic.CreateView):
     model = Pedido
     form_class = PedidoCreationForm
     template_name = "dashboard/pedido_creation.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["dispositivo"] = Dispositivo.objects.get(
-            wisol__serie = self.kwargs["dispositivo"],
+            wisol__serie=self.kwargs["dispositivo"],
             usuario__gasera=self.request.user.gasera
         )
         now = datetime.now()
-        if not kwargs.get("week"):
+        if not self.kwargs.get("week"):
             context["week"] = f"{now.year}-W{now.isocalendar()[1]}"
         else:
-            semana = kwargs["week"]
+            semana = self.kwargs["week"]
             context["week"] = f"{now.year}-W{semana}"
         context["pedidos"] = Pedido.especial.pedidos_por_dia_por_gasera(
             gasera=self.request.user.gasera,
             semana=context["week"]
         )
         return context
-    
-
