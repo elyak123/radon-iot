@@ -1,21 +1,36 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
+{% load l10n %}
 
 {% block content %}
 <h2>Creción de Pedido</h2>
-<h3 class="text-muted">Usuario: {{ dispositivo.user.firstname }} {{ dispositivo.user.lastname }} </h3>
-<h4 class="text-muted">Semana: {{ semana }}</h4>
+<h3 class="text-muted">Usuario: {{ dispositivo.usuario.first_name }} {{ dispositivo.usuario.last_name }} </h3>
+<h4 class="text-muted">Semana: {{ week }}</h4>
 <form class="form" method="POST">
     {% csrf_token %}
     <h3>Disponibilidad</h3>
     <div class="owl-carousel owl-theme">
         {% for pedido in pedidos %}
-        <div class="item" data-nivel="1000">
+        <div class="item" data-nivel="{{ pedido.1 | unlocalize }}">
             <div class="p-3">
-                <h5>{{ pedido.0|data }}</h5>
+                <h5>{{ pedido.0 | date:'d/m/Y' }}</h5>
+                <p>Cantidad reservada: {{ pedido.1 }}L</p>
+                <p>Cantidad restante: 3,455.00</p>
             </div>
         </div>
         {% endfor %}
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">$</span>
+        </div>
+        <input id="monto" type="number" step="0.01" min="0.00" class="form-control" placeholder="Introduzca el monto a cargar">
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Litros</span>
+        </div>
+        <input id="cantidad" type="number" step="0.01" min="0.00" class="form-control" placeholder="Introduzca la cantidad de gas a cargar">
     </div>
     <button type="submit" class="btn btn-primary">Actualizar</button>
 </form>
@@ -25,8 +40,17 @@
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script type="text/javascript">
+    var factor = 10.23; // Precio por litro.
+    $("#monto").on("change keyup", function(evt){
+        $("#cantidad").val((evt.target.value/factor).toFixed(2));
+    });
+    $("#cantidad").on("change keyup", function(evt){
+        $("#monto").val((evt.target.value*factor).toFixed(2));
+    });
+</script>
+<script type="text/javascript">
 $('.owl-carousel').owlCarousel({
-    loop:true,
+    loop:false,
     margin:10,
     responsive:{
         0:{
@@ -40,11 +64,11 @@ $('.owl-carousel').owlCarousel({
         }
     }
 })
-var dist = 1000;
+var dist = 10000;
 var items = $(".item");
 for(let i = 0; i < items.length; i++) {
     if(!items[i].dataset["nivel"])
-        items[i].dataset["nivel"] = Math.floor(Math.random()*1000);
+        items[i].dataset["nivel"] = Math.floor(Math.random()*dist);
     var color = getColor (
         (parseInt(items[i].dataset["nivel"]))/dist
     );
