@@ -65,6 +65,7 @@ class Migration(migrations.Migration):
                 ('orden', models.IntegerField(null=True, verbose_name='Orden del dispositivo dentro de una ruta.')),
                 ('dispositivo', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='iot.Dispositivo')),
                 ('ruta', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='rutas.Ruta')),
+                ('jornada', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='rutas.Jornada')),
             ],
             options={
                 'verbose_name': 'Pedido',
