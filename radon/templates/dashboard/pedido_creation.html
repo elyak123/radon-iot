@@ -3,13 +3,16 @@
 
 {% block content %}
 <h2>Creción de Pedido</h2>
+<h3 class="text-muted">Usuario: {{ dispositivo.user.firstname }} {{ dispositivo.user.lastname }} </h3>
+<h4 class="text-muted">Semana: {{ semana }}</h4>
 <form class="form" method="POST">
     {% csrf_token %}
     <h3>Disponibilidad</h3>
     <div class="owl-carousel owl-theme">
+        {{ pedidos }}
         <div class="item" data-nivel="1000">
             <div class="p-3">
-                <h5>Sábado 23-05 (hoy)</h5>
+                <h5>Sábado 23-05</h5>
             </div>
         </div>
         <div class="item">
@@ -75,6 +78,9 @@ for(let i = 0; i < items.length; i++) {
         (parseInt(items[i].dataset["nivel"]))/dist
     );
     items[i].style["background-color"] = color;
+    if(color=="#000000") {
+        items[i].style["color"] = "white"
+    }
 }
 
 function getColor (disponible) {
