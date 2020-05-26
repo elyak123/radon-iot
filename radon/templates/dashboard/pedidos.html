@@ -20,7 +20,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script type="text/javascript">
     $(".selector").on("change", function(evt){
-        var semana = evt.target.value.slice(-2);
+        var semana = evt.target.value;
         var url = "{% url 'dashboard:histograma_pedidos' %}";
         window.location.href = url+semana;
     });
