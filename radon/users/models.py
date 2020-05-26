@@ -32,7 +32,7 @@ class Precio(models.Model):
         unique_together = ('gasera', 'actual')
 
     def __str__(self):
-        return f'${self.precio} {self.gasera[:16]}... Actual: {self.actual}'
+        return f'${self.precio} {self.gasera.nombre[:16]}... Actual: {self.actual}'
 
 
 class User(AbstractUser):

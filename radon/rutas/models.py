@@ -112,7 +112,7 @@ class PedidoSet(models.QuerySet):
         WHERE "rutas_jornada"."fecha" BETWEEN %(start_date)s AND %(finish_date)s
         AND "rutas_jornada"."gasera_id" = %(gasera_id)s
         GROUP BY fecha
-        ORDER BY fecha DESC;
+        ORDER BY fecha;
         '''
         with connection.cursor() as cursor:
             cursor.execute(sql, {

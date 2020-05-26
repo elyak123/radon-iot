@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 {% load l10n %}
+{% load rutastags %}
 
 {% block content %}
 <h2>Creción de Pedido</h2>
@@ -13,9 +14,10 @@
         {% for pedido in pedidos %}
         <div class="item" data-nivel="{{ pedido.1 | unlocalize }}">
             <div class="p-3">
-                <h5>{{ pedido.0 | date:'d/m/Y' }}</h5>
-                <p>Cantidad reservada: {{ pedido.1 }}L</p>
-                <p>Cantidad restante: 3,455.00</p>
+                <h5>{{ pedido.0|date:'d/m/Y' }}</h5>
+                <p>{{ pedido.0|date:'l' }}</p>
+                <p>Comprometido: {{ pedido.1 }}L</p>
+                {% if gasera.capacidad_total %}<p>Capacidad: {{ gasera.capacidad_total|subtract:pedido.1 }}L</p>{% endif %}
             </div>
         </div>
         {% endfor %}
@@ -40,7 +42,7 @@
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
 <script type="text/javascript">
-    var factor = 10.23; // Precio por litro.
+    var factor = {{ gasera.precio_actual.precio }}; // Precio por litro.
     $("#monto").on("change keyup", function(evt){
         $("#cantidad").val((evt.target.value/factor).toFixed(2));
     });
@@ -64,7 +66,7 @@ $('.owl-carousel').owlCarousel({
         }
     }
 })
-var dist = 10000;
+var dist = {% if gasera.capacidad_total %}{{ gasera.capacidad_total|unlocalize }}{% else %}0{% endif %} || Infinity;
 var items = $(".item");
 for(let i = 0; i < items.length; i++) {
     if(!items[i].dataset["nivel"])

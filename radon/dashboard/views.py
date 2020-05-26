@@ -82,8 +82,7 @@ class PedidoView(generic.TemplateView):
         if not kwargs["week"]:
             context["semana"] = f"{now.year}-W{now.isocalendar()[1]}"
         else:
-            semana = kwargs["week"]
-            context["semana"] = f"{now.year}-W{semana}"
+            context["semana"] = kwargs["week"]
         context["pedidos"] = Pedido.especial.pedidos_por_dia_por_gasera(
             gasera=self.request.user.gasera,
             semana=context["semana"]
@@ -102,12 +101,12 @@ class PedidoCreateView(generic.CreateView):
             wisol__serie=self.kwargs["dispositivo"],
             usuario__gasera=self.request.user.gasera
         )
+        context['gasera'] = self.request.user.gasera
         now = datetime.now()
         if not self.kwargs.get("week"):
             context["week"] = f"{now.year}-W{now.isocalendar()[1]}"
         else:
-            semana = self.kwargs["week"]
-            context["week"] = f"{now.year}-W{semana}"
+            context["week"] = self.kwargs["week"]
         context["pedidos"] = Pedido.especial.pedidos_por_dia_por_gasera(
             gasera=self.request.user.gasera,
             semana=context["week"]
