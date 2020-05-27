@@ -13,9 +13,8 @@ class Jornada(models.Model):
     fecha = models.DateField(default=datetime.datetime.now)
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
 
-    def validar_rutas_vs_pedidos(self):
-        pedidos = self.pedido_set.all()
-        pedidos_ruta = Pedido.objects.filter(ruta__jornada=self)
+    def geometria_actualizada(self):
+        return self.pedido_set.filter(actualizado=False).exists()
 
     class Meta:
         verbose_name = "Jornada"
@@ -45,7 +44,7 @@ class Ruta(models.Model):
     vehiculo = models.ManyToManyField(Vehiculo)
 
     def cantidad_pedidos(self):
-        return self.pedido_set.all().count()
+        return self.jornada.pedido_set.all().count()
 
     class Meta:
         verbose_name = "Ruta"
@@ -151,10 +150,10 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
     fecha_creacion = models.DateTimeField(auto_now=True)
     cantidad = models.DecimalField(max_digits=12, decimal_places=2)
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
-    ruta = models.ForeignKey(Ruta, on_delete=models.CASCADE, null=True)
     jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE, null=True)
     orden = models.IntegerField('Orden del dispositivo dentro de una ruta.', null=True)
     precio = models.ForeignKey(Precio, on_delete=models.CASCADE)
+    actualizado = models.BooleanField(default=False)
 
     objects = models.Manager()
     especial = PedidoSet.as_manager()
