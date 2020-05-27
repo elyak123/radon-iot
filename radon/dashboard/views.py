@@ -125,5 +125,5 @@ class PedidoCreateView(generic.CreateView):
         initial_obj["precio"] = precio
         return initial_obj
 
-        def get_success_url(self):
-            return reverse('dashboard:histograma_pedidos')
+    def get_success_url(self):
+        return reverse('dashboard:histograma_pedidos')
