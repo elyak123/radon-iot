@@ -37,8 +37,7 @@ class Command(BaseCommand):
                 for usr, wisol in zip(usrs, ws):
                     disp = iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
                     rutas_factories.PedidoFactory.create_batch(
-                        # ¿Aqui?
-                        pedidos_por_usuario, dispositivo=disp, jornada=None, ruta=None, orden=None, precio=precio
+                        pedidos_por_usuario, dispositivo=disp, jornada=None, actualizado=False, orden=None, precio=precio
                     )
                 vehiculos = rutas_factories.VehiculoFactory.create_batch(vechiculos_por_gasera, gasera=gasera)
                 today = datetime.datetime.now()
@@ -49,15 +48,14 @@ class Command(BaseCommand):
                         ruta = rutas_factories.RutaFactory(jornada=jornada)
                         ruta.vehiculo.add(vehiculo)
                         for idx in range(pedidos_por_ruta):
-                            # ¿Aqui?
                             ped = Pedido.objects.filter(
                                 dispositivo__usuario__gasera=gasera,
-                                ruta__isnull=True
+                                actualizado=False
                                 ).order_by('-fecha_creacion').first()
                             if ped:
                                 ped.jornada = jornada
                                 # ¿Aqui?
-                                ped.ruta = ruta
+                                ped.actualizado = True
                                 ped.orden = idx
                                 ped.save()
                                 ped.dispositivo.calendarizado = True
