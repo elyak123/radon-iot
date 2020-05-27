@@ -105,11 +105,10 @@ class PedidoSet(models.QuerySet):
         gasera_id = gasera.id
         sql = '''
         SELECT "rutas_jornada"."fecha" as fecha, SUM(cantidad) AS cantidad, MIN("rutas_jornada"."id") as id
-        FROM rutas_pedido
-        INNER JOIN "rutas_ruta" ON "rutas_pedido"."ruta_id" = "rutas_ruta"."id"
-        INNER JOIN "rutas_jornada" ON "rutas_ruta"."jornada_id" = "rutas_jornada"."id"
+        FROM rutas_pedido, rutas_jornada
         WHERE "rutas_jornada"."fecha" BETWEEN %(start_date)s AND %(finish_date)s
         AND "rutas_jornada"."gasera_id" = %(gasera_id)s
+        AND rutas_pedido.jornada_id = rutas_jornada.id
         GROUP BY fecha
         ORDER BY fecha;
         '''
