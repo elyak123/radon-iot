@@ -111,4 +111,19 @@ class PedidoCreateView(generic.CreateView):
             gasera=self.request.user.gasera,
             semana=context["week"]
         )
+        context["now"] = datetime.now().date()
         return context
+    
+    def get_initial(self):
+        initial_obj = super(PedidoCreateView, self).get_initial()
+        dispositivo = Dispositivo.objects.get(
+            wisol__serie=self.kwargs["dispositivo"],
+            usuario__gasera=self.request.user.gasera
+        )
+        precio = self.request.user.gasera.precio_actual
+        initial_obj["dispositivo"] = dispositivo
+        initial_obj["precio"] = precio
+        return initial_obj
+
+        def get_success_url(self):
+            return reverse('dashboard:histograma_pedidos')

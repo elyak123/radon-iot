@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 vehiculos = rutas_factories.VehiculoFactory.create_batch(vechiculos_por_gasera, gasera=gasera)
                 today = datetime.datetime.now()
                 for day in range(1, jornadas_por_gasera + 1):
-                    fecha = today + datetime.timedelta(days=-day)
+                    fecha = today + datetime.timedelta(days=+day)
                     jornada = rutas_factories.JornadaFactory(gasera=gasera, fecha=fecha)
                     for vehiculo in vehiculos:
                         ruta = rutas_factories.RutaFactory(jornada=jornada)

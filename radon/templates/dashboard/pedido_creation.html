@@ -9,19 +9,25 @@
 <h4 class="text-muted">Semana: {{ week }}</h4>
 <form class="form" method="POST">
     {% csrf_token %}
+    {% bootstrap_form form %}
     <h3>Disponibilidad</h3>
     <div class="owl-carousel owl-theme">
         {% for pedido in pedidos %}
+        {% if pedido.0 >= now %}
         <div class="item" data-nivel="{{ pedido.1 | unlocalize }}">
             <div class="p-3">
-                <h5>{{ pedido.0|date:'d/m/Y' }}</h5>
-                <p>{{ pedido.0|date:'l' }}</p>
-                <p>Comprometido: {{ pedido.1 }}L</p>
-                {% if gasera.capacidad_total %}<p>Capacidad: {{ gasera.capacidad_total|subtract:pedido.1 }}L</p>{% endif %}
+                <a href="#" class="select_jornada text-decoration-none text-dark" data-id="{{ pedido.2 }}">
+                    <h5>{{ pedido.0|date:'d/m/Y' }}</h5>
+                    <p>{{ pedido.0|date:'l' }}</p>
+                    <p>Comprometido: {{ pedido.1 }}L</p>
+                    {% if gasera.capacidad_total %}<p>Capacidad: {{ gasera.capacidad_total|subtract:pedido.1 }}L</p>{% endif %}
+                </a>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
+    <br>
     <div class="input-group mb-3">
         <div class="input-group-prepend">
             <span class="input-group-text">$</span>
@@ -44,10 +50,11 @@
 <script type="text/javascript">
     var factor = {{ gasera.precio_actual.precio }}; // Precio por litro.
     $("#monto").on("change keyup", function(evt){
-        $("#cantidad").val((evt.target.value/factor).toFixed(2));
+        $("#cantidad, #id_cantidad").val((evt.target.value/factor).toFixed(2));
     });
     $("#cantidad").on("change keyup", function(evt){
         $("#monto").val((evt.target.value*factor).toFixed(2));
+        $("#id_cantidad").val(evt.target.value);
     });
 </script>
 <script type="text/javascript">
@@ -89,6 +96,16 @@ function getColor (disponible) {
     `#${rojo.toString(16).padStart(2).replace(/ /g,0)}${verde.toString(16).padStart(2).replace(/ /g,0)}${azul.toString(16).padStart(2).replace(/ /g,0)}`;
 };
 
+$(".item").on("click", function(evt){
+    $(".selected").removeClass("selected");
+    $(evt.currentTarget).addClass("selected");
+});
+
+$(".select_jornada").on("click", function(evt){
+    evt.preventDefault();
+    $("#id_jornada").val(evt.currentTarget.dataset["id"]);
+});
+
 </script>
 {% endblock scripts %}
 
@@ -100,6 +117,12 @@ function getColor (disponible) {
         color: black;
         border-radius: 5px;
         min-height: 100px;
+        transition: 0.2s;
+    }
+    .selected {
+        transform: scale(0.95);
+        border: 3px solid;
+        box-shadow: inset 0px 0px 7px 0px;
     }
 </style>
 {% endblock extra_head %}

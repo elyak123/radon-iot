@@ -105,7 +105,7 @@ class PedidoSet(models.QuerySet):
         finish_date = str(datetime.datetime.strptime(semana + '-0', "%Y-W%W-%w"))
         gasera_id = gasera.id
         sql = '''
-        SELECT "rutas_jornada"."fecha" as fecha, SUM(cantidad) AS cantidad
+        SELECT "rutas_jornada"."fecha" as fecha, SUM(cantidad) AS cantidad, MIN("rutas_jornada"."id") as id
         FROM rutas_pedido
         INNER JOIN "rutas_ruta" ON "rutas_pedido"."ruta_id" = "rutas_ruta"."id"
         INNER JOIN "rutas_jornada" ON "rutas_ruta"."jornada_id" = "rutas_jornada"."id"

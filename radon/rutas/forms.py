@@ -6,4 +6,10 @@ class PedidoCreationForm(forms.ModelForm):
 
     class Meta:
         model = Pedido    
-        fields = '__all__'
+        fields = ["cantidad", "dispositivo", "precio", "jornada"]
+        widgets = {
+            "cantidad": forms.HiddenInput(),
+            "dispositivo": forms.HiddenInput(),
+            "precio": forms.HiddenInput(),
+            "jornada": forms.HiddenInput()
+        }
