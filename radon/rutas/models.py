@@ -160,7 +160,7 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
 
     CONDITIONAL_REQUIRED_FIELDS = [
         (
-            lambda instance: bool(instance.ruta), ['orden'],
+            lambda instance: actualizado, ['orden'],
         ),
     ]
 
