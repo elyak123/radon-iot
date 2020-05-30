@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.views import generic
 from radon.users.auth import AuthenticationTestMixin
 from radon.iot.models import Dispositivo
-from radon.rutas.models import Pedido
+from radon.rutas.models import Pedido, Jornada
 from radon.iot.forms import DispositivoForm
 from datetime import datetime
 
@@ -11,11 +11,25 @@ from radon.rutas.forms import PedidoCreationForm
 # Create your views here.
 
 
-class DashboardView(generic.TemplateView, AuthenticationTestMixin):
+class DashboardView(AuthenticationTestMixin, generic.DetailView):
     template_name = "dashboard/index.html"
+    model = Jornada
+
+    def get_object(self, queryset=None):
+        now = datetime.now()
+        self.object = self.model.objects.get(fecha=now, gasera=self.request.user.gasera)
+        return self.object
+
+    def get_context_data(self, **kwargs):
+        context = super(DashboardView, self).get_context_data(**kwargs)
+        if not self.object.geometria_actualizada:
+            pass  # aqui va la peticion...
+        context['dispositivos'] = Dispositivo.especial.calendarizados_geojson(self.object)
+        context['rutas'] = self.object.rutas_geojson()
+        return context
 
 
-class DispositivoListView(generic.ListView):
+class DispositivoListView(AuthenticationTestMixin, generic.ListView):
     paginate_by = 10
     model = Dispositivo
     template_name = "dashboard/dispositivo_list.html"
@@ -23,11 +37,11 @@ class DispositivoListView(generic.ListView):
     def get_queryset(self):
         query = self.model.objects.filter(
             usuario__gasera=self.request.user.gasera
-        )
+        ).select_related('wisol').order_by('wisol__serie')
         return query
 
 
-class DispositivoDetailView(generic.DetailView):
+class DispositivoDetailView(AuthenticationTestMixin, generic.DetailView):
     model = Dispositivo
     template_name = "dashboard/dispositivo_detail.html"
 
@@ -42,7 +56,7 @@ class DispositivoDetailView(generic.DetailView):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoUpdateView(generic.UpdateView):
+class DispositivoUpdateView(AuthenticationTestMixin, generic.UpdateView):
     form_class = DispositivoForm
     model = Dispositivo
     template_name = "dashboard/dispositivo_update.html"
@@ -58,7 +72,7 @@ class DispositivoUpdateView(generic.UpdateView):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoDeleteView(generic.DeleteView):
+class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView):
     model = Dispositivo
     template_name = "dashboard/dispositivo_delete.html"
 
@@ -73,7 +87,7 @@ class DispositivoDeleteView(generic.DeleteView):
         return reverse('dashboard:dispositivo_list', kwargs={'pk': self.object.pk})
 
 
-class PedidoView(generic.TemplateView):
+class PedidoView(AuthenticationTestMixin, generic.TemplateView):
     template_name = "dashboard/pedidos.html"
 
     def get_context_data(self, **kwargs):
@@ -90,7 +104,7 @@ class PedidoView(generic.TemplateView):
         return context
 
 
-class PedidoCreateView(generic.CreateView):
+class PedidoCreateView(AuthenticationTestMixin, generic.CreateView):
     model = Pedido
     form_class = PedidoCreationForm
     template_name = "dashboard/pedido_creation.html"
@@ -113,7 +127,7 @@ class PedidoCreateView(generic.CreateView):
         )
         context["now"] = datetime.now().date()
         return context
-    
+
     def get_initial(self):
         initial_obj = super(PedidoCreateView, self).get_initial()
         dispositivo = Dispositivo.objects.get(

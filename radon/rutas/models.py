@@ -1,4 +1,5 @@
 import datetime
+from django.core.serializers import serialize
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from django.db import connection
@@ -14,7 +15,10 @@ class Jornada(models.Model):
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
 
     def geometria_actualizada(self):
-        return self.pedido_set.filter(actualizado=False).exists()
+        return not self.pedido_set.filter(actualizado=False).exists()
+
+    def rutas_geojson(self):
+        return serialize('geojson', self.ruta_set.all(), geometry_field='geometry')
 
     class Meta:
         verbose_name = "Jornada"

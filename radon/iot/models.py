@@ -1,4 +1,5 @@
-from django.db.models import OuterRef, Subquery, F
+from django.db.models import OuterRef, Exists, Subquery, F
+from django.core.serializers import serialize
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from radon.users.utils import get_default_user
@@ -44,6 +45,20 @@ class DispositivoSet(models.QuerySet):
 
     def calendarizables(self, gasera):
         return self.filter(ultima_lectura__lte=F(20), calendarizado=False, gasera=gasera).anotar_lecturas()
+
+    def anotar_pedidos_calendarizados(self, jornada):
+        from radon.rutas.models import Pedido
+        pedidos = Pedido.objects.filter(dispositivo=OuterRef('pk'), jornada=jornada)
+        return self.annotate(pedidos_calendarizados=Exists(pedidos))
+
+    def calendarizados(self, jornada):
+        return self.anotar_pedidos_calendarizados(jornada).filter(
+            usuario__gasera=jornada.gasera,
+            pedidos_calendarizados=True
+        )
+
+    def calendarizados_geojson(self, jornada):
+        return serialize('geojson', self.calendarizados(jornada), geometry_field='location')
 
 
 class Dispositivo(models.Model):

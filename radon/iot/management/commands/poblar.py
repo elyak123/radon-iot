@@ -8,7 +8,7 @@ from radon.users.tests import factories as user_factories
 from radon.iot.models import Wisol, Dispositivo
 from radon.iot.tests import factories as iot_factories
 from radon.rutas.tests import factories as rutas_factories
-from radon.rutas.models import Pedido
+from radon.rutas.models import Pedido, Jornada
 
 
 class Command(BaseCommand):
@@ -16,14 +16,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if settings.DEBUG:
             call_command('flush')
-            cantidad_gaseras = 4
-            consumidores_por_gasera = 18
-            vechiculos_por_gasera = 12
-            jornadas_por_gasera = 30
-            pedidos_por_ruta = 8
+            cantidad_gaseras = 1
+            vehiculos_por_gasera = 6
+            pedidos_por_ruta = 5
+            consumidores_por_gasera = vehiculos_por_gasera * pedidos_por_ruta
+            jornadas_por_gasera = consumidores_por_gasera
             cantidad_wisol = cantidad_gaseras * consumidores_por_gasera
-            pedidos_por_usuario = int(
-                (jornadas_por_gasera * vechiculos_por_gasera * pedidos_por_ruta) / consumidores_por_gasera)
             tz = pytz.timezone(settings.TIME_ZONE)
             gaseras = user_factories.GaseraFactory.create_batch(cantidad_gaseras)
             iot_factories.WisolFactory.create_batch(cantidad_wisol)
@@ -35,31 +33,25 @@ class Command(BaseCommand):
                 usuario_cliente = user_factories.UserFactory(gasera=gasera, tipo='CLIENTE')
                 ws = Wisol.objects.filter(dispositivo__isnull=True)
                 for usr, wisol in zip(usrs, ws):
-                    disp = iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
-                    rutas_factories.PedidoFactory.create_batch(
-                        pedidos_por_usuario, dispositivo=disp, jornada=None, actualizado=False, orden=None, precio=precio
-                    )
-                vehiculos = rutas_factories.VehiculoFactory.create_batch(vechiculos_por_gasera, gasera=gasera)
+                    iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
+                vehiculos = rutas_factories.VehiculoFactory.create_batch(vehiculos_por_gasera, gasera=gasera)
                 today = datetime.datetime.now()
-                for day in range(1, jornadas_por_gasera + 1):
+                for day in range(jornadas_por_gasera + 1):
                     fecha = today + datetime.timedelta(days=+day)
                     jornada = rutas_factories.JornadaFactory(gasera=gasera, fecha=fecha)
                     for vehiculo in vehiculos:
                         ruta = rutas_factories.RutaFactory(jornada=jornada)
                         ruta.vehiculo.add(vehiculo)
-                        for idx in range(pedidos_por_ruta):
-                            ped = Pedido.objects.filter(
-                                dispositivo__usuario__gasera=gasera,
-                                actualizado=False
-                                ).order_by('-fecha_creacion').first()
-                            if ped:
-                                ped.jornada = jornada
-                                # ¿Aqui?
-                                ped.actualizado = True
-                                ped.orden = idx
-                                ped.save()
-                                ped.dispositivo.calendarizado = True
-                                ped.dispositivo.save()
+                jornadas = Jornada.objects.filter(gasera=gasera)
+                dispositivos = Dispositivo.objects.filter(usuario__gasera=gasera)
+                for idx, jor in enumerate(jornadas):
+                    for dis in dispositivos:
+                        rutas_factories.PedidoFactory(
+                            dispositivo=dis, jornada=jor,
+                            actualizado=True, orden=idx, precio=precio
+                        )
+                        dis.calendarizado = True
+                        dis.save()
                 self.stdout.write(self.style.SUCCESS(
                     f'Usuario consumidor: {usrs[0].username}\n'
                     f'Usuario cliente: {usuario_cliente.username}\n'
