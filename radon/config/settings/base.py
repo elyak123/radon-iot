@@ -46,6 +46,7 @@ ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
 FAVICON_URL = ''
 ACCOUNT_ALLOW_REGISTRATION = False
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+LOGIN_URL = 'account_login'
 
 # Application definition
 

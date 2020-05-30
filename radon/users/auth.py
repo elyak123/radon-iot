@@ -9,7 +9,6 @@ User = get_user_model()
 
 class AuthenticationTestMixin(UserPassesTestMixin, ContextManager):
 
-    login_url = settings.LOGIN_URL
     permiso_requerido = 1
     asignacion_requerida = False
     change_company_ability = True
@@ -37,9 +36,7 @@ class AuthenticationTestMixin(UserPassesTestMixin, ContextManager):
         if self.request.user.is_authenticated and self.request.user.tipo == "CLIENTE":
             return True
         else:
-            raise PermissionDenied(
-                'El usuario {} no tiene permiso para ver esta página.'.format(self.request.user.username)
-            )
+            return False
 
     def auth_access(self):
         return self.request.user.nivel_acceso.nivel
