@@ -5,6 +5,7 @@ app_name = 'dashboard'
 
 urlpatterns = [
     path(r'', views.DashboardView.as_view(), name='inicio'),
+    re_path(r'^geojsons/(?P<fecha>\d{4}-\d{2}-\d{2})/$', views.get_geojsons, name="geojsons"),
     path(r'dispositivos/', views.DispositivoListView.as_view(), name='dispositivo_list'),
     path(r'dispositivos/<int:pk>/', views.DispositivoDetailView.as_view(), name='dispositivo_detail'),
     path(r'dispositivos/eliminar/<int:pk>/', views.DispositivoDeleteView.as_view(), name='dispositivo_delete'),

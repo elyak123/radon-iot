@@ -1,10 +1,12 @@
 from django.urls import reverse
 from django.views import generic
+from django.http import JsonResponse
 from radon.users.auth import AuthenticationTestMixin
 from radon.iot.models import Dispositivo
 from radon.rutas.models import Pedido, Jornada
 from radon.iot.forms import DispositivoForm
 from datetime import datetime
+import json
 
 from radon.rutas.forms import PedidoCreationForm
 
@@ -27,6 +29,23 @@ class DashboardView(AuthenticationTestMixin, generic.DetailView):
         context['dispositivos'] = Dispositivo.especial.calendarizados_geojson(self.object)
         context['rutas'] = self.object.rutas_geojson()
         return context
+
+
+def get_geojsons(request, fecha):
+    obj = {}
+    jornada = Jornada.objects.get(
+        fecha=fecha,
+        gasera=request.user.gasera
+    )
+    obj['dispositivos'] = json.loads(
+        Dispositivo.especial.calendarizados_geojson(
+            jornada
+        )
+    )
+    obj['rutas '] = json.loads(
+        jornada.rutas_geojson()
+    )
+    return JsonResponse(obj)
 
 
 class DispositivoListView(AuthenticationTestMixin, generic.ListView):
