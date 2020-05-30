@@ -39,6 +39,7 @@ class UserCreateView(CreateView, AuthenticationTestMixin):
 
 
 class UserListView(ListView, AuthenticationTestMixin):
+    paginate_by = 10
     model = User
     template_name = "users/user_list.html"
 

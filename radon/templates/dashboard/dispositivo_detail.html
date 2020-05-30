@@ -38,6 +38,23 @@
         <h4 class="text-muted">El dispositivo aún no ha realizado lecturas.</h4>
     {% endif %}
 </div>
+<div class="mt-5">
+    <h3>Pedidos del dispositivo:</h3>
+    {% if dispositivo.pedido_set.exists %}
+        <div class="list-group">
+            {% for pedido in dispositivo.pedido_set.all %}
+            <div class="list-group-item list-group-item-action flex-column align-items-start my-2">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Fecha de pedido: {{ pedido.fecha_creacion }}</h5>
+                    <p  class="text-muted">{{ pedido.cantidad }}l</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <h4 class="text-muted">El dispositivo aún no ha realizado lecturas.</h4>
+    {% endif %}
+</div>
 {% endblock content %}
 {% block scripts%}
 <script>

@@ -117,8 +117,9 @@ class PedidoCreateView(AuthenticationTestMixin, generic.CreateView):
         )
         context['gasera'] = self.request.user.gasera
         now = datetime.now()
+        context["current_week"] = f"{now.year}-W{now.isocalendar()[1]}"
         if not self.kwargs.get("week"):
-            context["week"] = f"{now.year}-W{now.isocalendar()[1]}"
+            context["week"] = context["current_week"]
         else:
             context["week"] = self.kwargs["week"]
         context["pedidos"] = Pedido.especial.pedidos_por_dia_por_gasera(

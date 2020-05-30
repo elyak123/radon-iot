@@ -29,5 +29,35 @@
 <h4>¡Lo sentimos!</h4><h5>Usted aún no cuenta con usuarios registrados.</h5>
 {% endif %}
 
+
+{% if is_paginated %}
+<hr>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center pagination-sm">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+              <a class="page-link" href="{% url 'users:user_list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+          </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        {% endif %} 
+        {% for object in page_obj.paginator.page_range %}
+            <li class="page-item"><a class="page-link" href="{% url 'users:user_list' %}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+        {% endfor %} 
+        {% if page_obj.has_next %}
+          <li class="page-item">
+              <a class="page-link" href="{% url 'users:user_list' %}?page={{ page_obj.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
 {% endblock content %}
 
