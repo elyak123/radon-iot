@@ -9,12 +9,20 @@
 <script>
     var map;
     var jsonData = null;
+    var feature;
     function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
             zoom: 13,
-            center: {lng: -102.29012, lat: 21.84504}
+            center: {lng: -102.36134, lat: 21.8857199}
         });
-        map.data.addGeoJson(jsonData["dispositivos"]);
+        feature = map.data.addGeoJson(jsonData["dispositivos"]);
+    }
+
+    function overrideMap() {
+        for(var i=0; i<feature.length; i++){
+            map.data.remove(feature[i]);
+        }
+        feature = map.data.addGeoJson(jsonData["dispositivos"]);
     }
 
     function CargaScript() {
@@ -23,7 +31,7 @@
       document.body.appendChild(script);
     }
 
-    function cargarJson(hoy=new Date()) {
+    function cargarJson(hoy=new Date(), nuevo=true) {
         var str = hoy.getFullYear()+"-"+a_dos_digitos(hoy.getMonth()+1)+"-"+a_dos_digitos(hoy.getDate());
         $.when(
             $.ajax({
@@ -31,7 +39,11 @@
             })
         ).done(function(data){
             jsonData = data;
-            CargaScript();
+            if(nuevo){
+                CargaScript();
+            } else {
+                overrideMap();
+            }
         })
     }
 
@@ -44,7 +56,7 @@
     }
 
     $("#datepick").on("change", function(evt){
-        cargarJson(new Date(evt.currentTarget.value));
+        cargarJson(new Date(evt.currentTarget.value), false);
     });
 </script>
 {% endblock scripts %}
