@@ -69,8 +69,8 @@ class DispositivoDetailView(AuthenticationTestMixin, generic.DetailView):
     template_name = "dashboard/dispositivo_detail.html"
 
     def get_object(self, queryset=None):
-        self.object = self.model.objects.get(
-            pk=self.kwargs['pk'],
+        self.object = self.model.objects.select_related('usuario').select_related('wisol').get(
+            wisol__serie=self.kwargs['serie'],
             usuario__gasera=self.request.user.gasera
         )
         return self.object
@@ -86,7 +86,7 @@ class DispositivoUpdateView(AuthenticationTestMixin, generic.UpdateView):
 
     def get_object(self, queryset=None):
         self.object = self.model.objects.get(
-            pk=self.kwargs['pk'],
+            wisol__serie=self.kwargs['serie'],
             usuario__gasera=self.request.user.gasera
         )
         return self.object
@@ -101,7 +101,7 @@ class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView):
 
     def get_object(self, queryset=None):
         self.object = self.model.objects.get(
-            pk=self.kwargs['pk'],
+            wisol__serie=self.kwargs['serie'],
             usuario__gasera=self.request.user.gasera
         )
         return self.object

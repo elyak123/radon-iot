@@ -77,6 +77,9 @@ class Dispositivo(models.Model):
     def lecturas_ordenadas(self):
         return self.lectura_set.order_by('-fecha')
 
+    def pedidos_ordenados(self):
+        return self.pedido_set.all().select_related('precio').select_related('jornada').order_by('-jornada__fecha')
+
     class Meta:
         verbose_name = "Dispositivo"
         verbose_name_plural = "Dispositivos"

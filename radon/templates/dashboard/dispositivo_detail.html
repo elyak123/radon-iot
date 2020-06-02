@@ -40,10 +40,10 @@
     <h3>Pedidos del dispositivo:</h3>
     {% if dispositivo.pedido_set.exists %}
         <div class="list-group">
-            {% for pedido in dispositivo.pedido_set.all %}
+            {% for pedido in dispositivo.pedidos_ordenados %}
             <div class="list-group-item list-group-item-action flex-column align-items-start my-2">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Fecha de pedido: {{ pedido.fecha_creacion }}</h5>
+                    <h5 class="mb-1">Fecha de pedido: {{ pedido.jornada.fecha }}</h5>
                     <p  class="text-muted">{{ pedido.cantidad }} L</p>
                     <p  class="text-muted">$ {{ pedido.pedido_en_dinero }}</p>
                 </div>
