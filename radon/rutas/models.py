@@ -33,6 +33,7 @@ class Vehiculo(models.Model):
     n_economico = models.CharField(max_length=12, blank=True)
     operador = models.ForeignKey(User, on_delete=models.CASCADE)
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
+    capacidad = models.IntegerField('Capacidad del vehiculo en litros')
 
     class Meta:
         verbose_name = "Vehiculo"
@@ -173,3 +174,6 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
 
     def __str__(self):
         return 'Pedido: {}'.format(self.cantidad)
+
+    def pedido_en_dinero(self):
+        return round(self.cantidad * self.precio.precio, 2)
