@@ -22,6 +22,7 @@ class VehiculoFactory(factory.django.DjangoModelFactory):
     n_economico = factory.LazyAttribute(lambda o: fake.bothify(text='?? ##'))
     operador = factory.SubFactory(UserFactory, tipo='OPERARIO')
     gasera = factory.SubFactory(GaseraFactory)
+    capacidad = factory.LazyAttribute(lambda o: fake.random_element(elements=[5000, 8500, 12500]))
 
     class Meta:
         model = models.Vehiculo

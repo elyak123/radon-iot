@@ -37,6 +37,7 @@ class Migration(migrations.Migration):
                 ('placa', models.CharField(max_length=12)),
                 ('n_economico', models.CharField(blank=True, max_length=12)),
                 ('operador', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('capacidad', models.IntegerField(verbose_name='Capacidad del vehiculo en litros')),
             ],
             options={
                 'verbose_name': 'Vehiculo',
