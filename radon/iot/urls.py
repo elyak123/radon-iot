@@ -1,4 +1,5 @@
 from django.urls import path, include
+from django.conf import settings
 from rest_framework import routers
 from . import views
 
@@ -15,3 +16,8 @@ urlpatterns = [
     path('disponibilidad-wisol/', views.wisol_initial_validation, name='dispwisol'),
     path(r'', include(router.urls)),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        path('mock_lectura/', views.mock_lectura, name='mock_lectura'),
+    ]
