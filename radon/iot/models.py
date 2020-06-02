@@ -85,7 +85,7 @@ class Dispositivo(models.Model):
         verbose_name_plural = "Dispositivos"
 
     def __str__(self):
-        return 'Dispositivo {}'.format(self.wisol.serie)
+        return 'Serie: {}'.format(self.wisol.serie)
 
 
 class Instalacion(models.Model):

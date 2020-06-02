@@ -35,6 +35,18 @@ class Precio(models.Model):
         return f'${self.precio} {self.gasera.nombre[:16]}... Actual: {self.actual}'
 
 
+class UserSet(models.QuerySet):
+
+    def leads(self, gasera):
+        from radon.iot.models import Dispositivo
+        disps = Dispositivo.especial.filter(
+            usuario=models.OuterRef('pk')
+        ).calendarizables().values('ultima_lectura')[:1]
+        return self.filter(gasera=gasera).annotate(
+            ultima_lectura=models.Subquery(disps, output_field=models.IntegerField())
+        ).filter(ultima_lectura__isnull=False)
+
+
 class User(AbstractUser):
     TIPO_USUARIO = (('CLIENTE', 'Cliente'), ('CONSUMIDOR', 'Consumidor'), ('STAFF', 'Staff'), ('OPERARIO', 'Operario'))
 
@@ -43,6 +55,9 @@ class User(AbstractUser):
     tipo = models.CharField(max_length=14, choices=TIPO_USUARIO, default='CLIENTE')
     gasera = models.ForeignKey(Gasera, default=get_default_gasera, on_delete=models.SET(get_default_gasera))
     pwdtemporal = models.BooleanField(default=False)
+
+    objects = models.Manager()
+    especial = UserSet.as_manager()
 
     class Meta:
         verbose_name = "User"
