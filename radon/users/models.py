@@ -39,11 +39,16 @@ class UserSet(models.QuerySet):
 
     def leads(self, gasera):
         from radon.iot.models import Dispositivo
-        disps = Dispositivo.especial.filter(
+        u_lectura = Dispositivo.especial.filter(
             usuario=models.OuterRef('pk')
         ).calendarizables().values('ultima_lectura')[:1]
+        disps = Dispositivo.especial.filter(
+            usuario=models.OuterRef('pk')
+        ).calendarizables().values('wisol__serie')[:1]
         return self.filter(gasera=gasera).annotate(
-            ultima_lectura=models.Subquery(disps, output_field=models.IntegerField())
+            ultima_lectura=models.Subquery(u_lectura, output_field=models.IntegerField())
+        ).annotate(
+            serie=models.Subquery(disps, output_field=models.IntegerField())
         ).filter(ultima_lectura__isnull=False)
 
 
@@ -56,7 +61,6 @@ class User(AbstractUser):
     gasera = models.ForeignKey(Gasera, default=get_default_gasera, on_delete=models.SET(get_default_gasera))
     pwdtemporal = models.BooleanField(default=False)
 
-    objects = models.Manager()
     especial = UserSet.as_manager()
 
     class Meta:
