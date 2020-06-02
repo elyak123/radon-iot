@@ -70,7 +70,14 @@ def registrolectura(request):
     porcentaje = (angulo * 100) / 360
     dispositivo = models.Dispositivo.objects.get(wisol__serie=message['device'])
     models.Lectura.objects.create(nivel=porcentaje, dispositivo=dispositivo)
-    return HttpResponse('Registro Creado', status_code=201)
+    return HttpResponse('Registro Creado', status=201)
+
+
+@api_view(['POST'])
+def mock_lectura(request):
+    disp = models.Dispositivo.objects.get(wisol__serie=request.data['dispositivo'])
+    models.Lectura.objects.create(nivel=request.data['nivel'], dispositivo=disp)
+    return HttpResponse('Registro Creado', status=201)
 
 
 def registro_wisol(request):
