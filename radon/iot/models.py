@@ -1,4 +1,4 @@
-from django.db.models import OuterRef, Exists, Subquery, F
+from django.db.models import OuterRef, Exists, Subquery
 from django.core.serializers import serialize
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
@@ -40,11 +40,11 @@ class Wisol(models.Model):
 class DispositivoSet(models.QuerySet):
 
     def anotar_lecturas(self):
-        qs = Lectura.objects.filter(dispositivo=OuterRef('pk')).order_by('-fecha').first()
+        qs = Lectura.objects.filter(dispositivo=OuterRef('pk')).order_by('-fecha')[:1]
         return self.annotate(ultima_lectura=Subquery(qs.values('nivel'), output_field=models.IntegerField()))
 
-    def calendarizables(self, gasera):
-        return self.filter(ultima_lectura__lte=F(20), calendarizado=False, gasera=gasera).anotar_lecturas()
+    def calendarizables(self):
+        return self.anotar_lecturas().filter(ultima_lectura__lte=20, calendarizado=False)
 
     def anotar_pedidos_calendarizados(self, jornada):
         from radon.rutas.models import Pedido
@@ -73,6 +73,9 @@ class Dispositivo(models.Model):
 
     def get_ultima_lectura(self):
         return self.lectura_set.order_by('-fecha').first()
+
+    def lecturas_ordenadas(self):
+        return self.lectura_set.order_by('-fecha')
 
     class Meta:
         verbose_name = "Dispositivo"

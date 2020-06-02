@@ -13,7 +13,11 @@ from radon.rutas.forms import PedidoCreationForm
 # Create your views here.
 
 
-class DashboardView(AuthenticationTestMixin, generic.DetailView):
+class DashboardView(AuthenticationTestMixin, generic.TemplateView):
+    pass
+
+
+class JornadaView(AuthenticationTestMixin, generic.DetailView):
     template_name = "dashboard/index.html"
     model = Jornada
 
@@ -23,7 +27,7 @@ class DashboardView(AuthenticationTestMixin, generic.DetailView):
         return self.object
 
     def get_context_data(self, **kwargs):
-        context = super(DashboardView, self).get_context_data(**kwargs)
+        context = super(JornadaView, self).get_context_data(**kwargs)
         if not self.object.geometria_actualizada:
             pass  # aqui va la peticion...
         context['dispositivos'] = Dispositivo.especial.calendarizados_geojson(self.object)
@@ -54,9 +58,9 @@ class DispositivoListView(AuthenticationTestMixin, generic.ListView):
     template_name = "dashboard/dispositivo_list.html"
 
     def get_queryset(self):
-        query = self.model.objects.filter(
+        query = self.model.especial.filter(
             usuario__gasera=self.request.user.gasera
-        ).select_related('wisol').order_by('wisol__serie')
+        ).select_related('wisol').select_related('usuario').anotar_lecturas().order_by('ultima_lectura')
         return query
 
 
