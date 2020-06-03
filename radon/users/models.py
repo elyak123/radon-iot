@@ -45,7 +45,7 @@ class UserSet(models.QuerySet):
         disps = Dispositivo.especial.filter(
             usuario=models.OuterRef('pk')
         ).calendarizables().values('wisol__serie')[:1]
-        return self.filter(gasera=gasera).annotate(
+        return self.filter(gasera=gasera, tipo='CONSUMIDOR').annotate(
             ultima_lectura=models.Subquery(u_lectura, output_field=models.IntegerField())
         ).annotate(
             serie=models.Subquery(disps, output_field=models.IntegerField())
