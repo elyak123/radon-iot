@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import validate_email
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from radon.users.utils import get_default_gasera
 
@@ -61,6 +61,7 @@ class User(AbstractUser):
     gasera = models.ForeignKey(Gasera, default=get_default_gasera, on_delete=models.SET(get_default_gasera))
     pwdtemporal = models.BooleanField(default=False)
 
+    objects = BaseUserManager()
     especial = UserSet.as_manager()
 
     class Meta:

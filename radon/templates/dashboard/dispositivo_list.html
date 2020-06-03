@@ -1,59 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Listado de dispositivos</h2>
 <div>
-{% if object_list %}
-<div class="list-group">
-    {% for dispositivo in object_list %}
-    <div class="list-group-item list-group-item-action flex-column align-items-start my-2" style="cursor: pointer;" data-x="{{ dispositivo.location.x }}" data-y="{{ dispositivo.location.y }}">
-        <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">Dispositivo: {{ dispositivo.wisol.serie }}</h5>
-        <small><a href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
-        </div>
-        <a href="{% url 'dashboard:dispositivo_detail' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Detalles</a>
-        <a href="{% url 'dashboard:dispositivo_update' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Editar Dispositivo</a>
-        <a href="{% url 'dashboard:dispositivo_delete' dispositivo.wisol.serie %}" class="badge badge-pill badge-danger">Eliminar Dispositivo</a>
-        <a href="{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary float-right">Crear Pedido</a>
-        <div class="w-100 map-container" style="transition: 0.3s;" data-expanded="false">
+    <h2>Listado de dispositivos</h2>
+    <a href="{% url 'dashboard:calendarizables' %}">Leads</a>
+    {% if object_list %}
+    <div class="list-group">
+        {% for dispositivo in object_list %}
+        <div class="list-group-item list-group-item-action flex-column align-items-start my-2" style="cursor: pointer;" data-x="{{ dispositivo.location.x }}" data-y="{{ dispositivo.location.y }}">
+            <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Dispositivo: {{ dispositivo.wisol.serie }}</h5>
+            <small><a href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
+            </div>
+            <a href="{% url 'dashboard:dispositivo_detail' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Detalles</a>
+            <a href="{% url 'dashboard:dispositivo_update' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Editar Dispositivo</a>
+            <a href="{% url 'dashboard:dispositivo_delete' dispositivo.wisol.serie %}" class="badge badge-pill badge-danger">Eliminar Dispositivo</a>
+            <a href="{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary float-right">Crear Pedido</a>
+            <div class="w-100 map-container" style="transition: 0.3s;" data-expanded="false">
 
+            </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <h4>¡Lo sentimos!</h4><h5>Usted aún no cuenta con dispositivos registrados.</h5>
+    {% endif %}
+    {% if is_paginated %}
+    <hr>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center pagination-sm">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1">Previous</a>
+            </li>
+            {% endif %} 
+            {% for object in page_obj.paginator.page_range %}
+                <li class="page-item"><a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+            {% endfor %} 
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
 </div>
-{% else %}
-<h4>¡Lo sentimos!</h4><h5>Usted aún no cuenta con dispositivos registrados.</h5>
-{% endif %}
-</div>
-
-{% if is_paginated %}
-<hr>
-<nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center pagination-sm">
-        {% if page_obj.has_previous %}
-          <li class="page-item">
-              <a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
-          </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1">Previous</a>
-        </li>
-        {% endif %} 
-        {% for object in page_obj.paginator.page_range %}
-            <li class="page-item"><a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
-        {% endfor %} 
-        {% if page_obj.has_next %}
-          <li class="page-item">
-              <a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ page_obj.next_page_number }}">Next</a>
-          </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" href="#">Next</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
-{% endif %}
 {% endblock content %}
 {% block scripts%}
 <script>

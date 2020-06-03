@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.views import generic
 from django.http import JsonResponse
 from radon.users.auth import AuthenticationTestMixin
+from radon.users.models import User
 from radon.iot.models import Dispositivo
 from radon.rutas.models import Pedido, Jornada
 from radon.iot.forms import DispositivoForm
@@ -61,6 +62,14 @@ class DispositivoListView(AuthenticationTestMixin, generic.ListView):
         query = self.model.especial.filter(
             usuario__gasera=self.request.user.gasera
         ).select_related('wisol').select_related('usuario').anotar_lecturas().order_by('ultima_lectura')
+        return query
+
+
+class DispositivoCriticoListView(DispositivoListView):
+    template_name = "dashboard/leads.html"
+
+    def get_queryset(self):
+        query = User.especial.leads(self.request.user.gasera)
         return query
 
 
