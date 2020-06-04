@@ -3,7 +3,6 @@
 {% block content %}
 <div>
     <h2>Clientes a llamar</h2>
-    <a href="{% url 'dashboard:dispositivo_list' %}">Lista de Dispositivos</a>
     {% if object_list %}
     <div class="list-group">
         {% for user in object_list %}
