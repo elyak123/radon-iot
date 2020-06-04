@@ -1,9 +1,9 @@
 {% extends "base.html" %}
+{% load dashboard_tags %}
 
 {% block content %}
 <div>
     <h2>Listado de dispositivos</h2>
-    <a href="{% url 'dashboard:calendarizables' %}">Leads</a>
     {% if object_list %}
     <div class="list-group">
         {% for dispositivo in object_list %}
@@ -13,12 +13,9 @@
             <small><a href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
             </div>
             <a href="{% url 'dashboard:dispositivo_detail' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Detalles</a>
-            <a href="{% url 'dashboard:dispositivo_update' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Editar Dispositivo</a>
-            <a href="{% url 'dashboard:dispositivo_delete' dispositivo.wisol.serie %}" class="badge badge-pill badge-danger">Eliminar Dispositivo</a>
             <a href="{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary float-right">Crear Pedido</a>
-            <div class="w-100 map-container" style="transition: 0.3s;" data-expanded="false">
-
-            </div>
+            <a href="#" class="badge badge-{{ dispositivo.get_ultima_lectura.nivel | badge }}">Actual: {{ dispositivo.get_ultima_lectura.nivel }}%</a>
+            <div class="w-100 map-container" style="transition: 0.3s;" data-expanded="false"></div>
         </div>
         {% endfor %}
     </div>
