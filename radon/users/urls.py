@@ -19,5 +19,6 @@ urlpatterns = [
     ##################
     path('user-dispositivo-registration/', views.RegisterUsersView.as_view(), name='usr-disp-reg'),
     path('activacion-usuarios/', views.activacion_usuarios, name='activacion-usuarios'),
+    path('leads/', views.LeadsView.as_view(), name='leads'),
     path(r'', include(router.urls)),
 ]

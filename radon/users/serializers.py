@@ -40,6 +40,19 @@ class UserSerializer(serializers.ModelSerializer):
         depth = 2
 
 
+class LeadSerializer(serializers.ModelSerializer):
+    dispositivo_set = NestedDispositivoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'id', 'username', 'first_name', 'last_name',
+            'email', 'telefono', 'dispositivo_set', 'tipo', 'gasera',
+        ]
+        read_only_fields = fields
+        depth = 2
+
+
 class ExpirationJWTSerializer(JWTSerializer):
     access_token = serializers.SerializerMethodField()
     refresh_token = serializers.SerializerMethodField()

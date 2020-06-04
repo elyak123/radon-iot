@@ -5,6 +5,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
+from rest_framework.generics import ListAPIView
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.views import TokenRefreshView
 from dj_rest_auth.views import LoginView
@@ -96,6 +97,14 @@ class UserUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('users:user_detail', kwargs={'username': self.object.username})
+
+
+class LeadsView(ListAPIView):
+    serializer_class = serializers.LeadSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return User.especial.leads(self.request.user.gasera).order_by('ultima_lectura')
 
 
 class UserViewSet(viewsets.ModelViewSet):

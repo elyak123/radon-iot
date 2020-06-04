@@ -72,7 +72,10 @@ class Dispositivo(models.Model):
     especial = DispositivoSet.as_manager()
 
     def get_ultima_lectura(self):
-        return self.lectura_set.order_by('-fecha').first()
+        lectura = self.lectura_set.order_by('-fecha').first()
+        if lectura:
+            return lectura.nivel
+        return None
 
     def lecturas_ordenadas(self):
         return self.lectura_set.order_by('-fecha')
