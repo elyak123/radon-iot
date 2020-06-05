@@ -1,3 +1,5 @@
+from django.contrib.sites.models import Site
+
 virtual_hosts = {
     "enterprise.radargas.com": "",
     "app.radargas.com": "",
@@ -16,4 +18,5 @@ class VirtualHostMiddleware:
         request.urlconf = virtual_hosts.get(host)
         # order matters!
         response = self.get_response(request)
+        import pdb; pdb.set_trace()
         return response

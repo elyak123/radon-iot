@@ -39,8 +39,7 @@ if READ_DOT_ENV_FILE:
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-
-ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS')
+ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS').split(',')
 
 # checar estos settings:
 FAVICON_URL = ''
@@ -56,6 +55,7 @@ INSTALLED_APPS = [
     'radon.users.apps.UsersConfig',
     'radon.accounts.apps.AccountsConfig',
     'radon.dashboard.apps.DashboardConfig',
+    'radon.siteprofile.apps.SiteprofileConfig',
     'floppyforms',
     'rest_framework',
     'rest_framework.authtoken',
@@ -78,13 +78,16 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Custom
+    'radon.middleware.virtualhostmiddleware.VirtualHostMiddleware',
+    #
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 # MIGRATIONS CONFIGURATION
