@@ -1,11 +1,6 @@
 from django.contrib.sites.models import Site
-
-virtual_hosts = {
-    "enterprise.radargas.com": "",
-    "app.radargas.com": "",
-    "logistica.radargas.com": "",
-    "api.radargas.com": ""
-}
+from django.http import Http404
+from radon.siteprofile.models import Sitio
 
 
 class VirtualHostMiddleware:
@@ -14,9 +9,12 @@ class VirtualHostMiddleware:
 
     def __call__(self, request):
         # let's configure the root urlconf
-        host = request.get_host()
-        request.urlconf = virtual_hosts.get(host)
+        host = request.get_host().split(":")[0]
+        try:
+            sitio = Sitio.objects.get(domain=host)
+            request.urlconf = sitio.modulo
+        except Sitio.DoesNotExist:
+            raise Http404("El sitio al que está tratando de acceder no existe.")
         # order matters!
         response = self.get_response(request)
-        import pdb; pdb.set_trace()
         return response

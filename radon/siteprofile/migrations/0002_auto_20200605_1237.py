@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
 def update_site_forward(apps, schema_editor):
-    Sitio = apps.get_model('siteprofile', 'Sitios')
+    Sitio = apps.get_model('siteprofile', 'Sitio')
     for host in settings.ALLOWED_HOSTS:
         name=host.split('.')[0]
         if apps.is_installed(name):
