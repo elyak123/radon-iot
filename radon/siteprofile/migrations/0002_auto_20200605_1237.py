@@ -9,6 +9,7 @@ def update_site_forward(apps, schema_editor):
     Sitio = apps.get_model('siteprofile', 'Sitio')
     for host in settings.ALLOWED_HOSTS:
         name=host.split('.')[0]
+        import pdb; pdb.set_trace()
         if apps.is_installed(name):
             Sitio.objects.update_or_create(
                 domain=host,

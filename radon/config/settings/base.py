@@ -50,7 +50,10 @@ LOGIN_URL = 'account_login'
 # Application definition
 
 INSTALLED_APPS = [
+    # prueba de PWA.
+    'pwa',
     'radon.iot.apps.IotConfig',
+    'radon.app.apps.AppConfig',
     'radon.rutas.apps.RutasConfig',
     'radon.users.apps.UsersConfig',
     'radon.accounts.apps.AccountsConfig',
@@ -261,6 +264,9 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 STATICFILES_DIRS = [
+    # PWA Cfg
+    os.path.join(BASE_DIR, 'static'),
+    # end pwa cfg
     str(ROOT_DIR('radon/static'))
 ]
 
@@ -280,3 +286,33 @@ DEFAULT_GASERA = env('DEFAULT_GASERA')
 
 GOOGLE_MAPS_API_KEY = env('GOOGLE_MAPS_API_KEY')
 
+# pwa cfg
+PWA_APP_NAME = 'My App'
+PWA_APP_DESCRIPTION = "My app description"
+PWA_APP_THEME_COLOR = '#0A0302'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/images/icon.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/images/icon.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': '/static/images/icons/splash.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'es-MX'
