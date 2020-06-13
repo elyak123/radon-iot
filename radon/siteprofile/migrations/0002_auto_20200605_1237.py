@@ -2,6 +2,7 @@
 
 from django.apps import apps
 from django.db import migrations
+from django.db.utils import IntegrityError
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
@@ -9,9 +10,8 @@ def update_site_forward(apps, schema_editor):
     Sitio = apps.get_model('siteprofile', 'Sitio')
     for host in settings.ALLOWED_HOSTS:
         name=host.split('.')[0]
-        import pdb; pdb.set_trace()
-        if apps.is_installed(name):
-            Sitio.objects.update_or_create(
+        if f'radon.{name}.apps.{name[0].upper()}{name[1:]}Config' in settings.INSTALLED_APPS:
+            Sitio.objects.get_or_create(
                 domain=host,
                 name=name,
                 modulo='radon.'+name+'.urls'
