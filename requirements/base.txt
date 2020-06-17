@@ -89,10 +89,14 @@ django-phonenumber-field==4.0.0 \
     --hash=sha256:2ca3bb0ada0ebc164bd903a981a34f1202a4294006e520b0da961bd7ce9f20a4 \
     --hash=sha256:d4580cc3352f4433962825f9927e6669852c1b40ec484fcb5a74064dabc1201a \
     # via -r requirements/base.in
+django-pwa==1.0.9 \
+    --hash=sha256:8706cbd84489fb63d3523d5037d2cdfd8ff177417292bd7845b0f177d3c4ed3f \
+    --hash=sha256:c11bcb40bbbb65f9037e4ae4d7233e6fa724c4410419b257cce4b6624a9542e9 \
+    # via -r requirements/base.in
 django==2.2.10 \
     --hash=sha256:1226168be1b1c7efd0e66ee79b0e0b58b2caa7ed87717909cd8a57bb13a7079a \
     --hash=sha256:9a4635813e2d498a3c01b10c701fe4a515d76dd290aaa792ccb65ca4ccb6b038 \
-    # via -r requirements/base.in, dj-rest-auth, django-allauth, django-phonenumber-field, djangorestframework-simplejwt
+    # via -r requirements/base.in, dj-rest-auth, django-allauth, django-phonenumber-field, django-pwa, djangorestframework-simplejwt
 djangorestframework-gis==0.15 \
     --hash=sha256:63c253528a107bc77cd71506cd639a0489b05b763fa7c3190cfd4622bf094594 \
     # via -r requirements/base.in

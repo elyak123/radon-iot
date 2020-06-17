@@ -13,6 +13,7 @@ dj-rest-auth==1.0.1
 django-allauth==0.41.0
 django-phonenumber-field==4.0.0
 phonenumbers==8.12.1
+django-pwa==1.0.9
 django-environ==0.4.5
 psycopg2>=2.8.4
 gunicorn
