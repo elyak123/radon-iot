@@ -39,7 +39,7 @@ if READ_DOT_ENV_FILE:
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-ALLOWED_HOSTS = env('DJANGO_ALLOWED_HOSTS').split(',')
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 
 # checar estos settings:
 FAVICON_URL = ''

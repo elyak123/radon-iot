@@ -9,13 +9,15 @@ from radon.iot.models import Wisol, Dispositivo
 from radon.iot.tests import factories as iot_factories
 from radon.rutas.tests import factories as rutas_factories
 from radon.rutas.models import Pedido, Jornada
+from radon.siteprofile.utils import create_sites
 
 
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if settings.DEBUG:
-            call_command('flush')
+            call_command('flush', '--noinput')
+            create_sites()
             cantidad_gaseras = 1
             vehiculos_por_gasera = 6
             pedidos_por_ruta = 5
