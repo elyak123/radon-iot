@@ -15,3 +15,7 @@ class DashboardView(generic.TemplateView):
 
 def sigfox(request):
     return Response({}, status.HTTP_204_NO_CONTENT)
+
+
+class GraphView(generic.TemplateView):
+    template_name = "app/grafica.html"
