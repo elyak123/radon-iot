@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import validate_email
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import Permission
 from phonenumber_field.modelfields import PhoneNumberField
 from radon.users.utils import get_default_gasera
 
@@ -52,6 +53,20 @@ class UserSet(models.QuerySet):
         ).filter(ultima_lectura__isnull=False)
 
 
+class ExtendUserManager(UserManager):
+
+    permissions_dict = {
+        'CLIENTE': {},
+        'CONSUMIDOR': {},
+        'STAFF': {},
+        'OPERARIO': {}
+    }
+
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        user = super(ExtendUserManager, self).create_user(username, email, password, **extra_fields)
+        user.user_permissions.clear()
+
+
 class User(AbstractUser):
     TIPO_USUARIO = (('CLIENTE', 'Cliente'), ('CONSUMIDOR', 'Consumidor'), ('STAFF', 'Staff'), ('OPERARIO', 'Operario'))
 
@@ -61,7 +76,7 @@ class User(AbstractUser):
     gasera = models.ForeignKey(Gasera, default=get_default_gasera, on_delete=models.SET(get_default_gasera))
     pwdtemporal = models.BooleanField(default=False)
 
-    objects = BaseUserManager()
+    objects = UserManager()
     especial = UserSet.as_manager()
 
     class Meta:
