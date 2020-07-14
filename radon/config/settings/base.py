@@ -17,7 +17,8 @@ import environ
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 ROOT_DIR = environ.Path(__file__) - 4  # (radon/radon/config/settings/base.py - 3 = radon/
 APPS_DIR = ROOT_DIR.path('radon')
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = ROOT_DIR
 
 
 # Load operating system environment variables and then prepare to use them
