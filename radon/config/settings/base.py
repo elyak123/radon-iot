@@ -266,7 +266,7 @@ STATIC_ROOT = str(ROOT_DIR('staticfiles'))
 
 STATICFILES_DIRS = [
     # PWA Cfg
-    os.path.join(BASE_DIR, 'static'),
+    # os.path.join(BASE_DIR, 'static'),
     # end pwa cfg
     str(ROOT_DIR('radon/static'))
 ]
