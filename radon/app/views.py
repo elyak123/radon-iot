@@ -1,8 +1,8 @@
 from django.views import generic
-from radon.users.auth import AuthenticationTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class DashboardView(generic.TemplateView):
+class DashboardView(LoginRequiredMixin, generic.TemplateView):
     template_name = "app/inicio.html"
 
     # def get_context_data(self, **kwargs):
