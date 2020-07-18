@@ -20,7 +20,7 @@
 </div>
 {% block scripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.js"></script>
-{{ value|json_script:"hello-data" }}
+{{ ultima_lectura|json_script:"nivelLectura" }}
 <script>
 function getColor (disponible) {
     var nivel_r = 255;
@@ -230,8 +230,10 @@ function loadLiquidFillGauge(elementId, value, config) {
             });
     }
 }
-
-loadLiquidFillGauge("fillgauge1", 85);
+var value = JSON.parse(document.getElementById('nivelLectura').innerText).lectura;
+if(typeof(value) === 'number' && value > 0){
+    loadLiquidFillGauge("fillgauge1", parseInt(JSON.parse(document.getElementById('nivelLectura').innerText).lectura));
+}
 </script>
 {% endblock scripts %}
 {% endblock content %}
