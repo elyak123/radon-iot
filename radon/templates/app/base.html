@@ -105,6 +105,7 @@
     {% endblock %}
     {% block extra_body %}
     {% endblock %}
+    {% compress js %}
     <script>
       $(document).ready(function () {
         $('#sidebarCollapse').on('click', function () {
@@ -114,5 +115,6 @@
     </script>
     {% block scripts %}
     {% endblock %}
+    {% endcompress %}
   </body>
 </html>
