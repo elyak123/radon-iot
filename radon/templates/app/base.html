@@ -1,6 +1,4 @@
-{% load static %}
-{% load bootstrap4 %}
-{% load pwa %}
+{% load static bootstrap4 pwa compress %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -10,7 +8,7 @@
     {% endblock %}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
-    <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
+    {% compress css %}<link rel="stylesheet" href="{% static 'css/base_style.css' %}">{% endcompress %}
     <meta name="viewport" content="width=device-width, user-scalable=no">
   </head>
   <body>
