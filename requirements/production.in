@@ -2,5 +2,4 @@
 mod-wsgi==4.7.1
 whitenoise==4.1.2
 django-storages==1.7.1
-django-compressor==2.2
 rcssmin==1.0.6
