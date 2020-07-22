@@ -32,7 +32,7 @@ class _LoginView(BaseContext, LoginView):
         return context
 
     def get_success_url(self):
-        return reverse('dashboard:inicio')
+        return reverse('inicio')
 
 
 class _LogoutView(BaseContext, LogoutView):

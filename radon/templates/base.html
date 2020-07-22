@@ -16,7 +16,9 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <a class="navbar-brand" href="#!">Radargas</a>
-
+      {% block nav %}
+      {% endblock nav%}
+      {% comment %}
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto mt-2 mt-md-0">
           <li class="nav-item">
@@ -47,10 +49,11 @@
           {% endif %}
         </div>
       </div>
+      {% endcomment %}
     </nav>
     {% block body %}
-
-<!--    <div>
+    {% comment %}
+    <div>
       <strong>Menu:</strong>
       <ul>
         {% if user.is_authenticated %}
@@ -61,7 +64,8 @@
         <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
         {% endif %}
       </ul>
-    </div> -->
+    </div>
+    {% endcomment %}
     <div class="content p-5">
       {% if messages %}
         <div class="alert alert-success" role="alert">
@@ -75,7 +79,7 @@
       {% block content %}
       {% endblock %}
     </div>
-    {% endblock %}
+    {% endblock body %}
     {% block extra_body %}
     {% endblock %}
     {% block scripts %}
