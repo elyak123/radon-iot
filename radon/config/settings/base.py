@@ -17,7 +17,6 @@ import environ
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 ROOT_DIR = environ.Path(__file__) - 4  # (radon/radon/config/settings/base.py - 3 = radon/
 APPS_DIR = ROOT_DIR.path('radon')
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = ROOT_DIR
 
 
@@ -79,6 +78,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -132,9 +132,6 @@ TIME_ZONE = 'America/Mexico_City'
 LANGUAGE_CODE = 'es-MX'
 USE_THOUSAND_SEPARATOR = True
 THOUSAND_SEPARATOR = ','
-
-# See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-SITE_ID = 1
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#use-i18n
 USE_I18N = True

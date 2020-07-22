@@ -1,5 +1,5 @@
-from django.contrib.sites.models import Site
 from django.http import Http404
+from django.conf import settings
 from radon.siteprofile.models import Sitio
 
 
@@ -9,12 +9,17 @@ class VirtualHostMiddleware:
 
     def __call__(self, request):
         # let's configure the root urlconf
-        host = request.get_host().split(":")[0]
-        try:
-            sitio = Sitio.objects.get(domain=host)
-            request.urlconf = sitio.modulo
-        except Sitio.DoesNotExist:
-            raise Http404("El sitio al que está tratando de acceder no existe.")
-        # order matters!
+        # TODO: Parece poco eficiente hacer una consulta a DB
+        #       a cada request
+        if not settings.DEBUG:
+            host = request.get_host().split(":")[0]
+            try:
+                sitio = Sitio.objects.get(domain=host)
+                request.urlconf = sitio.modulo
+            except Sitio.DoesNotExist:
+                raise Http404("El sitio al que está tratando de acceder no existe.")
+            # order matters!
+        else:
+            request.urlconf = settings.MOCK_URL_CONF
         response = self.get_response(request)
         return response
