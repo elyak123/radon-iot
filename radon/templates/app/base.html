@@ -30,8 +30,7 @@
           Bienvenido {% if user.is_authenticated %}{{ request.user.username }}{% endif %}
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-          {% if user.is_authenticated %}
-            <a class="dropdown-item" href="#">Cerrar Sesión</a>
+          {% if user.is_authenticated %}<a class="dropdown-item" href="{% url 'account_logout' %}">Cerrar Sesión</a>
           {% else %}
             <a class="dropdown-item" href="#">Iniciar Sesión</a>
           {% endif %}
