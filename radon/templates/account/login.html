@@ -8,9 +8,96 @@
 
 {% block content %}
 
+<script>
+  var ml4 = {};
+  ml4.opacityIn = [0,1];
+  ml4.scaleIn = [0.2, 1];
+  ml4.scaleOut = 3;
+  ml4.durationIn = 800;
+  ml4.durationOut = 600;
+  ml4.delay = 500;
+
+  $(window).on("load", function(){
+    anime.timeline()
+    .add({
+      targets: '.starting-text',
+      opacity: ml4.opacityIn,
+      scale: ml4.scaleIn,
+      duration: ml4.durationIn
+    });
+  });
+</script>
+
+<script type="text/javascript">
+  function onQRCodeScanned(scannedText)
+  {
+    var scannedTextMemo = document.getElementById("scannedTextMemo");
+    if(scannedTextMemo)
+    {
+      scannedTextMemo.value = scannedText;
+    }
+  }
+  
+  //funtion returning a promise with a video stream
+  function provideVideoQQ()
+  {
+      return navigator.mediaDevices.enumerateDevices()
+      .then(function(devices) {
+          var exCameras = [];
+          devices.forEach(function(device) {
+          if (device.kind === 'videoinput') {
+            exCameras.push(device.deviceId)
+          }
+       });
+          
+          return Promise.resolve(exCameras);
+      }).then(function(ids){
+          if(ids.length === 0)
+          {
+            return Promise.reject('Could not find a webcam');
+          }
+          
+          return navigator.mediaDevices.getUserMedia({
+              video: {
+                'optional': [{
+                  'sourceId': ids.length === 1 ? ids[0] : ids[1]//this way QQ browser opens the rear camera
+                  }]
+              }
+          });        
+      });                
+  }  
+
+  //this function will be called when JsQRScanner is ready to use
+  function JsQRScannerReady()
+  {
+      //create a new scanner passing to it a callback function that will be invoked when
+      //the scanner succesfully scan a QR code
+      var jbScanner = new JsQRScanner(onQRCodeScanned, provideVideoQQ);
+      //reduce the size of analyzed images to increase performance on mobile devices
+      jbScanner.setSnapImageMaxSize(300);
+    var scannerParentElement = document.getElementById("scanner");
+    if(scannerParentElement)
+    {
+        //append the jbScanner to an existing DOM element
+      jbScanner.appendTo(scannerParentElement);
+    }        
+  }
+</script>
+
 <div class="row">
   <div class="col-lg-3"></div>
-  <div class="col-lg-6">
+  <div class="col-lg-6 card p-5">
+    <h1 class="starting-text"><b>Comienza leyendo el QR.</b></h1>
+    <div id="scanner">
+      
+    </div>
+  </div>
+  <div class="col-lg-3"></div>
+</div>
+
+<div class="row">
+  <div class="col-lg-3"></div>
+  <div class="col-lg-6 card p-5">
     <h1>{% trans "Sign In" %}</h1>
     {% get_providers as socialaccount_providers %}
 
@@ -42,8 +129,10 @@
       {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
       {% endif %}
-      <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-      <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+      <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a><br>
+      <div class="w-100 text-center">
+        <button class="btn btn-success bg-secundario primaryAction boton mt-3" type="submit">{% trans "Sign In" %}</button>
+      </div>
     </form>
   </div>
   <div class="col-lg-3"></div>

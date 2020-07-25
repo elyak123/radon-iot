@@ -1,3 +1,21 @@
+.bg-primario {
+    background-color: #49D49D;
+}
+
+.bg-secundario {
+    background-color: #9FA4A9;
+    border-color: #9FA4A9;
+    color: white;
+}
+
+.bg-fondo {
+    background-color: #FCFBED;
+}
+
+.boton {
+    border-radius: 25px;
+}
+
 a[data-toggle="collapse"] {
     position: relative;
 }

@@ -8,9 +8,13 @@
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
     {% compress css %}<link rel="stylesheet" href="{% static 'css/base_style.css' %}">{% endcompress %}
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <meta name="theme-color" content="#49D49D">
+    <script src="https://raw.githubusercontent.com/jbialobr/JsQRScanner/master/docs/js/jsqrscanner.nocache.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script> 
   </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <body class="bg-fondo">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primario">
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
