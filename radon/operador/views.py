@@ -1,5 +1,12 @@
-from django.shortcuts import render
+from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin
+from radon.iot.models import Instalacion
 
-# Create your views here.
-class DashboardView(LoginRequiredMixin, generic.TemplateView):
-    template_name = "operador/inicio.html"
+
+class DashboardView(LoginRequiredMixin, generic.ListView):
+    template_name = "operador/listado_instalaciones.html"
+    model = Instalacion
+    paginate_by = 20
+
+    def get_queryset(self):
+        return self.model.objects.filter(operario=self.request.user).order_by('-fecha')
