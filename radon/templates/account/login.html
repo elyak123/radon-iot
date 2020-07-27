@@ -9,6 +9,8 @@
 {% block content %}
 
 <script>
+  var reg = new RegExp('rg:[a-zA-Z0-9]{8}:rg');
+  /*
   var ml4 = {};
   ml4.opacityIn = [0,1];
   ml4.scaleIn = [0.2, 1];
@@ -16,86 +18,72 @@
   ml4.durationIn = 800;
   ml4.durationOut = 600;
   ml4.delay = 500;
+  */
+  var step = 0;
 
-  $(window).on("load", function(){
+  $(window).on("load", function(){    
     anime.timeline()
-    .add({
+    /* .add({
       targets: '.starting-text',
       opacity: ml4.opacityIn,
       scale: ml4.scaleIn,
       duration: ml4.durationIn
     });
+    */
+    $(document).on("stepChange", function(){
+      if(step) {
+        anime({
+          targets: '#step-'+(step),
+          translateX: [0, -500],
+          easing: 'easeInOutExpo',
+          complete: function(anim) {
+            $("#step-"+(step-1)).addClass("d-none");
+            $("#step-"+step).removeClass("d-none");
+            anime({
+              targets: '#step-'+step,
+              translateX: [500, 0],
+              easing: 'easeInOutExpo'
+            });
+          }
+        });
+      } else {
+        $("#step-1").removeClass("d-none");
+        anime({
+          targets: '#step-1',
+          translateX: [500, 0],
+          easing: 'easeInOutExpo'
+        });
+      }      
+      step++;
+    });
+    $(document).trigger("stepChange");
+    $(".siguiente").on('click', function(){
+      $(document).trigger("stepChange");
+    });
   });
 </script>
-
-<script type="text/javascript">
-  function onQRCodeScanned(scannedText)
-  {
-    var scannedTextMemo = document.getElementById("scannedTextMemo");
-    if(scannedTextMemo)
-    {
-      scannedTextMemo.value = scannedText;
-    }
-  }
-  
-  //funtion returning a promise with a video stream
-  function provideVideoQQ()
-  {
-      return navigator.mediaDevices.enumerateDevices()
-      .then(function(devices) {
-          var exCameras = [];
-          devices.forEach(function(device) {
-          if (device.kind === 'videoinput') {
-            exCameras.push(device.deviceId)
-          }
-       });
-          
-          return Promise.resolve(exCameras);
-      }).then(function(ids){
-          if(ids.length === 0)
-          {
-            return Promise.reject('Could not find a webcam');
-          }
-          
-          return navigator.mediaDevices.getUserMedia({
-              video: {
-                'optional': [{
-                  'sourceId': ids.length === 1 ? ids[0] : ids[1]//this way QQ browser opens the rear camera
-                  }]
-              }
-          });        
-      });                
-  }  
-
-  //this function will be called when JsQRScanner is ready to use
-  function JsQRScannerReady()
-  {
-      //create a new scanner passing to it a callback function that will be invoked when
-      //the scanner succesfully scan a QR code
-      var jbScanner = new JsQRScanner(onQRCodeScanned, provideVideoQQ);
-      //reduce the size of analyzed images to increase performance on mobile devices
-      jbScanner.setSnapImageMaxSize(300);
-    var scannerParentElement = document.getElementById("scanner");
-    if(scannerParentElement)
-    {
-        //append the jbScanner to an existing DOM element
-      jbScanner.appendTo(scannerParentElement);
-    }        
-  }
-</script>
-
 <div class="row">
   <div class="col-lg-3"></div>
-  <div class="col-lg-6 card p-5">
-    <h1 class="starting-text"><b>Comienza leyendo el QR.</b></h1>
-    <div id="scanner">
-      
+  <div class="col-lg-6 card p-5 text-center" style="min-height: 500px;">
+    <div id="step-1" class="d-none">
+      <h1 class="starting-text"><b>Correo Electrónico</b></h1>
+      <input class="form-control mt-5" type="email" placeholder="Email" name="" id="email">
+      <button class="btn bg-secundario mt-5 w-100 siguiente">Siguiente</button>
     </div>
+    <div id="step-2" class="d-none">
+      <!-- if django: Sólo para usuario normal --><h1 class="starting-text"><b>Lee el código QR</b></h1>
+      <div id="scanner">
+      </div>
+      <label for="scannedTextMemo"><b>ID</b></label>
+      <input class="form-control" type="text" name="" id="scannedTextMemo" disabled>
+    </div>
+    <div id="step-3" class="d-none"></div>
+    <div id="step-4" class="d-none"></div>
   </div>
   <div class="col-lg-3"></div>
 </div>
 
-<div class="row">
+<!--<div class="row">
   <div class="col-lg-3"></div>
   <div class="col-lg-6 card p-5">
     <h1>{% trans "Sign In" %}</h1>
@@ -136,6 +124,31 @@
     </form>
   </div>
   <div class="col-lg-3"></div>
-</div>
+</div> -->
+<script type="text/javascript">
+  function onQRCodeScanned(scannedText)
+  {
+    var scannedTextMemo = document.getElementById("scannedTextMemo");
+    if(scannedTextMemo)
+    {
+      scannedTextMemo.value = scannedText;
+    }
+  }
 
+  //this function will be called when JsQRScanner is ready to use
+  function JsQRScannerReady()
+  {
+      //create a new scanner passing to it a callback function that will be invoked when
+      //the scanner succesfully scan a QR code
+      var jbScanner = new JsQRScanner(onQRCodeScanned);
+      //reduce the size of analyzed images to increase performance on mobile devices
+      jbScanner.setSnapImageMaxSize(300);
+    var scannerParentElement = document.getElementById("scanner");
+    if(scannerParentElement)
+    {
+        //append the jbScanner to an existing DOM element
+      jbScanner.appendTo(scannerParentElement);
+    }        
+  }
+</script>  
 {% endblock %}
