@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'radon.app.apps.AppConfig',
     'radon.rutas.apps.RutasConfig',
     'radon.users.apps.UsersConfig',
+    'radon.operador.apps.OperadorConfig',
     'radon.accounts.apps.AccountsConfig',
     'radon.dashboard.apps.DashboardConfig',
     'radon.siteprofile.apps.SiteprofileConfig',

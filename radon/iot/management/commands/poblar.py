@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if settings.DEBUG:
             call_command('flush', '--noinput')
-            create_sites()
+            # create_sites()
             cantidad_gaseras = 1
             vehiculos_por_gasera = 6
             pedidos_por_ruta = 5

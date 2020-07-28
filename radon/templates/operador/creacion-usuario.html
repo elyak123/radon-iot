@@ -2,20 +2,139 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <h3 class="mb-5 text-center">Su nivel actual es:</h3>
-        <svg id="fillgauge1" class="w-100 mb-5" style="height: 300px"></svg>
-        <h4>¿Qué desea hacer?</h4>
-        <ul>
-            <li>
-                <a href="{% url 'grafica' %}">Consultar gráfica de consumo.</a>
-            </li>
-            <li>
-                <a href="#">Realiza tu pedido de gas.</a>
-            </li>
-        </ul>
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6 card p-5 text-center" style="min-height: 500px;">
+        <div id="step-1" class="d-none">
+            <h1 class="starting-text"><b>Correo Electrónico</b></h1>
+            <input class="form-control mt-5" type="email" placeholder="Email" name="" id="email">
+            <button class="btn bg-secundario mt-5 w-100 siguiente" id="email-control" disabled="true">Siguiente</button>
+        </div>
+        <div id="step-2" class="d-none">
+            <!-- if django: Sólo para usuario normal -->
+            <h1 class="starting-text"><b>Lee el código QR</b></h1>
+            <div id="scanner">
+            </div>
+            <label for="scannedTextMemo"><b>ID</b></label>
+            <input class="form-control" type="text" name="" id="scannedTextMemo" disabled>
+        </div>
+        <div id="step-3" class="d-none">
+            <h1>Registro Terminado</h1>
+            <p class="mt-5">La contraseña es: <b>BX029S</b></p>
+            <button class="btn bg-secundario mt-5 w-100 siguiente">Siguiente</button>
+        </div>
+        <div id="step-4" class="d-none">
+            <h1>Introduce el Folio de Operación</h1>
+            <input class="form-control" type="text" name="" id="">
+            <button class="btn bg-secundario mt-5 w-100 finalizar">Finalizar</button>
+        </div>
     </div>
-    <div class="col-md-3"></div>
+    <div class="col-lg-3"></div>
 </div>
 {% endblock content %}
+{% block scripts %}
+<script type="text/javascript">
+    var jbScanner;
+    var scannerParentElement = document.getElementById("scanner");
+    function onQRCodeScanned(scannedText) {
+        // var reg = new RegExp('rg:[a-zA-Z0-9]{8}:rg');
+        // var error;
+        // if (reg.test(scannedText)) {
+        //   id_dispositivo = scannedText.split(':rg')[0].split('rg:')[1];
+        //   $.ajax({
+        //     url: "iot/wisol/" + id_dispositivo + "/",
+        //     context: document.body
+        //   }).done(function (response) {
+        //     if (response['serie']) {
+        //       $.ajax({
+        //         url: "iot/dispositivos/" + id_dispositivo + "/",
+        //         context: document.body
+        //       }).done(function (response) {
+        //         if (response['properties']['usuario']) {
+        //           error = "Dispositivo ya registrado.";
+        //         }
+        //       }).error(function (error) {
+        //         $(document).trigger("stepChange");
+        //       });
+        //     }
+        //   });
+        // }
+        var scannedTextMemo = document.getElementById("scannedTextMemo");
+        if (scannedTextMemo) {
+            scannedTextMemo.value = scannedText;
+            scannerParentElement.parentNode.removeChild(scannerParentElement);
+        }
+        $(document).trigger("stepChange");
+    }
+
+    //this function will be called when JsQRScanner is ready to use
+    function JsQRScannerReady() {
+        //create a new scanner passing to it a callback function that will be invoked when
+        //the scanner succesfully scan a QR code
+        jbScanner = new JsQRScanner(onQRCodeScanned);
+        //reduce the size of analyzed images to increase performance on mobile devices
+        jbScanner.setSnapImageMaxSize(300);
+    }
+</script>
+<script>
+    $("#email").on("change", function () {
+        if ($("#email").val()) {
+            $("#email-control").prop("disabled", false);
+        }
+    });
+    /*
+    var ml4 = {};
+    ml4.opacityIn = [0,1];
+    ml4.scaleIn = [0.2, 1];
+    ml4.scaleOut = 3;
+    ml4.durationIn = 800;
+    ml4.durationOut = 600;
+    ml4.delay = 500;
+    */
+    var step = 0;
+    var id_dispositivo = "";
+
+    $(window).on("load", function () {
+        anime.timeline()
+        /* .add({
+          targets: '.starting-text',
+          opacity: ml4.opacityIn,
+          scale: ml4.scaleIn,
+          duration: ml4.durationIn
+        });
+        */
+        $(document).on("stepChange", function () {
+            if (step) {
+                if (step == 1) {
+                    jbScanner.appendTo(scannerParentElement);
+                }
+                anime({
+                    targets: '#step-' + (step),
+                    translateX: [0, -500],
+                    easing: 'easeInOutExpo',
+                    complete: function (anim) {
+                        $("#step-" + (step - 1)).addClass("d-none");
+                        $("#step-" + step).removeClass("d-none");
+                        anime({
+                            targets: '#step-' + step,
+                            translateX: [500, 0],
+                            easing: 'easeInOutExpo'
+                        });
+                    }
+                });
+            } else {
+                $("#step-1").removeClass("d-none");
+                anime({
+                    targets: '#step-1',
+                    translateX: [500, 0],
+                    easing: 'easeInOutExpo'
+                });
+            }
+            step++;
+        });
+        $(document).trigger("stepChange");
+        $(".siguiente").on('click', function () {
+            $(document).trigger("stepChange");
+        });
+    });
+</script>
+{% endblock scripts %}
