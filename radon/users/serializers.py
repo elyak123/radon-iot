@@ -87,7 +87,38 @@ class ExpirationRefreshJWTSerializer(TokenRefreshSerializer):
         return data
 
 
-class AsistedUserDispositivoCreation(WisolValidation):
+class EmailValidator(serializers.Serializer):
+    """
+    ENDPOINT:
+    /users/email-validator/
+
+    DESCRIPCION
+    Email verificamos que el email no exista en la base de datos
+    """
+    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+
+    def validate_email(self, email):
+        email = get_adapter().clean_email(email)
+        if allauth_settings.UNIQUE_EMAIL:
+            if email and email_address_exists(email):
+                raise serializers.ValidationError(
+                    _("A user is already registered with this e-mail address."))
+        return email
+
+
+class UsernameValidator(serializers.Serializer):
+    username = serializers.CharField(
+        max_length=get_username_max_length(),
+        min_length=allauth_settings.USERNAME_MIN_LENGTH,
+        required=allauth_settings.USERNAME_REQUIRED
+    )
+
+    def validate_username(self, username):
+        username = get_adapter().clean_username(username)
+        return username
+
+
+class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameValidator):
     """
     ENDPOINT:
     /users/user-dispositivo-registration/
@@ -98,8 +129,6 @@ class AsistedUserDispositivoCreation(WisolValidation):
     activación.
 
     CAMPOS:
-    username: Nombre de usuario del futuro usuario
-    email: Correo del futuro usuario
     telefono: (string) Telefono del futuro usuario a 10 digitos
     location: (string) Ubicacion geografica del futuro dispositivo en formato POINT(x.abcd -y.xyz)
     capacidad: (int) Capacidad del tanque del futuro dispositivo
@@ -108,6 +137,11 @@ class AsistedUserDispositivoCreation(WisolValidation):
     gasera: (<Gasera: Model>) Sera la gasera del cliente que da de alta el consumidor
     tipo: (string) En este caso siempre será `CONSUMIDOR`
     pwdtemporal: (bool) En este caso siempre será True
+
+    CAMPOS EN HERENCIA:
+    username: Nombre de usuario del futuro usuario
+    email: Correo del futuro usuario
+    wisol: Numero de serie del wisol a validar y unir al dispositivo
 
     VALIDA:
     * Wisol con serie existe
@@ -121,12 +155,7 @@ class AsistedUserDispositivoCreation(WisolValidation):
     * Crea el dispositivo con el chip Wisol proporcionado
     * Asigna el dispositivo al usuario recién creado
     """
-    username = serializers.CharField(
-        max_length=get_username_max_length(),
-        min_length=allauth_settings.USERNAME_MIN_LENGTH,
-        required=allauth_settings.USERNAME_REQUIRED
-    )
-    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+
     gasera = serializers.HiddenField(default='DUMMY')
     tipo = serializers.HiddenField(default='CONSUMIDOR')
     pwdtemporal = serializers.HiddenField(default=True)
@@ -134,20 +163,8 @@ class AsistedUserDispositivoCreation(WisolValidation):
     location = GeometryField(precision=14)
     capacidad = serializers.IntegerField(required=False)
 
-    def validate_email(self, email):
-        email = get_adapter().clean_email(email)
-        if allauth_settings.UNIQUE_EMAIL:
-            if email and email_address_exists(email):
-                raise serializers.ValidationError(
-                    _("A user is already registered with this e-mail address."))
-        return email
-
     def validate_gasera(self, gasera):
         return self.context['request'].user.gasera
-
-    def validate_username(self, username):
-        username = get_adapter().clean_username(username)
-        return username
 
     def get_cleaned_data(self):
         user_data = {
