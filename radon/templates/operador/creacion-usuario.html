@@ -1,4 +1,4 @@
-{% extends "app/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="row">
@@ -7,6 +7,9 @@
         <div id="step-1" class="d-none">
             <h1 class="starting-text"><b>Correo Electrónico</b></h1>
             <input class="form-control mt-5" type="email" placeholder="Email" name="" id="email">
+            <div class="invalid-feedback">
+                ¡Introduce un correo electrónico válido!
+            </div>
             <button class="btn bg-secundario mt-5 w-100 siguiente" id="email-control" disabled="true">Siguiente</button>
         </div>
         <div id="step-2" class="d-none">
@@ -31,6 +34,21 @@
     <div class="col-lg-3"></div>
 </div>
 {% endblock content %}
+<script>
+{% block validaciones %}
+var regex = new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/, 'i');
+$("#email").on("keyup", function(evt) {
+    if(regex.test($(evt.target).val())) {
+        // Preguntar por la existencia del email
+        $.post('../checar-email/', function(response){
+            debugger;
+        });
+    } else {
+        accionarValidacion(evt.target, false);
+    }
+});
+{% endblock %}
+</script>
 {% block scripts %}
 <script type="text/javascript">
     var jbScanner;
@@ -76,11 +94,6 @@
     }
 </script>
 <script>
-    $("#email").on("change", function () {
-        if ($("#email").val()) {
-            $("#email-control").prop("disabled", false);
-        }
-    });
     /*
     var ml4 = {};
     ml4.opacityIn = [0,1];
