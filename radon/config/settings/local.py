@@ -4,7 +4,7 @@ from .base import *  # noqa
 # ------------------------------------------------------------------------------
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
 
-MOCK_URL_CONF = 'radon.app.urls'
+MOCK_URL_CONF = env('DJANGO_MOCK_URL_CONF', default='radon.app.urls')
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
 SITE_ID = env.int('DJANGO_SITE_ID')
 CORS_ORIGIN_ALLOW_ALL = True
