@@ -61,7 +61,6 @@
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
-
     $("#email").on("keyup", function (evt) {
         if (regex.test($(evt.target).val())) {
             // Preguntar por la existencia del email
