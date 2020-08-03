@@ -43,7 +43,7 @@ class WisolViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Wisol.objects.all()
     serializer_class = serializers.WisolSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
     lookup_field = 'serie'
 
 

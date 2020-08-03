@@ -1,10 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
+<div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-3"></div>
-    <div class="col-lg-6 card p-5 text-center" style="min-height: 500px;">
+    <div class="col-lg-6 card p-4 text-center" style="min-height: 500px;">
         <div id="step-1" class="d-none">
+            {% csrf_token %}
             <h1 class="starting-text"><b>Correo Electrónico</b></h1>
             <input class="form-control mt-5" type="email" placeholder="Email" name="" id="email">
             <div class="invalid-feedback">
@@ -35,47 +55,57 @@
 </div>
 {% endblock content %}
 <script>
-{% block validaciones %}
-var regex = new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/, 'i');
-$("#email").on("keyup", function(evt) {
-    if(regex.test($(evt.target).val())) {
-        // Preguntar por la existencia del email
-        $.post('../checar-email/', function(response){
-            debugger;
-        });
-    } else {
-        accionarValidacion(evt.target, false);
+    {% block validaciones %}
+    var regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'i');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
-});
-{% endblock %}
+
+    $("#email").on("keyup", function (evt) {
+        if (regex.test($(evt.target).val())) {
+            // Preguntar por la existencia del email
+            $.post('../checar-email/', { email: event.currentTarget.value }, function (response) {
+                accionarValidacion(evt.target, true);
+                $("#email-control").prop({ 'disabled': false });
+            }).fail(function (response) {
+                accionarValidacion(evt.target, false);
+            });
+        } else {
+            accionarValidacion(evt.target, false);
+        }
+    });
+    {% endblock %}
 </script>
 {% block scripts %}
 <script type="text/javascript">
     var jbScanner;
     var scannerParentElement = document.getElementById("scanner");
     function onQRCodeScanned(scannedText) {
-        // var reg = new RegExp('rg:[a-zA-Z0-9]{8}:rg');
-        // var error;
-        // if (reg.test(scannedText)) {
-        //   id_dispositivo = scannedText.split(':rg')[0].split('rg:')[1];
-        //   $.ajax({
-        //     url: "iot/wisol/" + id_dispositivo + "/",
-        //     context: document.body
-        //   }).done(function (response) {
-        //     if (response['serie']) {
-        //       $.ajax({
-        //         url: "iot/dispositivos/" + id_dispositivo + "/",
-        //         context: document.body
-        //       }).done(function (response) {
-        //         if (response['properties']['usuario']) {
-        //           error = "Dispositivo ya registrado.";
-        //         }
-        //       }).error(function (error) {
-        //         $(document).trigger("stepChange");
-        //       });
-        //     }
-        //   });
-        // }
+        var reg = new RegExp('rg:[a-zA-Z0-9]{7}:rg');
+        var error;
+        if (reg.test(scannedText)) {
+            id_dispositivo = scannedText.split(':rg')[0].split('rg:')[1];
+            $.ajax({
+                url: "../iot/wisol/" + id_dispositivo + "/",
+                context: document.body
+            }).done(function (response) {
+                if (response['serie']) {
+                    $.ajax({
+                        url: "iot/dispositivos/" + id_dispositivo + "/",
+                        context: document.body
+                    }).done(function (response) {
+                        if (response['properties']['usuario']) {
+                            error = "Dispositivo ya registrado.";
+                        }
+                    }).error(function (error) {
+                        $(document).trigger("stepChange");
+                    });
+                }
+            }).error(function (error) {
+                var detalle = error["detail"];
+            });
+        }
         var scannedTextMemo = document.getElementById("scannedTextMemo");
         if (scannedTextMemo) {
             scannedTextMemo.value = scannedText;
