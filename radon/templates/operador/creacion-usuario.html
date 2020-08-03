@@ -1,20 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Error</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Error</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p>Modal body text goes here.</p>
+                <p id="error-message"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Save changes</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -86,10 +86,14 @@
         var error;
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText.split(':rg')[0].split('rg:')[1];
+            var data = {'wisol': id_dispositivo};
             $.ajax({
-                url: "../iot/wisol/" + id_dispositivo + "/",
+                url: "../iot/disponibilidad-wisol/",
+                method: "POST",
+                data: data,
                 context: document.body
             }).done(function (response) {
+                debugger;
                 if (response['serie']) {
                     $.ajax({
                         url: "iot/dispositivos/" + id_dispositivo + "/",
@@ -102,8 +106,11 @@
                         $(document).trigger("stepChange");
                     });
                 }
-            }).error(function (error) {
+            }).fail(function (error) {
+                debugger;
                 var detalle = error["detail"];
+                document.getElementById("error-message").innerHTML = detalle;
+                $("#modal").modal();
             });
         }
         var scannedTextMemo = document.getElementById("scannedTextMemo");
