@@ -16,6 +16,7 @@ Production settings for Construbot project.
 # import importlib
 
 from .base import *  # noqa
+import re
 # import sentry_sdk
 # from sentry_sdk.integrations.logging import LoggingIntegration
 
