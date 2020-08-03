@@ -1,5 +1,4 @@
 from django.urls import path, include, re_path
-from radon.users.views import UsersLoginView, RefreshUsersView
 from radon.operador import views
 
 

@@ -5,7 +5,6 @@
     <div class="col-lg-3"></div>
     <div class="col-lg-6 card p-5 text-center" style="min-height: 500px;">
         <div id="step-1" class="d-none">
-            {% csrf_token %}
             <h1 class="starting-text"><b>Correo Electrónico</b></h1>
             <input class="form-control mt-5" type="email" placeholder="Email" name="" id="email">
             <div class="invalid-feedback">
@@ -38,26 +37,11 @@
 <script>
 {% block validaciones %}
 var regex = new RegExp(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/, 'i');
-function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-const csrftoken = $("[name=csrfmiddlewaretoken]").val();
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-    }
-});
-
 $("#email").on("keyup", function(evt) {
     if(regex.test($(evt.target).val())) {
         // Preguntar por la existencia del email
-        $.post('../checar-email/', {email: event.currentTarget.value}, function(response){
-            accionarValidacion(evt.target, true);
-        }).fail(function(){
-            accionarValidacion(evt.target, false);
+        $.post('../checar-email/', function(response){
+            debugger;
         });
     } else {
         accionarValidacion(evt.target, false);

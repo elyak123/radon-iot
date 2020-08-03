@@ -21,8 +21,9 @@ class CreacionUsuarioView(LoginRequiredMixin, generic.TemplateView):
 
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes(permissions.AllowAny)
 def ChecarEmailView(request):
     serializer = serializers.EmailValidator(data=request.data)
     serializer.is_valid(raise_exception=True)
-    return Response({'emailIsUnique': True}, status.HTTP_200_OK, {})
+    serializer.save()
+    return Response(serializer.data, status.HTTP_200_OK, {})
