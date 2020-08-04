@@ -1,8 +1,9 @@
-{% load static bootstrap4 compress %}
+{% load static bootstrap4 pwa compress %}
 <!DOCTYPE html>
 <html>
 
 <head>
+  {% progressive_web_app_meta %}
   <title>{% block head_title %}{% endblock %}</title>
   {% block extra_head %}
   {% endblock %}
