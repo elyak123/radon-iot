@@ -21,17 +21,44 @@
 </div>
 <div class="row">
     <div class="col-lg-3"></div>
-    <div class="col-lg-6 card p-4 text-center" style="min-height: 500px;">
+    <div class="col-lg-6 card p-4 text-center" style="min-height: 300px;">
         <div id="step-1" class="d-none">
             {% csrf_token %}
-            <h1 class="starting-text"><b>Correo Electrónico</b></h1>
-            <input class="form-control mt-5" type="email" placeholder="Email" name="" id="email">
-            <div class="invalid-feedback">
-                ¡Introduce un correo electrónico válido!
+            <h3 class="starting-text mt-4"><b>Correo Electrónico</b></h3>
+            <div class="form-group">
+                <input class="form-control mt-2" type="email" placeholder="Email" name="" id="email">
+                <div class="invalid-feedback">
+                    ¡Introduce un correo electrónico válido!
+                </div>
             </div>
-            <button class="btn bg-secundario mt-5 w-100 siguiente" id="email-control" disabled="true">Siguiente</button>
+            <button class="btn bg-secundario my-3 w-100 siguiente" id="email-control" disabled="true">Siguiente</button>
         </div>
         <div id="step-2" class="d-none">
+            <h3 class="starting-text mt-4"><b>Teléfono</b></h3>
+            <div class="form-group">
+                <input class="form-control mt-2 campo-formulario" type="tel" placeholder="10 dígitos: 4491234567"
+                    name="" id="phone" pattern="[0-9]{10}">
+                <div class="invalid-feedback">
+                    ¡Introduce un teléfono válido!
+                </div>
+            </div>
+            <h3 class="starting-text mt-5"><b>Capacidad del Tanque (L)</b></h3>
+            <div class="form-group">
+                <select class="form-control mt-2" id="capacidad">
+                    <option value="120">120</option>
+                    <option value="300" selected>300</option>
+                    <option value="800">800</option>
+                    <option value="1000">1,000</option>
+                    <option value="1600">1,600</option>
+                    <option value="2200">2,200</option>
+                    <option value="2800">2,800</option>
+                    <option value="3400">3,400</option>
+                    <option value="5000">5,000</option>
+                </select>
+            </div>
+            <button class="btn bg-secundario my-3 w-100 siguiente" id="phone-control" disabled="true">Siguiente</button>
+        </div>
+        <div id="step-3" class="d-none">
             <!-- if django: Sólo para usuario normal -->
             <h1 class="starting-text"><b>Lee el código QR</b></h1>
             <div id="scanner">
@@ -39,21 +66,35 @@
             <label for="scannedTextMemo"><b>ID</b></label>
             <input class="form-control" type="text" name="" id="scannedTextMemo" disabled>
         </div>
-        <div id="step-3" class="d-none">
+        <div id="step-4" class="d-none">
             <h1>Leer Geolocalización</h1>
             <h3 class="mensaje-espera">Espere un momento...</h3>
-            <p class="mt-5">La contraseña es: <b>BX029S</b></p>
-            <button class="btn bg-secundario mt-5 w-100 siguiente" disabled="true">Siguiente</button>
+            <div id="mapa" class="mt-4" style="min-height: 300px;"></div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="lat">Latitud:</label>
+                        <input class="form-control" type="text" name="lat" id="lat" disabled>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="lon">Longitud:</label>
+                        <input class="form-control" type="text" name="lon" id="lon" disabled>
+                    </div>
+                </div>
+            </div>
+            <button class="btn bg-secundario mt-4 w-100 siguiente" id="geo-control" disabled="true">Siguiente</button>
         </div>
-        <div id="step-6" class="d-none">
+        <div id="step-5" class="d-none">
             <h1>Registro Terminado</h1>
             <p class="mt-5">La contraseña es: <b>BX029S</b></p>
-            <button class="btn bg-secundario mt-5 w-100 siguiente">Siguiente</button>
+            <button class="btn bg-secundario mt-4 w-100 siguiente">Siguiente</button>
         </div>
-        <div id="step-4" class="d-none">
+        <div id="step-6" class="d-none">
             <h1>Introduce el Folio de Operación</h1>
             <input class="form-control" type="text" name="" id="">
-            <button class="btn bg-secundario mt-5 w-100 finalizar">Finalizar</button>
+            <button class="btn bg-secundario mt-4 w-100 finalizar">Finalizar</button>
         </div>
     </div>
     <div class="col-lg-3"></div>
@@ -78,6 +119,9 @@
         } else {
             accionarValidacion(evt.target, false);
         }
+    });
+    $("#phone").on("keyup", function (evt) {
+        $("#phone-control").prop({ 'disabled': !evt.target.checkValidity() });
     });
     {% endblock %}
 </script>
@@ -107,7 +151,6 @@
                             error = "Dispositivo ya registrado.";
                             showModal(error);
                         }
-                        jbScanner.appendTo(scannerParentElement);
                     }).fail(function (error) {
                         if (error.responseJSON.detail == "No encontrado.") {
                             $(document).trigger("stepChange");
@@ -119,11 +162,9 @@
             }).fail(function (error) {
                 var detalle = error.responseJSON.wisol[0];
                 showModal(detalle);
-                jbScanner.appendTo(scannerParentElement);
             });
         } else {
             showModal("El código QR que se leyó es incorrecto.");
-            jbScanner.appendTo(scannerParentElement);
         }
         var scannedTextMemo = document.getElementById("scannedTextMemo");
         if (scannedTextMemo) {
@@ -157,9 +198,76 @@
     ml4.delay = 500;
     */
     var step = 0;
+    var lat;
+    var lon;
     var id_dispositivo = "";
+    var opciones = {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 0
+    }
+
+    function getCoordenadas() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(exito, fracaso, opciones);
+        } else {
+            showModal("Usted no ha permitido la geolocalización o su dispositivo no es compatible. Por favor, escriba el ID manualmente");
+        }
+    }
+
+    function cargar() {
+        var OpcionesMapa = {
+            center: new google.maps.LatLng(lat, lon),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            //ROADMAP  SATELLITE HYBRID TERRAIN
+            zoom: 19
+        };
+        var miMapa;      //constructor
+        miMapa = new google.maps.Map(document.getElementById('mapa'), OpcionesMapa);
+
+        //Añadimos el marcador
+        var Marcador = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lon),
+            map: miMapa,
+            title: "Tu ubicación"
+        });
+    }
+
+    function exito(posicion) {
+        var script = document.createElement("script");
+        script.src = 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=cargar&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
+        document.body.appendChild(script);
+
+        lat = posicion.coords.latitude;
+        lon = posicion.coords.longitude;
+        document.getElementById("lat").value = lat;
+        document.getElementById("lon").value = lon;
+        $(".mensaje-espera").addClass("d-none");
+
+        $("#geo-control").prop({ 'disabled': false });
+    }
+
+    function fracaso(error) {
+        var output = document.getElementById("output");
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                showModal("Usted no ha permitido su ubicación.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                showModal("Ubicación no Disponible. Registre manualmente.");
+                break;
+            case error.TIMEOUT:
+                showModal("No se recibe respuesta. Registre manualmente.");
+                break;
+        }
+    }
 
     $(window).on("load", function () {
+        $("#modal").on("hidden.bs.modal", function () {
+            if (step == 3) {
+                jbScanner.appendTo(scannerParentElement);
+            }
+        });
         anime.timeline()
         /* .add({
           targets: '.starting-text',
@@ -171,11 +279,11 @@
         $(document).on("stepChange", function () {
             if (step) {
                 switch (step) {
-                    case 1:
+                    case 2:
                         jbScanner.appendTo(scannerParentElement);
                         break;
-                    case 2:
-                    
+                    case 3:
+                        getCoordenadas();
                         break;
                 }
                 anime({
