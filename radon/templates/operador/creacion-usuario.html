@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -41,6 +40,12 @@
             <input class="form-control" type="text" name="" id="scannedTextMemo" disabled>
         </div>
         <div id="step-3" class="d-none">
+            <h1>Leer Geolocalización</h1>
+            <h3 class="mensaje-espera">Espere un momento...</h3>
+            <p class="mt-5">La contraseña es: <b>BX029S</b></p>
+            <button class="btn bg-secundario mt-5 w-100 siguiente" disabled="true">Siguiente</button>
+        </div>
+        <div id="step-6" class="d-none">
             <h1>Registro Terminado</h1>
             <p class="mt-5">La contraseña es: <b>BX029S</b></p>
             <button class="btn bg-secundario mt-5 w-100 siguiente">Siguiente</button>
@@ -83,41 +88,53 @@
     function onQRCodeScanned(scannedText) {
         var reg = new RegExp('rg:[a-zA-Z0-9]{7}:rg');
         var error;
+        jbScanner.removeFrom(scannerParentElement);
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText.split(':rg')[0].split('rg:')[1];
-            var data = {'wisol': id_dispositivo};
+            var data = { 'wisol': id_dispositivo };
             $.ajax({
                 url: "../iot/disponibilidad-wisol/",
                 method: "POST",
                 data: data,
                 context: document.body
             }).done(function (response) {
-                debugger;
-                if (response['serie']) {
+                if (response['wisol'] == "valid") {
                     $.ajax({
-                        url: "iot/dispositivos/" + id_dispositivo + "/",
+                        url: "../iot/dispositivos/" + id_dispositivo + "/",
                         context: document.body
                     }).done(function (response) {
                         if (response['properties']['usuario']) {
                             error = "Dispositivo ya registrado.";
+                            showModal(error);
                         }
-                    }).error(function (error) {
-                        $(document).trigger("stepChange");
+                        jbScanner.appendTo(scannerParentElement);
+                    }).fail(function (error) {
+                        if (error.responseJSON.detail == "No encontrado.") {
+                            $(document).trigger("stepChange");
+                        } else {
+                            showModal("Ocurrió un error, por favor contacta a soporte.");
+                        }
                     });
                 }
             }).fail(function (error) {
-                debugger;
-                var detalle = error["detail"];
-                document.getElementById("error-message").innerHTML = detalle;
-                $("#modal").modal();
+                var detalle = error.responseJSON.wisol[0];
+                showModal(detalle);
+                jbScanner.appendTo(scannerParentElement);
             });
+        } else {
+            showModal("El código QR que se leyó es incorrecto.");
+            jbScanner.appendTo(scannerParentElement);
         }
         var scannedTextMemo = document.getElementById("scannedTextMemo");
         if (scannedTextMemo) {
             scannedTextMemo.value = scannedText;
-            scannerParentElement.parentNode.removeChild(scannerParentElement);
         }
-        $(document).trigger("stepChange");
+    }
+
+    function showModal(texto) {
+        var detalle = texto;
+        document.getElementById("error-message").innerHTML = detalle;
+        $("#modal").modal();
     }
 
     //this function will be called when JsQRScanner is ready to use
@@ -153,8 +170,13 @@
         */
         $(document).on("stepChange", function () {
             if (step) {
-                if (step == 1) {
-                    jbScanner.appendTo(scannerParentElement);
+                switch (step) {
+                    case 1:
+                        jbScanner.appendTo(scannerParentElement);
+                        break;
+                    case 2:
+                    
+                        break;
                 }
                 anime({
                     targets: '#step-' + (step),

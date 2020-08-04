@@ -18,6 +18,7 @@
 		</div>
 	{% empty %}
 	<h4>¡Lo sentimos!</h4><h5>Usted aún no cuenta con instalaciones registradas.</h5>
+	<a href="{% url 'creacion-usuario' %}">-> Crear usuario</a>
 	{% endfor %}
 </div>
 {% endblock content %}

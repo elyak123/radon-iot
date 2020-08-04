@@ -24,7 +24,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Dispositivo.objects.all()
     serializer_class = serializers.DispositivoSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'wisol__serie'
 
 
