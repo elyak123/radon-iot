@@ -86,12 +86,12 @@
             </div>
             <button class="btn bg-secundario mt-4 w-100 siguiente" id="geo-control" disabled="true">Siguiente</button>
         </div>
-        <div id="step-5" class="d-none">
+        <div id="step-6" class="d-none">
             <h1>Registro Terminado</h1>
             <p class="mt-5">La contraseña es: <b>BX029S</b></p>
             <button class="btn bg-secundario mt-4 w-100 siguiente">Siguiente</button>
         </div>
-        <div id="step-6" class="d-none">
+        <div id="step-5" class="d-none">
             <h1>Introduce el Folio de Operación</h1>
             <input class="form-control" type="text" name="" id="">
             <button class="btn bg-secundario mt-4 w-100 finalizar">Finalizar</button>
@@ -99,6 +99,21 @@
     </div>
     <div class="col-lg-3"></div>
 </div>
+<script>
+    var payload = {
+        location: "",
+        username: "",
+        email: "",
+        wisol: "",
+        capacidad: "",
+        telefono: ""
+    };
+    var payload_instalacion = {
+        folio: "", // Folio de Instalación de la papeleta.
+        operario: "", // Nombre de usuario del operario
+        consumidor: "" // Username del nuevo consumidor
+    }
+</script>
 {% endblock content %}
 <script>
     {% block validaciones %}
@@ -112,6 +127,7 @@
             // Preguntar por la existencia del email
             $.post('../checar-email/', { email: event.currentTarget.value }, function (response) {
                 accionarValidacion(evt.target, true);
+                payload.email = evt.currentTarget.value;
                 $("#email-control").prop({ 'disabled': false });
             }).fail(function (response) {
                 accionarValidacion(evt.target, false);
@@ -121,7 +137,12 @@
         }
     });
     $("#phone").on("keyup", function (evt) {
+        payload.telefono = evt.target.value;
         $("#phone-control").prop({ 'disabled': !evt.target.checkValidity() });
+    });
+
+    $("#phone-control").on("click", function (evt) {
+        payload.capacidad = $("#capacidad").val();
     });
     {% endblock %}
 </script>
@@ -136,6 +157,9 @@
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText.split(':rg')[0].split('rg:')[1];
             var data = { 'wisol': id_dispositivo };
+
+            payload.wisol = id_dispositivo;
+
             $.ajax({
                 url: "../iot/disponibilidad-wisol/",
                 method: "POST",
@@ -242,6 +266,9 @@
         lon = posicion.coords.longitude;
         document.getElementById("lat").value = lat;
         document.getElementById("lon").value = lon;
+
+        payload.location = "POINT(" + lat + " " + lon + ")";
+
         $(".mensaje-espera").addClass("d-none");
 
         $("#geo-control").prop({ 'disabled': false });
