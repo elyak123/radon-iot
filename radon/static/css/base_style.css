@@ -58,19 +58,17 @@ a, a:hover, a:focus {
 
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
-    background: #7386D5;
     color: #fff;
     transition: all 0.3s;
 }
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #6d7fcc;
+    background: #42c28f;
 }
 
 #sidebar ul.components {
     padding: 20px 0;
-    border-bottom: 1px solid #47748b;
 }
 
 #sidebar ul p {
@@ -83,19 +81,20 @@ a, a:hover, a:focus {
     font-size: 1.1em;
     display: block;
 }
+
 #sidebar ul li a:hover {
-    color: #7386D5;
-    background: #fff;
+    background: #9FA4A9;
 }
 
-#sidebar ul li.active > a, a[aria-expanded="true"] {
+#sidebar ul li.active>a, a[aria-expanded="true"] {
     color: #fff;
-    background: #6d7fcc;
+    background: #49D49D;
 }
+
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #6d7fcc;
+    background: #49D49D;
 }
 
 @media (max-width: 768px) {
@@ -105,4 +104,179 @@ ul ul a {
     #sidebar.active {
         margin-left: 0;
     }
+}
+
+/* ---------------------------------------------------
+      SIDEBAR STYLE
+  ----------------------------------------------------- */
+
+.wrapper {
+    display: -webkit-box;
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px 0;
+}
+
+#sidebar ul.components {
+    padding: 20px 0;
+}
+
+#sidebar ul p {
+    padding: 10px;
+}
+
+#sidebar ul li a {
+    padding: 10px;
+    font-size: 1.1em;
+    display: block;
+}
+
+#sidebar ul li a:hover {
+    color: #fff;
+}
+
+#sidebar ul li.active>a, a[aria-expanded="true"] {
+    color: #fff;
+    background: #444;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: #444;
+}
+
+ul.CTAs {
+    padding: 20px;
+}
+
+ul.CTAs a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+a.download {
+    background: #fff;
+}
+
+a.article, a.article:hover {
+    color: #fff !important;
+}
+
+/* ---------------------------------------------------
+      CONTENT STYLE
+  ----------------------------------------------------- */
+
+.test {
+    left: 0;
+    -webkit-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+#sidebarCollapse {
+    width: 50px;
+    margin: 0;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* ---------------------------------------------------
+      MEDIAQUERIES
+  ----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #content.active {
+        filter: blur(3px);
+    }
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    .navbar {
+        left: 0;
+    }
+    .navbar.test {
+        left: 250px;
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+    #fondo {
+        position: fixed;
+        z-index: 1;
+    }
+}
+
+@media (min-width: 768px) {
+    #fondo {
+        display: none;
+    }
+    #content {
+        width: calc(100% - 250px);
+        padding: 40px;
+        padding-top: 100px;
+        min-height: 100vh;
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    #content.active {
+        width: 100%;
+    }
+}
+
+.fondo-negro {
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#fondo {
+    transition: 0.3s;
+}
+
+.h-button {
+    width: 250px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-weight: bolder;
+    font-size: 18px;
 }
