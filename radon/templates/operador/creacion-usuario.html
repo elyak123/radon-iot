@@ -19,6 +19,7 @@
         </div>
     </div>
 </div>
+<p class="d-none" id="username">{{ request.user.username }}</p>
 <div class="row">
     <div class="col-lg-3"></div>
     <div class="col-lg-6 card p-4 text-center" style="min-height: 300px;">
@@ -63,12 +64,16 @@
             <h1 class="starting-text"><b>Lee el código QR</b></h1>
             <div id="scanner">
             </div>
-            <label for="scannedTextMemo"><b>ID</b></label>
-            <input class="form-control" type="text" name="" id="scannedTextMemo" disabled>
+            <label for="scannedTextMemo"><b>ID</b></label><br>
+            <i id="mensaje-problemas" class="d-none">¿Tiene problemas para leer el código?, escríbalo directamente:</i>
+            <input class="form-control" type="text" name="" id="scannedTextMemo" disabled="true">
         </div>
         <div id="step-4" class="d-none">
             <h1>Leer Geolocalización</h1>
             <h3 class="mensaje-espera">Espere un momento...</h3>
+            <br>
+            <i><b>Coloca el marcador en la puerta de tu casa, así podremos entregarte tu gas a tiempo.</b></i>
+            <br>
             <div id="mapa" class="mt-4" style="min-height: 300px;"></div>
             <div class="row">
                 <div class="col-6">
@@ -86,15 +91,13 @@
             </div>
             <button class="btn bg-secundario mt-4 w-100 siguiente" id="geo-control" disabled="true">Siguiente</button>
         </div>
-        <div id="step-6" class="d-none">
-            <h1>Registro Terminado</h1>
-            <p class="mt-5">La contraseña es: <b>BX029S</b></p>
-            <button class="btn bg-secundario mt-4 w-100 siguiente">Siguiente</button>
-        </div>
         <div id="step-5" class="d-none">
-            <h1>Introduce el Folio de Operación</h1>
-            <input class="form-control" type="text" name="" id="">
-            <button class="btn bg-secundario mt-4 w-100 finalizar">Finalizar</button>
+            <h3>Registro Terminado</h3>
+            <p class="mt-3">La contraseña es:</p>
+            <b>BX029S</b>
+            <h3 class="mt-5">Folio de Operación:</h3>
+            <input class="form-control" type="text" name="" id="folio">
+            <button class="btn bg-secundario mt-5 w-100" id="finalizar">Finalizar</button>
         </div>
     </div>
     <div class="col-lg-3"></div>
@@ -108,6 +111,7 @@
         capacidad: "",
         telefono: ""
     };
+
     var payload_instalacion = {
         folio: "", // Folio de Instalación de la papeleta.
         operario: "", // Nombre de usuario del operario
@@ -128,6 +132,8 @@
             $.post('../checar-email/', { email: event.currentTarget.value }, function (response) {
                 accionarValidacion(evt.target, true);
                 payload.email = evt.currentTarget.value;
+                payload.username = evt.currentTarget.value;
+                payload_instalacion.consumidor = evt.currentTarget.value;
                 $("#email-control").prop({ 'disabled': false });
             }).fail(function (response) {
                 accionarValidacion(evt.target, false);
@@ -144,14 +150,15 @@
     $("#phone-control").on("click", function (evt) {
         payload.capacidad = $("#capacidad").val();
     });
+
     {% endblock %}
 </script>
 {% block scripts %}
 <script type="text/javascript">
     var jbScanner;
     var scannerParentElement = document.getElementById("scanner");
+    var reg = new RegExp('[a-zA-Z0-9]{7}');
     function onQRCodeScanned(scannedText) {
-        var reg = new RegExp('rg:[a-zA-Z0-9]{7}:rg');
         var error;
         jbScanner.removeFrom(scannerParentElement);
         if (reg.test(scannedText)) {
@@ -224,6 +231,7 @@
     var step = 0;
     var lat;
     var lon;
+    var err = false;
     var id_dispositivo = "";
     var opciones = {
         enableHighAccuracy: true,
@@ -244,7 +252,7 @@
             center: new google.maps.LatLng(lat, lon),
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             //ROADMAP  SATELLITE HYBRID TERRAIN
-            zoom: 19
+            zoom: err ? 5 : 19,
         };
         var miMapa;      //constructor
         miMapa = new google.maps.Map(document.getElementById('mapa'), OpcionesMapa);
@@ -253,8 +261,18 @@
         var Marcador = new google.maps.Marker({
             position: new google.maps.LatLng(lat, lon),
             map: miMapa,
+            draggable: true,
             title: "Tu ubicación"
         });
+
+        google.maps.event.addListener(Marcador, 'dragend', function (evt) {
+            lat = evt.latLng.lat();
+            lon = evt.latLng.lng();
+            document.getElementById("lat").value = lat;
+            document.getElementById("lon").value = lon;
+        });
+
+        $("#geo-control").prop({ 'disabled': false });
     }
 
     function exito(posicion) {
@@ -270,29 +288,50 @@
         payload.location = "POINT(" + lat + " " + lon + ")";
 
         $(".mensaje-espera").addClass("d-none");
-
-        $("#geo-control").prop({ 'disabled': false });
     }
 
     function fracaso(error) {
+        err = true;
+        var script = document.createElement("script");
+        script.src = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=cargar&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
+        document.body.appendChild(script);
+
+        lat = 21.8808344;
+        lon = -102.2958248;
+        document.getElementById("lat").value = lat;
+        document.getElementById("lon").value = lon;
+
         var output = document.getElementById("output");
         switch (error.code) {
             case error.PERMISSION_DENIED:
-                showModal("Usted no ha permitido su ubicación.");
+                showModal("Usted no ha permitido su ubicación. Registre manualmente su ubicación.");
                 break;
             case error.POSITION_UNAVAILABLE:
-                showModal("Ubicación no Disponible. Registre manualmente.");
+                showModal("Ubicación no Disponible. Registre manualmente su ubicación.");
                 break;
             case error.TIMEOUT:
                 showModal("No se recibe respuesta. Registre manualmente.");
                 break;
         }
+
+        $(".mensaje-espera").addClass("d-none");
     }
 
     $(window).on("load", function () {
         $("#modal").on("hidden.bs.modal", function () {
             if (step == 3) {
                 jbScanner.appendTo(scannerParentElement);
+            }
+            else if (step == 5) {
+                $.ajax({
+                    url: "../iot/instalaciones/",
+                    context: document.body
+                }).done(function (response) {
+                    // Aquí redirigir a inicio.
+                    alert("terminado");
+                }).fail(function (error) {
+                    showModal(error);
+                });
             }
         });
         anime.timeline()
@@ -303,11 +342,21 @@
           duration: ml4.durationIn
         });
         */
+        function problemasEjecucion() {
+            $("#mensaje-problemas").removeClass("d-none");
+            $("#scannedTextMemo").prop({ disabled: false });
+            $("#scannedTextMemo").on("keyup", function (evt) {
+                if (reg.test(evt.target.value)) {
+                    onQRCodeScanned(evt.target.value);
+                }
+            });
+        }
         $(document).on("stepChange", function () {
             if (step) {
                 switch (step) {
                     case 2:
                         jbScanner.appendTo(scannerParentElement);
+                        setTimeout(problemasEjecucion, 7500);
                         break;
                     case 3:
                         getCoordenadas();
@@ -340,6 +389,21 @@
         $(document).trigger("stepChange");
         $(".siguiente").on('click', function () {
             $(document).trigger("stepChange");
+        });
+
+        $("#finalizar").on("click", function () {
+            payload_instalacion.operario = $("#username").html();
+            payload_instalacion.folio = $("#folio").val();
+            $.ajax({
+                url: "../users/user-dispositivo-registration/",
+                method: "POST",
+                data: payload,
+                context: document.body
+            }).done(function (response) {
+                showModal("Usuario creado con éxito.");
+            }).fail(function (error) {
+                showModal(error);
+            });
         });
     });
 </script>
