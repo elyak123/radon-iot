@@ -211,3 +211,6 @@ validate_aws_sns_message==0.9.0 \
     --hash=sha256:099e073c0aaf66a5e294ff71c91dbdbc32583addb1b761ee42ea8ea2de1339cc \
     --hash=sha256:3da7364c18ae54014b741e8d0ea854fb9a6966212ea96f6676a380df2d6fa98f \
     # via -r requirements/base.in
+xkcdpass==1.17.3 \
+    --hash=sha256:95cf3fd41130606ba64ec7edb9efac7c5d61efe21abab51a2c21ccbbebc48bb6 \
+    # via -r requirements/base.in

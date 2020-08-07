@@ -282,3 +282,6 @@ whitenoise[brotli]==4.1.2 \
     --hash=sha256:118ab3e5f815d380171b100b05b76de2a07612f422368a201a9ffdeefb2251c1 \
     --hash=sha256:42133ddd5229eeb6a0c9899496bdbe56c292394bf8666da77deeb27454c0456a \
     # via -r requirements/production.in
+xkcdpass==1.17.3 \
+    --hash=sha256:95cf3fd41130606ba64ec7edb9efac7c5d61efe21abab51a2c21ccbbebc48bb6 \
+    # via -r requirements/base.txt
