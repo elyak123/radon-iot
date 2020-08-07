@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db.utils import ProgrammingError
 from django.contrib.auth import get_user_model
+from xkcdpass import xkcd_password as xp
 
 
 def get_default_user():
@@ -14,6 +15,14 @@ def get_default_gasera():
         return Gasera.objects.get_or_create(nombre=settings.DEFAULT_GASERA)[0].pk
     except ProgrammingError:
         return 1
+
+
+def create_user_password(numwords=2):
+    wordfile = xp.locate_wordfile('spa-mich')
+    word_list = xp.generate_wordlist(wordfile=wordfile, min_length=5, max_length=8)
+    pwd = xp.generate_xkcdpassword(word_list, numwords=numwords, delimiter='_')
+    repl = pwd.maketrans('áéíóú', 'aeiou')
+    return pwd.translate(repl)
 
 
 def create_user_and_dispositivo(user_data, disp_data):

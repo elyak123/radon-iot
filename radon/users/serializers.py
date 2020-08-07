@@ -13,7 +13,7 @@ from allauth.account.adapter import get_adapter
 from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
-from .utils import create_user_and_dispositivo
+from .utils import create_user_and_dispositivo, create_user_password
 
 User = get_user_model()
 
@@ -185,6 +185,21 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
         user_data, disp_data = self.get_cleaned_data()
         user, dispositivo = create_user_and_dispositivo(user_data, disp_data)
         return user
+
+
+class TemporalPassUserDispsitivoCreation(AsistedUserDispositivoCreation):
+    password = serializers.HiddenField(default=True)
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret['password'] = self.pwd
+        return ret
+
+    def get_cleaned_data(self):
+        user_data, disp_data = super().get_cleaned_data()
+        self.pwd = create_user_password()
+        user_data['password'] = self.pwd
+        return user_data, disp_data
 
 
 class ActivateUsers(WisolValidation):
