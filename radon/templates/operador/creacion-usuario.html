@@ -157,7 +157,7 @@
 <script type="text/javascript">
     var jbScanner;
     var scannerParentElement = document.getElementById("scanner");
-    var reg = new RegExp('rg:[a-zA-Z0-9]{7}:rg');
+    var reg = new RegExp('[a-zA-Z0-9]{7}');
     function onQRCodeScanned(scannedText) {
         var error;
         jbScanner.removeFrom(scannerParentElement);
