@@ -81,4 +81,4 @@ class InstalacionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Instalacion
-        fields = ['fecha', 'operario', 'consumidor']
+        fields = ['fecha', 'operario', 'consumidor', 'folio']

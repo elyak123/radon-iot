@@ -96,6 +96,7 @@ class Instalacion(models.Model):
     fecha = models.DateTimeField(auto_now=True)
     operario = models.ForeignKey(User, related_name='operario', on_delete=models.CASCADE)
     consumidor = models.ForeignKey(User, related_name='consumidor', on_delete=models.CASCADE)
+    folio = models.CharField('Folio de Instalación', max_length=10, unique=True)
 
     class Meta:
         verbose_name = "Instalacion"
