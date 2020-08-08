@@ -1,5 +1,5 @@
 .bg-primario {
-    background-color: #49D49D;
+    background-color: #a2e8cd;
 }
 
 .bg-secundario {
@@ -64,7 +64,7 @@ a, a:hover, a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #42c28f;
+    background: #95dac1;
 }
 
 #sidebar ul.components {
