@@ -93,11 +93,15 @@
         </div>
         <div id="step-5" class="d-none">
             <h3>Registro Terminado</h3>
-            <p class="mt-3">La contraseña es:</p>
-            <b>BX029S</b>
             <h3 class="mt-5">Folio de Operación:</h3>
             <input class="form-control" type="text" name="" id="folio">
             <button class="btn bg-secundario mt-5 w-100" id="finalizar" disabled="true">Finalizar</button>
+        </div>
+        <div id="step-6" class="d-none">
+            <h3>Registro Terminado</h3>
+            <p class="mt-3">La contraseña es:</p>
+            <b id="pwd-wrapper"></b>
+            <a class="btn bg-secundario mt-5 w-100" id="inicio" href="{% url 'inicio' %}">Ir a Inicio</a>
         </div>
     </div>
     <div class="col-lg-3"></div>
@@ -276,6 +280,7 @@
             lon = evt.latLng.lng();
             document.getElementById("lat").value = lat;
             document.getElementById("lon").value = lon;
+            payload.location = "POINT(" + lat + " " + lon + ")";
         });
 
         $("#geo-control").prop({ 'disabled': false });
@@ -307,6 +312,8 @@
         document.getElementById("lat").value = lat;
         document.getElementById("lon").value = lon;
 
+        payload.location = "POINT(" + lat + " " + lon + ")";
+
         var output = document.getElementById("output");
         switch (error.code) {
             case error.PERMISSION_DENIED:
@@ -333,10 +340,9 @@
                     url: "../iot/instalaciones/",
                     context: document.body
                 }).done(function (response) {
-                    // Aquí redirigir a inicio.
-                    alert("terminado");
+                    $(document).trigger("stepChange");
                 }).fail(function (error) {
-                    showModal(error);
+                    showModal("Error interno, por favor contacte a un administrador.");
                 });
             }
         });
@@ -398,7 +404,6 @@
         });
 
         $("#finalizar").on("click", function () {
-            debugger;
             payload_instalacion.operario = $("#username").html();
             payload_instalacion.folio = $("#folio").val();
             $.ajax({
@@ -408,8 +413,18 @@
                 context: document.body
             }).done(function (response) {
                 showModal("Usuario creado con éxito.");
+                $("#pwd-wrapper").html(response['password']);
             }).fail(function (error) {
-                showModal(error);
+                var error_json = error.responseJSON;
+                var error_str = "<ul>";
+                for(error in error_json) {
+                    error_str += `<li><b>${error}:</b></li>`;
+                    for(error_detalle in error_json[error]) {
+                        error_str += `<li>${error_json[error][error_detalle]}</li>`;
+                    }
+                }
+                error_str += "</ul>";
+                showModal(error_str);
             });
         });
     });
