@@ -168,8 +168,10 @@
     var jbScanner;
     var scannerParentElement = document.getElementById("scanner");
     var reg = new RegExp(/^[0-9a-fA-F]{7}$/);
+    var scanning = false;
     function onQRCodeScanned(scannedText) {
         var error;
+        scanning = jbScanner.isScanning()
         jbScanner.removeFrom(scannerParentElement);
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText;
@@ -335,7 +337,7 @@
     $(window).on("load", function () {
         $("#modal").on("hidden.bs.modal", function () {
             if (step == 3) {
-                if($("scannedTextMemo").html() != 'Permission denied') jbScanner.appendTo(scannerParentElement);
+                if(scanning) jbScanner.appendTo(scannerParentElement);
             }
             else if (step == 5) {
                 $.ajax({
