@@ -3,7 +3,7 @@ body {
 }
 
 .bg-primario {
-    background-color: red;
+    background-color: rgb(201, 226, 233);
 }
 
 .bg-secundario {
@@ -68,7 +68,7 @@ a, a:hover, a:focus {
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: #95dac1;
+    background: rgb(187, 206, 212);
 }
 
 #sidebar ul.components {
@@ -87,7 +87,7 @@ a, a:hover, a:focus {
 }
 
 #sidebar ul li a:hover {
-    background: #9FA4A9;
+    background: rgb(109, 109, 109);
 }
 
 #sidebar ul li.active>a, a[aria-expanded="true"] {

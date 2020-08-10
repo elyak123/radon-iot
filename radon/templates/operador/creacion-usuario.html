@@ -152,9 +152,11 @@
         $("#finalizar").prop({ 'disabled': !(evt.target.value.length == 6) });
     });
 
+    var phone_reg = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]‌​)\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]‌​|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})\s*(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+)\s*)?$/gm;
+
     $("#phone").on("keyup", function (evt) {
         payload.telefono = evt.target.value;
-        $("#phone-control").prop({ 'disabled': !evt.target.checkValidity() });
+        $("#phone-control").prop({ 'disabled': !phone_reg.test(evt.target.value) && evt.target.value.length == 10 });
     });
 
     $("#phone-control").on("click", function (evt) {
@@ -201,7 +203,7 @@
                         }
                     }).fail(function (error) {
                         if (error.responseJSON.detail == "No encontrado.") {
-                            jbScanner.removeFrom(scannerParentElement);
+                            if (scanning) jbScanner.removeFrom(scannerParentElement);
                             $(document).trigger("stepChange");
                         } else {
                             showModal("Ocurrió un error, por favor contacta a soporte.");
@@ -343,7 +345,9 @@
             if (step == 5) {
                 $.ajax({
                     url: "../iot/instalaciones/",
-                    context: document.body
+                    context: document.body,
+                    method: "POST",
+                    data: payload_instalacion
                 }).done(function (response) {
                     $(document).trigger("stepChange");
                 }).fail(function (error) {
