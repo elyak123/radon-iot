@@ -63,7 +63,7 @@ brotli==1.0.7 \
 certifi==2019.11.28 \
     --hash=sha256:017c25db2a153ce562900032d5bc68e9f191e44e9a0f762f373977de9df1fbb3 \
     --hash=sha256:25b64c7da4cd7479594d035c08c2d809eb4aab3a26e5a990ea98cc450c320f1f \
-    # via -r requirements/base.txt, requests
+    # via -r requirements/base.txt, requests, sentry-sdk
 cffi==1.14.0 \
     --hash=sha256:001bf3242a1bb04d985d63e138230802c6c8d4db3668fb545fb5005ddf5bb5ff \
     --hash=sha256:00789914be39dffba161cfc5be31b55775de5ba2235fe49aa28c148236c4e06b \
@@ -258,6 +258,10 @@ s3transfer==0.1.13 \
     --hash=sha256:90dc18e028989c609146e241ea153250be451e05ecc0c2832565231dacdf59c1 \
     --hash=sha256:c7a9ec356982d5e9ab2d4b46391a7d6a950e2b04c472419f5fdec70cc0ada72f \
     # via boto3
+sentry-sdk==0.16.3 \
+    --hash=sha256:21b17d6aa064c0fb703a7c00f77cf6c9c497cf2f83345c28892980a5e742d116 \
+    --hash=sha256:4fc97114c77d005467b9b1a29f042e2bc01923cb683b0ef0bbda46e79fa12532 \
+    # via -r requirements/production.in
 six==1.14.0 \
     --hash=sha256:236bdbdce46e6e6a3d61a337c0f8b763ca1e8717c03b369e87a7ec7ce1319c0a \
     --hash=sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c \
@@ -273,7 +277,7 @@ sqlparse==0.3.0 \
 urllib3==1.25.8 \
     --hash=sha256:2f3db8b19923a873b3e5256dc9c2dedfa883e33d87c690d9c7913e1f40673cdc \
     --hash=sha256:87716c2d2a7121198ebcb7ce7cccf6ce5e9ba539041cfbaeecfb641dc0bf6acc \
-    # via -r requirements/base.txt, requests
+    # via -r requirements/base.txt, requests, sentry-sdk
 validate_aws_sns_message==0.9.0 \
     --hash=sha256:099e073c0aaf66a5e294ff71c91dbdbc32583addb1b761ee42ea8ea2de1339cc \
     --hash=sha256:3da7364c18ae54014b741e8d0ea854fb9a6966212ea96f6676a380df2d6fa98f \

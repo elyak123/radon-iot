@@ -10,8 +10,10 @@
     </div>
     <div class="col-md-3"></div>
 </div>
-{% block scripts %}
+{% block scriptsnocompress %}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
+{% endblock scriptsnocompress %}
+{% block scripts %}
 <script type="text/javascript">
     var context = document.getElementById("consumo").getContext("2d");
     var y = "-3*i+22.8";
