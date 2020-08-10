@@ -208,6 +208,7 @@
             });
         } else if (scannedText.split(" ").length > 2) {
             showModal("No permitiste el uso de cámara. Introduce el código manualmente.");
+            $("#scannedTextMemo").html("");
             jbScanner.removeFrom(scannerParentElement);
         } else {
             showModal("El código QR que se leyó es incorrecto.");
