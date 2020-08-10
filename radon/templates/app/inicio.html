@@ -18,8 +18,8 @@
     </div>
     <div class="col-md-3"></div>
 </div>
+{% block scriptsnocompress %}<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.js"></script>{% endblock scriptsnocompress %}
 {% block scripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.js"></script>
 {{ ultima_lectura|json_script:"nivelLectura" }}
 <script>
 function getColor (disponible) {
