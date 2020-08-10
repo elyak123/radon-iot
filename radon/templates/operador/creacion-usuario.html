@@ -206,7 +206,7 @@
                 var detalle = error.responseJSON.wisol[0];
                 showModal(detalle);
             });
-        } else if (scannedText.split(" ").length > 2) {
+        } else if (scannedText.split(" ").length > 1) {
             showModal("No permitiste el uso de cámara. Introduce el código manualmente.");
             $("#scannedTextMemo").html("");
             jbScanner.removeFrom(scannerParentElement);
