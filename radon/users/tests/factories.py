@@ -30,7 +30,7 @@ class PrecioFactory(factory.django.DjangoModelFactory):
 
 class UserFactory(factory.django.DjangoModelFactory):
     username = factory.LazyAttribute(
-        lambda o: unidecode(o.first_name.split(' ')[0].lower() + '.' + o.last_name.lower()))
+        lambda o: unidecode(o.first_name.split(' ')[0].lower() + '_' + o.last_name.lower()))
     # lambda o: fake.first_name().split(' ')[0].lower() + '_' + fake.lexify())
     first_name = factory.LazyAttribute(lambda o: faker.first_name())
     telefono = factory.LazyAttribute(lambda o: fake.numerify(fake.random_element(('####-###-###',))))

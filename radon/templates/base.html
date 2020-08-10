@@ -21,53 +21,25 @@
 <body class="bg-fondo">
   <nav id="sidebar" class="navbar-dark bg-primario">
     <div class=" sidebar-header" style="width: 295px;">
-      <button class="h-button" style="width: 240px;">Radargas</button>
+      <a class="h-button" style="width: 240px; display: inline-block; padding-left: 75px;" href="{% url 'inicio' %}">Radargas</a>
       <div id="sidebarCollapse" class="h-button" style="width: 50px;"> > </div>
     </div>
 
     <ul class="list-unstyled components">
       <li>
-        <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-        <ul class="collapse list-unstyled" id="homeSubmenu">
-          <li>
-            <a href="#">Home 1</a>
-          </li>
-          <li>
-            <a href="#">Home 2</a>
-          </li>
-          <li>
-            <a href="#">Home 3</a>
-          </li>
-        </ul>
+        <a href="">Historial Instalaciones</a>
       </li>
       <li>
-        <a href="#">About</a>
+        <a href="#">Nueva Instalación</a>
       </li>
       <li>
-        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-        <ul class="collapse list-unstyled" id="pageSubmenu">
-          <li>
-            <a href="#">Page 1</a>
-          </li>
-          <li>
-            <a href="#">Page 2</a>
-          </li>
-          <li>
-            <a href="#">Page 3</a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a href="#">Portfolio</a>
-      </li>
-      <li>
-        <a href="#">Contact</a>
+        <a href="">Reporta un problema</a>
       </li>
     </ul>
     <div class="p-3">
       {% if user.is_authenticated %}
       <p><b>{{ user.username }}</b></p>
-      <button class="btn bg-secundario primaryAction boton">Cerrar Sesión</button>
+      <a href="{% url 'account_logout' %}" class="btn bg-secundario primaryAction boton">Cerrar Sesión</a>
     </div>
     {% endif %}
   </nav>

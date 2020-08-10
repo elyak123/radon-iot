@@ -37,7 +37,7 @@
         <div id="step-2" class="d-none">
             <h3 class="starting-text mt-4"><b>Teléfono</b></h3>
             <div class="form-group">
-                <input class="form-control mt-2 campo-formulario" type="tel" placeholder="10 dígitos: 4491234567"
+                <input class="form-control mt-2" type="tel" placeholder="10 dígitos: 4491234567"
                     name="" id="phone" pattern="[0-9]{10}">
                 <div class="invalid-feedback">
                     ¡Introduce un teléfono válido!
@@ -156,7 +156,8 @@
 
     $("#phone").on("keyup", function (evt) {
         payload.telefono = evt.target.value;
-        $("#phone-control").prop({ 'disabled': !phone_reg.test(evt.target.value) && evt.target.value.length == 10 });
+        accionarValidacion(evt.target, (phone_reg.test(evt.target.value) && evt.target.value.length == 10));
+        $("#phone-control").prop({ 'disabled': !phone_reg.test(evt.target.value) && !evt.target.value.length == 10 });
     });
 
     $("#phone-control").on("click", function (evt) {
