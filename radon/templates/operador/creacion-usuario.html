@@ -172,7 +172,6 @@
     function onQRCodeScanned(scannedText) {
         var error;
         scanning = jbScanner.isScanning()
-        jbScanner.removeFrom(scannerParentElement);
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText;
             var data = { 'wisol': id_dispositivo };
@@ -196,6 +195,7 @@
                         }
                     }).fail(function (error) {
                         if (error.responseJSON.detail == "No encontrado.") {
+                            jbScanner.removeFrom(scannerParentElement);
                             $(document).trigger("stepChange");
                         } else {
                             showModal("Ocurrió un error, por favor contacta a soporte.");
@@ -206,8 +206,9 @@
                 var detalle = error.responseJSON.wisol[0];
                 showModal(detalle);
             });
-        } else if (scannedText == "Permission denied") {
+        } else if (scannedText.split(" ").length > 2) {
             showModal("No permitiste el uso de cámara. Introduce el código manualmente.");
+            jbScanner.removeFrom(scannerParentElement);
         } else {
             showModal("El código QR que se leyó es incorrecto.");
         }
@@ -336,10 +337,7 @@
 
     $(window).on("load", function () {
         $("#modal").on("hidden.bs.modal", function () {
-            if (step == 3) {
-                if(scanning) jbScanner.appendTo(scannerParentElement);
-            }
-            else if (step == 5) {
+            if (step == 5) {
                 $.ajax({
                     url: "../iot/instalaciones/",
                     context: document.body
