@@ -172,6 +172,12 @@
     function onQRCodeScanned(scannedText) {
         var error;
         scanning = jbScanner.isScanning()
+
+        var scannedTextMemo = document.getElementById("scannedTextMemo");
+        if (scannedTextMemo) {
+            scannedTextMemo.value = scannedText;
+        }
+
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText;
             var data = { 'wisol': id_dispositivo };
@@ -208,14 +214,10 @@
             });
         } else if (scannedText.split(" ").length > 1) {
             showModal("No permitiste el uso de cámara. Introduce el código manualmente.");
-            $("#scannedTextMemo").html("");
+            $("#scannedTextMemo").val("");
             jbScanner.removeFrom(scannerParentElement);
         } else {
             showModal("El código QR que se leyó es incorrecto.");
-        }
-        var scannedTextMemo = document.getElementById("scannedTextMemo");
-        if (scannedTextMemo) {
-            scannedTextMemo.value = scannedText;
         }
     }
 
