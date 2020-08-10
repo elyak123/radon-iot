@@ -1,5 +1,9 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
 .bg-primario {
-    background-color: #a2e8cd;
+    background-color: red;
 }
 
 .bg-secundario {
@@ -58,7 +62,7 @@ a, a:hover, a:focus {
 
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
-    color: #fff;
+    color: black;
     transition: all 0.3s;
 }
 
@@ -95,6 +99,11 @@ ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
     background: #49D49D;
+    transition: 0s;
+}
+
+ul ul.show a {
+    color: #ffffff;
 }
 
 @media (max-width: 768px) {
@@ -155,7 +164,7 @@ ul ul a {
 
 #sidebar ul li.active>a, a[aria-expanded="true"] {
     color: #fff;
-    background: #444;
+    background: rgb(109, 109, 109);
 }
 
 a[data-toggle="collapse"] {
@@ -174,7 +183,7 @@ a[data-toggle="collapse"] {
 ul ul a {
     font-size: 0.9em !important;
     padding-left: 30px !important;
-    background: #444;
+    background: rgb(109, 109, 109);
 }
 
 ul.CTAs {
@@ -276,7 +285,7 @@ a.article, a.article:hover {
     width: 250px;
     background: transparent;
     border: none;
-    color: white;
+    color: black;
     font-weight: bolder;
     font-size: 18px;
 }
