@@ -20,6 +20,6 @@ class VirtualHostMiddleware:
                 raise Http404("El sitio al que está tratando de acceder no existe.")
             # order matters!
         else:
-            request.urlconf = 'radon.operador.urls'
+            request.urlconf = 'radon.app.urls'
         response = self.get_response(request)
         return response
