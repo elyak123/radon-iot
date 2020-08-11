@@ -1,12 +1,13 @@
-{% extends "app/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-3"></div>
-    <div class="col-md-6">
-        <h4>Gráfica de tus consumos</h4>
+    <div class="col-md-6 card p-3">
+        <h4 class="mt-4">Gráfica de tus consumos</h4>
         <canvas id="consumo" height="100px" width="100%"></canvas>
         <h4 class="mt-5" id="fecha_estimada"></h4>
+        <a class="btn bg-primario my-2" href="#">Agendar recarga de gas</a>
     </div>
     <div class="col-md-3"></div>
 </div>
@@ -16,11 +17,14 @@
 {% block scripts %}
 <script type="text/javascript">
     var context = document.getElementById("consumo").getContext("2d");
+    var informacion = {
+        ['15-jun', 54, 0],
+    };
     var y = "-3*i+22.8";
     var z = [];
-    var fechas = ['15-jun', '15-jun', '16-jun', '16-jun', '17-jun', '17-jun', '18-jun', '18-jun', '19-jun', '19-jun'];
+    var fechas = ['15-jun', '15-jun', '16-jun', '16-jun', '17-jun', '17-jun', '18-jun', '18-jun', '19-jun', '19-jun', '15-jun', '15-jun', '16-jun', '16-jun', '17-jun', '17-jun', '18-jun', '18-jun', '19-jun', '19-jun', '15-jun', '15-jun', '16-jun', '16-jun', '17-jun', '17-jun', '18-jun', '18-jun', '19-jun', '19-jun'];
     var tope = 0;
-    for(var i=1; i<=10; i++) {
+    for(var i=1; i<=30; i++) {
         if(!(eval(y)<0)){
             z.push(eval(y));
             tope = i+1;
@@ -34,7 +38,7 @@
                 label: 'Tus medidas',
                 data: [20, 16, 15, 10, 8],
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(99, 125, 255, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
                     'rgba(255, 206, 86, 0.2)',
                     'rgba(75, 192, 192, 0.2)',

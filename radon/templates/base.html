@@ -21,14 +21,15 @@
 <body class="bg-fondo">
   <nav id="sidebar" class="navbar-dark bg-primario">
     <div class=" sidebar-header" style="width: 295px;">
-      <a class="h-button" style="width: 240px; display: inline-block; padding-left: 75px;" href="{% url 'inicio' %}">Radargas</a>
+      <a class="h-button" style="width: 240px; display: inline-block; padding-left: 75px;"
+        href="{% url 'inicio' %}">Radargas</a>
       <div id="sidebarCollapse" class="h-button" style="width: 50px;"> > </div>
     </div>
-
+    {% if user.tipo == 'OPERARIO' %}
     <ul class="list-unstyled components">
       <li>
         <a href="{% url 'inicio' %}">Historial Instalaciones</a>
-      </li> 
+      </li>
       <li>
         <a href="{% url 'creacion-usuario' %}">Nueva Instalación</a>
       </li>
@@ -36,6 +37,23 @@
         <a href="">Reporta un problema</a>
       </li>
     </ul>
+    {% endif %}
+    {% if user.tipo == 'CONSUMIDOR' %}
+    <ul class="list-unstyled components">
+      <li>
+        <a href="{% url 'inicio' %}">Nivel Actual</a>
+      </li>
+      <li>
+        <a href="{% url 'grafica' %}">Gráfica de mi consumo</a>
+      </li>
+      <li>
+        <a href="{% url 'inicio' %}">Pedir Gas</a>
+      </li>
+      <li>
+        <a href="">Reporta un problema</a>
+      </li>
+    </ul>
+    {% endif %}
     <div class="p-3">
       {% if user.is_authenticated %}
       <p><b>{{ user.username }}</b></p>
