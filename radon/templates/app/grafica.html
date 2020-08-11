@@ -17,38 +17,126 @@
 {% block scripts %}
 <script type="text/javascript">
     var context = document.getElementById("consumo").getContext("2d");
-    var informacion = {
-        ['15-jun', 54, 0],
-    };
     var y = "-3*i+22.8";
     var z = [];
     var fechas = ['15-jun', '15-jun', '16-jun', '16-jun', '17-jun', '17-jun', '18-jun', '18-jun', '19-jun', '19-jun', '15-jun', '15-jun', '16-jun', '16-jun', '17-jun', '17-jun', '18-jun', '18-jun', '19-jun', '19-jun', '15-jun', '15-jun', '16-jun', '16-jun', '17-jun', '17-jun', '18-jun', '18-jun', '19-jun', '19-jun'];
     var tope = 0;
-    for(var i=1; i<=30; i++) {
-        if(!(eval(y)<0)){
+    for (var i = 1; i <= 30; i++) {
+        if (!(eval(y) < 0)) {
             z.push(eval(y));
-            tope = i+1;
+            tope = i + 1;
         }
+    }
+
+
+    var l_inicial = Math.floor(Math.random() * 100);
+    var arreglo = [];
+    var fecha = new Date(2020, 08, 05);
+    var meses = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEPT", "OCT", "NOV", "DIC"]
+
+    function dateToString(fecha) {
+        return fecha.getDate() + "-" + meses[fecha.getMonth() - 1]
+    }
+
+    function linearRegression(y, x) {
+        var lr = {};
+        var n = y.length;
+        var sum_x = 0;
+        var sum_y = 0;
+        var sum_xy = 0;
+        var sum_xx = 0;
+        var sum_yy = 0;
+
+        for (var i = 0; i < y.length; i++) {
+
+            sum_x += x[i];
+            sum_y += y[i];
+            sum_xy += (x[i] * y[i]);
+            sum_xx += (x[i] * x[i]);
+            sum_yy += (y[i] * y[i]);
+        }
+
+        lr['slope'] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
+        lr['intercept'] = (sum_y - lr.slope * sum_x) / n;
+        lr['r2'] = Math.pow((n * sum_xy - sum_x * sum_y) / Math.sqrt((n * sum_xx - sum_x * sum_x) * (n * sum_yy - sum_y * sum_y)), 2);
+
+        return lr;
+    }
+
+    var rand = -Math.random() * 1 + .5;
+
+    // Si inicio con un numero, es porque voy a restarle
+
+    for (var i = 0; i < 60; i++) {
+        var anterior = l_inicial;
+
+        var rand = -(Math.random() * 1 + .5); // Esto es lo que voy a restarle.
+
+        l_inicial += rand; // Ejecuto lo que será la resta.
+
+        if (l_inicial < 0) {
+            rand = Math.floor(Math.random() * 100);
+            l_inicial = anterior + rand;
+        }
+        obj = [l_inicial, dateToString(fecha), rand];
+        fecha = new Date(fecha.setHours(fecha.getHours() + 12));
+        arreglo.push(obj);
+    }
+
+    var x = [];
+    var y = [];
+    var count = 0;
+
+    var fechas = [];
+    var lecturas = [];
+    var fechas_predict = [];
+    var lecturas_predict = [];
+    var promedio = 0;
+
+    for (var i = 0; i < arreglo.length; i++) {
+        if (i >= 30) {
+            lecturas.push(arreglo[i][0]);
+            fechas.push(arreglo[i][1]);
+            fechas_predict.push(arreglo[i][1]);
+            lecturas_predict.push(arreglo[i][0]);
+        }
+        if (!(arreglo[i][2] > 0)) {
+            x.push(count);
+            count++;
+            y.push(arreglo[i][2]);
+            promedio += arreglo[i][2];
+        }
+    }
+
+    promedio = promedio / count;
+
+    var regresion = linearRegression(x, y);
+
+    var res = l_inicial;
+    var f_actual = fecha;
+
+    for (var i = 0; res > 0; i++) {
+        res += promedio;
+        if (res > 0 && i < 30) {
+            lecturas_predict.push(res);
+            fechas.push(dateToString(fecha));
+        }
+        fecha = new Date(fecha.setHours(fecha.getHours() + 12));
     }
     var grafica = new Chart(context, {
         type: "line",
         data: {
             labels: fechas,
             datasets: [{
-                label: 'Tus medidas',
-                data: [20, 16, 15, 10, 8],
+                label: 'Lectura real',
+                data: lecturas,
                 backgroundColor: [
-                    'rgba(99, 125, 255, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    'rgba(99, 125, 255, 0.2)'
                 ],
                 borderWidth: 1
             }, {
-                label: 'Estimado por nosotros',
-                data: z,
+                label: 'Estimado',
+                data: lecturas_predict,
                 backgroundColor: "rgba(100, 100, 100, 0.2)",
                 borderWidth: 1
             }]
@@ -63,7 +151,7 @@
             }
         }
     });
-    document.getElementById("fecha_estimada").innerHTML = `Tu gas se termina el día ${fechas[tope]}`;
+    document.getElementById("fecha_estimada").innerHTML = `Tu gas se termina el día ${dateToString(fecha)}`;
 </script>
 {% endblock scripts %}
 {% endblock content %}
