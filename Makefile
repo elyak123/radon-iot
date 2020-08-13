@@ -8,3 +8,13 @@ pipcompile:
 	@pip-compile --generate-hashes requirements/local.in --output-file requirements/local.txt
 	@pip-compile --generate-hashes requirements/test.in --output-file requirements/test.txt
 	@pip-compile --generate-hashes requirements/production.in --output-file requirements/production.txt
+
+static:
+	#@python manage.py collectstatic --noinput --clear
+	@python manage.py collectstatic --noinput
+	@python manage.py compress --force
+	@python manage.py collectstatic --noinput
+	@python manage.py migrate
+
+deploy: static
+	@service apache2 restart
