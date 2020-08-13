@@ -105,7 +105,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # COMPRESSOR
 # ------------------------------------------------------------------------------
-COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
+#COMPRESS_STORAGE = 'compressor.storage.CompressorFileStorage'
+COMPRESS_STORAGE = STATICFILES_STORAGE
 COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
 COMPRESS_OFFLINE = env.bool('COMPRESS_OFFLINE', default=True)
 COMPRESS_URL = STATIC_URL
