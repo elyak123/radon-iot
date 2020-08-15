@@ -9,7 +9,7 @@ class DashboardView(LoginRequiredMixin, generic.TemplateView):
         context = super(DashboardView, self).get_context_data(**kwargs)
         dispositivo = self.request.user.dispositivo_set.first()
         lectura = dispositivo.get_ultima_lectura() if dispositivo else None
-        context['ultima_lectura'] = {'lectura': lectura}
+        context['ultima_lectura'] = lectura
         return context
 
 

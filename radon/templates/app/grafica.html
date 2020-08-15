@@ -5,8 +5,10 @@
     <div class="col-md-3"></div>
     <div class="col-md-6 card p-1">
         <h4 class="mt-4">Gráfica de tus consumos</h4>
-        <canvas id="consumo" height="100px" width="100%"></canvas>
-        <h4 class="mt-5" id="fecha_estimada"></h4>
+        <div class="consumo-wrapper">
+
+        </div>
+        <h4 class="mt-3" id="fecha_estimada"></h4>
         <a class="btn bg-primario my-2" href="#">Agendar recarga de gas</a>
     </div>
     <div class="col-md-3"></div>
@@ -16,6 +18,15 @@
 {% endblock scriptsnocompress %}
 {% block scripts %}
 <script type="text/javascript">
+    var h = $(window).height();
+    var w = $(window).width();
+    // $("#consumo").css("height", "10px");
+    if (h / w >= (4 / 3)) {
+        $(".consumo-wrapper").html('<canvas id="consumo" height="120px" width="100%"></canvas>');
+    } else {
+        $(".consumo-wrapper").html('<canvas id="consumo" height="70px" width="100%"></canvas>');
+    }
+
     var context = document.getElementById("consumo").getContext("2d");
     var y = "-3*i+22.8";
     var z = [];
@@ -70,7 +81,7 @@
     for (var i = 0; i < 60; i++) {
         var anterior = l_inicial;
 
-        var rand = -(Math.random() * 1 + .5); // Esto es lo que voy a restarle.
+        var rand = -(Math.random() * 2 + .5); // Esto es lo que voy a restarle.
 
         l_inicial += rand; // Ejecuto lo que será la resta.
 
@@ -168,7 +179,7 @@
                 backgroundColor: "rgba(0,0,0, 0.4)",
                 fill: "+1",
                 borderColor: "rgba(0,0,0, 0.5)",
-                borderDash: [10,5],
+                borderDash: [10, 5],
                 borderWidth: 1
             }, {
                 label: 'Optimista',
@@ -177,7 +188,7 @@
                 fill: false,
                 borderColor: "rgba(0,0,0, 0.5)",
                 backgroundColor: "transparent",
-                borderDash: [10,5],
+                borderDash: [10, 5],
                 borderWidth: 1,
             }]
         },
