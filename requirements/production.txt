@@ -4,6 +4,10 @@
 #
 #    pip-compile --generate-hashes --output-file=requirements/production.txt requirements/production.in
 #
+-e git+https://github.com/elyak123/django-pwa.git@master#egg=pwa \
+    --hash=sha256:8706cbd84489fb63d3523d5037d2cdfd8ff177417292bd7845b0f177d3c4ed3f \
+    --hash=sha256:c11bcb40bbbb65f9037e4ae4d7233e6fa724c4410419b257cce4b6624a9542e9 \
+    # via -r requirements/base.txt
 asn1crypto==1.3.0 \
     --hash=sha256:5a215cb8dc12f892244e3a113fe05397ee23c5c4ca7a69cd6e69811755efc42d \
     --hash=sha256:831d2710d3274c8a74befdddaf9f17fcbf6e350534565074818722d6d615b315 \
@@ -131,10 +135,6 @@ django-floppyforms==1.9.0 \
 django-phonenumber-field==4.0.0 \
     --hash=sha256:2ca3bb0ada0ebc164bd903a981a34f1202a4294006e520b0da961bd7ce9f20a4 \
     --hash=sha256:d4580cc3352f4433962825f9927e6669852c1b40ec484fcb5a74064dabc1201a \
-    # via -r requirements/base.txt
-django-pwa==1.0.9 \
-    --hash=sha256:8706cbd84489fb63d3523d5037d2cdfd8ff177417292bd7845b0f177d3c4ed3f \
-    --hash=sha256:c11bcb40bbbb65f9037e4ae4d7233e6fa724c4410419b257cce4b6624a9542e9 \
     # via -r requirements/base.txt
 django-storages==1.7.1 \
     --hash=sha256:8e35d2c7baeda5dc6f0b4f9a0fc142d25f9a1bf72b8cebfcbc5db4863abc552d \
