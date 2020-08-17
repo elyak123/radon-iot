@@ -38,7 +38,7 @@ WHITENOISE_MIDDLEWARE = ['whitenoise.middleware.WhiteNoiseMiddleware', ]
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
 WHITENOISE_MAX_AGE = 315360000
 WHITENOISE_ALLOW_ALL_ORIGINS = True
-WHITENOISE_KEEP_ONLY_HASHED_FILES = True
+WHITENOISE_KEEP_ONLY_HASHED_FILES = False  # si queremos True jsqrscanner necesita estar en S3
 
 
 def immutable_file_test(path, url):
