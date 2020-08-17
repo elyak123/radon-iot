@@ -73,7 +73,7 @@ class DispositivoCriticoListView(DispositivoListView):
         return query
 
 
-class DispositivoDetailView(AuthenticationTestMixin, generic.DetailView):
+class DispositivoDetailView(generic.DetailView):
     model = Dispositivo
     template_name = "dashboard/dispositivo_detail.html"
 
@@ -83,12 +83,19 @@ class DispositivoDetailView(AuthenticationTestMixin, generic.DetailView):
             usuario__gasera=self.request.user.gasera
         )
         return self.object
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lecturas"] = self.object.lecturas_ordenadas()[:10]
+        context["pedidos"] = self.object.pedidos_ordenados()[:10]
+        return context
+    
 
     def get_success_url(self):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoUpdateView(AuthenticationTestMixin, generic.UpdateView):
+class DispositivoUpdateView(generic.UpdateView):
     form_class = DispositivoForm
     model = Dispositivo
     template_name = "dashboard/dispositivo_update.html"

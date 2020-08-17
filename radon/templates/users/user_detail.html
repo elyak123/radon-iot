@@ -2,43 +2,52 @@
 {% load dashboard_tags %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-4 text-center">
-        <h2>{{ object.username }}</h2>
-        <img src="https://www.ing.uc.cl/wp-content/themes/inguc/img/default_profile.png" alt="" width="50%" class="mx-auto mt-3">
-        <p class="text-muted">{{ object.tipo }}</p>
-    </div>
-    <div class="col-md-6">
-        <div class="card">
-            <h5 class="card-header">Información general:</h5>
-            <div class="card-body">
-                <p class="card-text"><b>{{ object.first_name }} {{ object.last_name }}</b></p>
-                <p class="card-text">{{ object.email }}</p>
-                <p class="card-text"><a href="{{object.telefono.as_rfc3966}}">{{ object.telefono.as_national }}</a></p>
-                <a href="{% url 'users:user_update' object.username %}" class="btn btn-primary btn-block">Editar Usuario</a>
-                <a href="{% url 'users:user_delete' object.username %}" class="btn btn-danger btn-block">Eliminar Usuario</a>
+<div class="card p-3">
+    <div class="row">
+        <div class="col-md-4 text-center">
+            <h2>{{ object.username }}</h2>
+            <img src="https://www.ing.uc.cl/wp-content/themes/inguc/img/default_profile.png" alt="" width="50%"
+                class="mx-auto mt-3">
+            <p class="text-muted">{{ object.tipo }}</p>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <h5 class="card-header">Información general:</h5>
+                <div class="card-body">
+                    <p class="card-text"><b>{{ object.first_name }} {{ object.last_name }}</b></p>
+                    <p class="card-text">{{ object.email }}</p>
+                    <p class="card-text"><a href="{{object.telefono.as_rfc3966}}">{{ object.telefono.as_national }}</a>
+                    </p>
+                    <a href="{% url 'users:user_update' object.username %}" class="btn btn-primary btn-block">Editar
+                        Usuario</a>
+                    <a href="{% url 'users:user_delete' object.username %}" class="btn btn-danger btn-block">Eliminar
+                        Usuario</a>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-{% if object.dispositivo_set.exists %}
-    <h3>Dispositivos del usuario:</h3>
+    {% if object.dispositivo_set.exists %}
+    <h3 class="mt-3">Dispositivos del usuario:</h3>
     {% for dispositivo in object.dispositivo_set.all %}
-    <div class="list-group-item list-group-item-action flex-column align-items-start my-2" style="cursor: pointer;" data-x="{{ dispositivo.location.x }}" data-y="{{ dispositivo.location.y }}">
+    <div class="list-group-item list-group-item-action flex-column align-items-start my-2" style="cursor: pointer;"
+        data-x="{{ dispositivo.location.x }}" data-y="{{ dispositivo.location.y }}">
         <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">Dispositivo: {{ dispositivo.wisol.serie }}</h5>
-        <small><a href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
+            <h5 class="mb-1">Dispositivo: {{ dispositivo.wisol.serie }}</h5>
+            <small><a
+                    href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
         </div>
-        <a href="{% url 'dashboard:dispositivo_detail' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Detalles</a>
-        <a href="{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary float-right">Crear Pedido</a>
-        <a href="#" class="badge badge-{{ dispositivo.get_ultima_lectura.nivel | badge }}">Actual: {{ dispositivo.get_ultima_lectura.nivel }}%</a>
+        <a href="{% url 'dashboard:dispositivo_detail' dispositivo.wisol.serie %}"
+            class="badge badge-pill badge-primary">Detalles</a>
+        <a href="{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}"
+            class="badge badge-pill badge-primary float-right">Crear Pedido</a>
+        <a href="#" class="badge badge-{{ dispositivo.get_ultima_lectura.lectura | badge }}">Actual:
+            {{ dispositivo.get_ultima_lectura.lectura }}%</a>
         <div class="w-100 map-container" style="transition: 0.3s;" data-expanded="false">
 
         </div>
     </div>
     {% endfor %}
-{% endif %}
-
+    {% endif %}
+</div>
 {% endblock content %}
-

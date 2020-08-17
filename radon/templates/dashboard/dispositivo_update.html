@@ -2,20 +2,21 @@
 {% load bootstrap4 %}
 
 {% block content %}
-
-<h2>Actualizar Dispositivo</h2>
-<form class="form" method="POST">
-    {{ form.media }}
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="row">
-        <div class="col-12 my-2">
-            {% bootstrap_field field %}
+<div class="card p-4">
+    <h3>Actualizar Dispositivo</h3>
+    <form class="form" method="POST">
+        {{ form.media }}
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="row">
+            <div class="col-12 my-2">
+                {% bootstrap_field field %}
+            </div>
         </div>
-    </div>
-    {% endfor %}
-    <button type="submit" class="btn btn-primary">Actualizar</button>
-</form>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+    </form>
+</div>
 {% endblock content %}
 {% block scripts %}
 
