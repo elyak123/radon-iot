@@ -17,11 +17,6 @@ class UserForm(UserCreationForm):
 
 
 class UserUpdateForm(UserChangeForm):
-    tipo = forms.ChoiceField(
-        choices=[('CLIENTE', 'Cliente'), ('OPERARIO', 'Operario')],
-        required=True
-    )
-
     password = ReadOnlyPasswordHashField(
         label=_("Password"),
         help_text=_(
@@ -42,4 +37,4 @@ class UserUpdateForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email', 'telefono', 'tipo']
+        fields = ['username', 'first_name', 'last_name', 'email', 'telefono']

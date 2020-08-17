@@ -51,7 +51,7 @@ class UserListView(ListView, AuthenticationTestMixin):
         return query
 
 
-class UserDetailView(DetailView, AuthenticationTestMixin):
+class UserDetailView(DetailView):
     model = User
     template_name = "users/user_detail.html"
 
