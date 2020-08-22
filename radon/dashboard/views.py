@@ -126,7 +126,7 @@ class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView):
         return reverse('dashboard:dispositivo_list', kwargs={'pk': self.object.pk})
 
 
-class PedidoView(AuthenticationTestMixin, generic.TemplateView):
+class PedidoView(generic.TemplateView):
     template_name = "dashboard/pedidos.html"
 
     def get_context_data(self, **kwargs):
@@ -143,7 +143,7 @@ class PedidoView(AuthenticationTestMixin, generic.TemplateView):
         return context
 
 
-class PedidoCreateView(AuthenticationTestMixin, generic.CreateView):
+class PedidoCreateView(generic.CreateView):
     model = Pedido
     form_class = PedidoCreationForm
     template_name = "dashboard/pedido_creation.html"

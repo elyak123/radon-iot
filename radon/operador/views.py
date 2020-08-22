@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import permissions, status
 from radon.users import serializers
+from radon.app.views import BaseTemplateSelector
 
 
 class DashboardView(LoginRequiredMixin, generic.ListView):

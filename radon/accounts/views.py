@@ -10,6 +10,7 @@ from allauth.account.views import (
 from allauth.account.forms import ChangePasswordForm, SetPasswordForm
 # from radargas.users.auth import AuthenticationTestMixin
 # Necesitamos un AuthTesttMixin
+from radon.app.views import BaseTemplateSelector
 
 User = get_user_model()
 
@@ -25,7 +26,7 @@ class _SignupView(BaseContext, SignupView):
     pass
 
 
-class _LoginView(BaseContext, LoginView):
+class _LoginView(BaseContext, BaseTemplateSelector, LoginView):
     def get_context_data(self, **kwargs):
         context = super(_LoginView, self).get_context_data(**kwargs)
         context['allow_register'] = settings.ACCOUNT_ALLOW_REGISTRATION

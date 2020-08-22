@@ -1,121 +1,128 @@
 {% load static bootstrap4 pwa compress %}
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     {% progressive_web_app_meta %}
     <title>{% block head_title %}{% endblock %}</title>
     {% block extra_head %}
     {% endblock %}
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='full' %}
-    {% compress css %}<link rel="stylesheet" href="{% static 'css/base_style.css' %}">{% endcompress %}
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/base_style.css' %}">{% endcompress %}
     <meta name="viewport" content="width=device-width, user-scalable=no">
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <button id="sidebarCollapse" class="navbar-toggler navbar-toggler-right" type="button" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
-          <li class="nav-item">
-            <a class="nav-link" href="#">Inicio</a>
-          </li>
+    <meta name="theme-color" content="#49D49D">
+    <script src="{% static 'js/jsqrscanner.nocache.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
+</head>
+
+<body class="bg-fondo">
+    {% if request.user.is_authenticated %}
+    <nav id="sidebar" class="navbar-dark bg-primario">
+        <div class=" sidebar-header" style="width: 295px;">
+            <a class="h-button" style="width: 240px; display: inline-block; padding-left: 75px;"
+                href="{% url 'inicio' %}">Radargas</a>
+            <div id="sidebarCollapse" class="h-button" style="width: 50px;"> > </div>
+        </div>
+        <ul class="list-unstyled components">
+            <li>
+                <a href="{% url 'inicio' %}">Nivel Actual</a>
+            </li>
+            <li>
+                <a href="{% url 'grafica' %}">Gráfica de mi consumo</a>
+            </li>
+            <li>
+                <a href="{% url 'inicio' %}">Pedir Gas</a>
+            </li>
+            <li>
+                <a href="{% url 'users:user_detail' request.user.username %}">Mi Usuario</a>
+            </li>
+
+            <li>
+                <a href="">Reporta un problema</a>
+            </li>
         </ul>
-      </div>
-      <div class="dropdown mr-5">
-        <button class="btn btn-secondary dropdown-toggle"
-                type="button" id="dropdownMenu1" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-          Bienvenido {% if user.is_authenticated %}{{ request.user.username }}{% endif %}
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-          {% if user.is_authenticated %}<a class="dropdown-item" href="{% url 'account_logout' %}">Cerrar Sesión</a>
-          {% else %}
-            <a class="dropdown-item" href="#">Iniciar Sesión</a>
-          {% endif %}
+        <div class="p-3">
+            <p><b>{{ user.username }}</b></p>
+            <a href="{% url 'account_logout' %}" class="btn bg-secundario primaryAction boton">Cerrar Sesión</a>
         </div>
-      </div>
     </nav>
+    {% endif %}
     {% block body %}
-    <div class="content">
-      {% if messages %}
-        <div class="alert alert-success" role="alert">
-          <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-      <div class="wrapper">
-        <!-- Sidebar -->
-        <nav id="sidebar">
-            <div class="sidebar-header">
-                <h3>Radargas</h3>
-            </div>
-            <ul class="list-unstyled components">
-                <p>Dummy Heading</p>
-                <li class="active">
-                    <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-                    <ul class="collapse list-unstyled" id="homeSubmenu">
-                        <li>
-                            <a href="#">Home 1</a>
-                        </li>
-                        <li>
-                            <a href="#">Home 2</a>
-                        </li>
-                        <li>
-                            <a href="#">Home 3</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">About</a>
-                </li>
-                <li>
-                    <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Pages</a>
-                    <ul class="collapse list-unstyled" id="pageSubmenu">
-                        <li>
-                            <a href="#">Page 1</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 2</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 3</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">Portfolio</a>
-                </li>
-                <li>
-                    <a href="#">Contact</a>
-                </li>
-            </ul>
-        </nav>
-        <div id="content" class="p-5">
-          {% block content %}
-          {% endblock %}
-        </div>
-      </div>
+    {% comment %}
+    <div>
+        <strong>Menu:</strong>
+        <ul>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'account_email' %}">Change E-mail</a></li>
+            <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+            {% else %}
+            <li><a href="{% url 'account_login' %}">Sign In</a></li>
+            <li><a href="{% url 'account_signup' %}">Sign Up</a></li>
+            {% endif %}
+        </ul>
     </div>
-    {% endblock %}
+    {% endcomment %}
+    <div id="fondo" class="w-100 h-100 d-none"></div>
+    <div id="content" class="content p-4 mt-4">
+        {% if messages %}
+        <div class="alert alert-success" role="alert">
+            <ul>
+                {% for message in messages %}
+                <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% endblock body %}
     {% block extra_body %}
     {% endblock %}
-    {% block scriptsnocompress %}
-    {% endblock scriptsnocompress %}
-    {% compress js %}
     <script>
-      $(document).ready(function () {
-        $('#sidebarCollapse').on('click', function () {
-            $('#sidebar').toggleClass('active');
+        $(window).on("load", function () {
+            $('#sidebarCollapse').on('click', function (evt) {
+                $('#sidebar, #content').toggleClass('active');
+                $('#fondo').toggleClass('d-none');
+                $('#fondo').toggleClass('fondo-negro');
+                $('.navbar').toggleClass('test');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+
+            if ($(".campo-formulario").length > 0) {
+                $(".campo-formulario").on("keyup", function (evt) {
+                    accionarValidacion(evt.target, evt.target.checkValidity());
+                });
+            }
+            const csrftoken = $("[name=csrfmiddlewaretoken]").val();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
+            {% block validaciones %}
+            {% endblock %}
         });
-      });
+        function accionarValidacion(elemento, es_valido) {
+            if (es_valido) {
+                $(elemento).removeClass("is-invalid");
+                $(elemento).addClass("is-valid");
+                $(elemento.parentNode).find(".invalid-feedback").addClass("d-none");
+            } else {
+                $(elemento).addClass("is-invalid");
+                $(elemento).removeClass("is-valid");
+                $(elemento.parentNode).find(".invalid-feedback").removeClass("d-none");
+            }
+        }
     </script>
     {% block scripts %}
     {% endblock %}
-    {% endcompress %}
-  </body>
+</body>
+
 </html>
