@@ -15,6 +15,7 @@ from django.views.generic import (CreateView, ListView, DetailView, DeleteView,
 from radon.users import serializers
 from radon.users import forms as uf
 from radon.users.auth import AuthenticationTestMixin
+from radon.app.views import BaseTemplateSelector
 
 
 User = get_user_model()
@@ -24,7 +25,7 @@ sensitive_post_parameters_m = method_decorator(
 )
 
 
-class UserCreateView(CreateView, AuthenticationTestMixin):
+class UserCreateView(CreateView, AuthenticationTestMixin, BaseTemplateSelector):
     form_class = uf.UserForm
     model = User
     template_name = "users/user_create.html"
@@ -39,7 +40,7 @@ class UserCreateView(CreateView, AuthenticationTestMixin):
         return reverse('dashboard:inicio')
 
 
-class UserListView(ListView, AuthenticationTestMixin):
+class UserListView(ListView, AuthenticationTestMixin, BaseTemplateSelector):
     paginate_by = 10
     model = User
     template_name = "users/user_list.html"
@@ -51,7 +52,7 @@ class UserListView(ListView, AuthenticationTestMixin):
         return query
 
 
-class UserDetailView(DetailView):
+class UserDetailView(DetailView, BaseTemplateSelector):
     model = User
     template_name = "users/user_detail.html"
 
@@ -63,7 +64,7 @@ class UserDetailView(DetailView):
         return self.object
 
 
-class UserDeleteView(DeleteView):
+class UserDeleteView(DeleteView, BaseTemplateSelector):
     model = User
     template_name = "users/user_delete.html"
 
@@ -78,7 +79,7 @@ class UserDeleteView(DeleteView):
         return reverse('users:user_list')
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(UpdateView, BaseTemplateSelector):
     model = User
     template_name = "users/user_update.html"
     form_class = uf.UserUpdateForm

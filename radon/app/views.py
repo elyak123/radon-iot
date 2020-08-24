@@ -1,8 +1,9 @@
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.base import ContextMixin
 
 
-class BaseTemplateSelector(generic.TemplateView):
+class BaseTemplateSelector(ContextMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         template = 'app/base.html'
@@ -17,7 +18,7 @@ class BaseTemplateSelector(generic.TemplateView):
         return context
     
 
-class DashboardView(LoginRequiredMixin, generic.TemplateView):
+class DashboardView(LoginRequiredMixin, BaseTemplateSelector, generic.TemplateView):
     template_name = "app/inicio.html"
 
     def get_context_data(self, **kwargs):
@@ -28,5 +29,5 @@ class DashboardView(LoginRequiredMixin, generic.TemplateView):
         return context
 
 
-class GraphView(generic.TemplateView):
+class GraphView(generic.TemplateView, BaseTemplateSelector):
     template_name = "app/grafica.html"

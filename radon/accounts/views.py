@@ -22,7 +22,7 @@ class BaseContext(object):
         return context
 
 
-class _SignupView(BaseContext, SignupView):
+class _SignupView(BaseContext, SignupView, BaseTemplateSelector):
     pass
 
 
@@ -36,12 +36,12 @@ class _LoginView(BaseContext, BaseTemplateSelector, LoginView):
         return reverse('inicio')
 
 
-class _LogoutView(BaseContext, LogoutView):
+class _LogoutView(BaseContext, BaseTemplateSelector, LogoutView):
     pass
 
 
 # original: BaseContext, AuthenticationTestMixin, PasswordChangeView
-class _PasswordChangeView(BaseContext, PasswordChangeView):
+class _PasswordChangeView(BaseContext, PasswordChangeView, BaseTemplateSelector):
     app_label_name = 'redirect'
     permiso_requerido = 3
 
@@ -92,35 +92,35 @@ class _PasswordChangeView(BaseContext, PasswordChangeView):
         return reverse('proyectos:proyect_dashboard')
 
 
-class _PasswordSetView(BaseContext, PasswordSetView):
+class _PasswordSetView(BaseContext, PasswordSetView, BaseTemplateSelector):
     pass
 
 
-class _PasswordResetView(BaseContext, PasswordResetView):
+class _PasswordResetView(BaseContext, PasswordResetView, BaseTemplateSelector):
     pass
 
 
-class _PasswordResetDoneView(BaseContext, PasswordResetDoneView):
+class _PasswordResetDoneView(BaseContext, PasswordResetDoneView, BaseTemplateSelector):
     pass
 
 
-class _PasswordResetFromKeyView(BaseContext, PasswordResetFromKeyView):
+class _PasswordResetFromKeyView(BaseContext, PasswordResetFromKeyView, BaseTemplateSelector):
     pass
 
 
-class _PasswordResetFromKeyDoneView(BaseContext, PasswordResetFromKeyDoneView):
+class _PasswordResetFromKeyDoneView(BaseContext, PasswordResetFromKeyDoneView, BaseTemplateSelector):
     pass
 
 
-class _AccountInactiveView(BaseContext, AccountInactiveView):
+class _AccountInactiveView(BaseContext, AccountInactiveView, BaseTemplateSelector):
     pass
 
 
-class _EmailView(BaseContext, EmailView):
+class _EmailView(BaseContext, EmailView, BaseTemplateSelector):
     pass
 
 
-class _EmailVerificationSentView(BaseContext, EmailVerificationSentView):
+class _EmailVerificationSentView(BaseContext, EmailVerificationSentView, BaseTemplateSelector):
     pass
 
 

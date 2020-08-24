@@ -10,15 +10,16 @@ from datetime import datetime
 import json
 
 from radon.rutas.forms import PedidoCreationForm
+from radon.app.views import BaseTemplateSelector
 
 # Create your views here.
 
 
-class DashboardView(AuthenticationTestMixin, generic.TemplateView):
+class DashboardView(AuthenticationTestMixin, generic.TemplateView, BaseTemplateSelector):
     pass
 
 
-class JornadaView(AuthenticationTestMixin, generic.DetailView):
+class JornadaView(AuthenticationTestMixin, generic.DetailView, BaseTemplateSelector):
     template_name = "dashboard/index.html"
     model = Jornada
 
@@ -53,7 +54,7 @@ def get_geojsons(request, fecha):
     return JsonResponse(obj)
 
 
-class DispositivoListView(AuthenticationTestMixin, generic.ListView):
+class DispositivoListView(AuthenticationTestMixin, generic.ListView, BaseTemplateSelector):
     paginate_by = 10
     model = Dispositivo
     template_name = "dashboard/dispositivo_list.html"
@@ -65,7 +66,7 @@ class DispositivoListView(AuthenticationTestMixin, generic.ListView):
         return query
 
 
-class DispositivoCriticoListView(DispositivoListView):
+class DispositivoCriticoListView(DispositivoListView, BaseTemplateSelector):
     template_name = "dashboard/leads.html"
 
     def get_queryset(self):
@@ -73,7 +74,7 @@ class DispositivoCriticoListView(DispositivoListView):
         return query
 
 
-class DispositivoDetailView(generic.DetailView):
+class DispositivoDetailView(generic.DetailView, BaseTemplateSelector):
     model = Dispositivo
     template_name = "dashboard/dispositivo_detail.html"
 
@@ -95,7 +96,7 @@ class DispositivoDetailView(generic.DetailView):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoUpdateView(generic.UpdateView):
+class DispositivoUpdateView(generic.UpdateView, BaseTemplateSelector):
     form_class = DispositivoForm
     model = Dispositivo
     template_name = "dashboard/dispositivo_update.html"
@@ -111,7 +112,7 @@ class DispositivoUpdateView(generic.UpdateView):
         return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView):
+class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView, BaseTemplateSelector):
     model = Dispositivo
     template_name = "dashboard/dispositivo_delete.html"
 
@@ -126,7 +127,7 @@ class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView):
         return reverse('dashboard:dispositivo_list', kwargs={'pk': self.object.pk})
 
 
-class PedidoView(generic.TemplateView):
+class PedidoView(generic.TemplateView, BaseTemplateSelector):
     template_name = "dashboard/pedidos.html"
 
     def get_context_data(self, **kwargs):
@@ -143,7 +144,7 @@ class PedidoView(generic.TemplateView):
         return context
 
 
-class PedidoCreateView(generic.CreateView):
+class PedidoCreateView(generic.CreateView, BaseTemplateSelector):
     model = Pedido
     form_class = PedidoCreationForm
     template_name = "dashboard/pedido_creation.html"

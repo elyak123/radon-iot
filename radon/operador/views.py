@@ -8,7 +8,7 @@ from radon.users import serializers
 from radon.app.views import BaseTemplateSelector
 
 
-class DashboardView(LoginRequiredMixin, generic.ListView):
+class DashboardView(LoginRequiredMixin, generic.ListView, BaseTemplateSelector):
     template_name = "operador/listado_instalaciones.html"
     model = Instalacion
     paginate_by = 20
@@ -17,7 +17,7 @@ class DashboardView(LoginRequiredMixin, generic.ListView):
         return self.model.objects.filter(operario=self.request.user).order_by('-fecha')
 
 
-class CreacionUsuarioView(LoginRequiredMixin, generic.TemplateView):
+class CreacionUsuarioView(LoginRequiredMixin, generic.TemplateView, BaseTemplateSelector):
     template_name = "operador/creacion-usuario.html"
 
 
