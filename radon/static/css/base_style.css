@@ -13,7 +13,7 @@ body {
 }
 
 .bg-fondo {
-    background-color: #FCFBED;
+    background-color: #ceeff3;
 }
 
 .boton {
@@ -62,13 +62,14 @@ a, a:hover, a:focus {
 
 #sidebar {
     /* don't forget to add all the previously mentioned styles here too */
-    color: black;
+    color: white;
     transition: all 0.3s;
+    background: rgb(64 63 63);
 }
 
 #sidebar .sidebar-header {
     padding: 20px;
-    background: rgb(187, 206, 212);
+    background: black;
 }
 
 #sidebar ul.components {
