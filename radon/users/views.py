@@ -2,17 +2,7 @@ from django.contrib.auth import get_user_model
 from django.utils.decorators import method_decorator
 from django.views.decorators.debug import sensitive_post_parameters
 from django.urls import reverse
-from rest_framework import status
-from rest_framework.response import Response
-from rest_framework import viewsets, permissions
-from rest_framework.generics import ListAPIView
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework_simplejwt.views import TokenRefreshView
-from dj_rest_auth.views import LoginView
-from dj_rest_auth.registration.views import RegisterView
-from django.views.generic import (CreateView, ListView, DetailView, DeleteView,
-    UpdateView)
-from radon.users import serializers
+from django.views.generic import (CreateView, ListView, DetailView, DeleteView, UpdateView)
 from radon.users import forms as uf
 from radon.users.auth import AuthenticationTestMixin
 from radon.app.views import BaseTemplateSelector
@@ -31,7 +21,6 @@ class UserCreateView(CreateView, AuthenticationTestMixin, BaseTemplateSelector):
     template_name = "users/user_create.html"
 
     def form_valid(self, form):
-        user = self.request.user
         form.instance.gasera = self.request.user.gasera
         form.instance.pwdtemporal = False
         return super(UserCreateView, self).form_valid(form)
@@ -98,61 +87,3 @@ class UserUpdateView(UpdateView, BaseTemplateSelector):
 
     def get_success_url(self):
         return reverse('users:user_detail', kwargs={'username': self.object.username})
-
-
-class LeadsView(ListAPIView):
-    serializer_class = serializers.LeadSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        return User.especial.leads(self.request.user.gasera).order_by('ultima_lectura')
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    serializer_class = serializers.UserSerializer
-    permission_classes = [permissions.IsAdminUser]
-    lookup_field = 'username'
-    lookup_value_regex = '[^/]+'
-
-    def get_queryset(self):
-        return User.objects.all().order_by('-date_joined')
-
-
-class UsersLoginView(LoginView):
-    permission_classes = ()
-    authentication_classes = ()
-
-    def get_response_serializer(self):
-        return serializers.ExpirationJWTSerializer
-
-
-class RefreshUsersView(TokenRefreshView):
-    serializer_class = serializers.ExpirationRefreshJWTSerializer
-
-
-class RegisterUsersView(RegisterView):
-    serializer_class = serializers.TemporalPassUserDispsitivoCreation
-    permission_classes = [permissions.IsAuthenticated]  # por lo pronto....
-
-    @sensitive_post_parameters_m
-    def dispatch(self, *args, **kwargs):
-        return super(RegisterView, self).dispatch(*args, **kwargs)
-
-    def create(self, request, *args, **kwargs):
-        return super(RegisterView, self).create(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        user = serializer.save(self.request)
-        return user
-
-
-@api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated]) # por lo pronto....
-def activacion_usuarios(request):
-    serializer = serializers.ActivateUsers(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data, status.HTTP_200_OK, {})

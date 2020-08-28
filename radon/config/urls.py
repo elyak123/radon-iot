@@ -16,9 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include, re_path
-from django.views.generic import TemplateView
-from radon.users.views import UsersLoginView, RefreshUsersView
+from django.urls import path, include
 
 
 urlpatterns = [
@@ -30,7 +28,6 @@ urlpatterns = [
     # re_path(r'^auth/login/$', UsersLoginView.as_view(), name='rest_login'),
     # re_path(r'^auth/refresh/$', RefreshUsersView.as_view(), name='token_refresh'),
     # re_path(r'^auth/', include('dj_rest_auth.urls')),
-    # path('admin/', admin.site.urls),
     # path('usuarios/', include('radon.accounts.urls')),
     # path('usuarios/', include('radon.users.urls')),
     # path('iot/', include('radon.iot.urls')),
