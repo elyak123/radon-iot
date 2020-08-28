@@ -36,6 +36,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # See: https://whitenoise.readthedocs.io/
 WHITENOISE_MIDDLEWARE = ['whitenoise.middleware.WhiteNoiseMiddleware', ]
 MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+MIDDLEWARE.append('django_hosts.middleware.HostsResponseMiddleware')
 WHITENOISE_MAX_AGE = 315360000
 WHITENOISE_ALLOW_ALL_ORIGINS = True
 WHITENOISE_KEEP_ONLY_HASHED_FILES = False  # si queremos True jsqrscanner necesita estar en S3
@@ -110,6 +111,9 @@ COMPRESS_ENABLED = env.bool('COMPRESS_ENABLED', default=True)
 COMPRESS_OFFLINE = env.bool('COMPRESS_OFFLINE', default=True)
 COMPRESS_URL = STATIC_URL
 COMPRESS_CSS_FILTERS = ['compressor.filters.css_default.CssAbsoluteFilter', 'compressor.filters.cssmin.rCSSMinFilter']
+# HOSTS
+# ---------------------
+ROOT_HOSTCONF = 'radon.config.hosts'
 
 # # EMAIL
 # # ------------------------------------------------------------------------------

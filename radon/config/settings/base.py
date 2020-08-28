@@ -40,7 +40,7 @@ if READ_DOT_ENV_FILE:
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
-
+DEFAULT_HOST = env('DJANGO_HOSTS_DEFAULT_HOST')
 # checar estos settings:
 FAVICON_URL = ''
 ACCOUNT_ALLOW_REGISTRATION = False
@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'radon.accounts.apps.AccountsConfig',
     'radon.dashboard.apps.DashboardConfig',
     'radon.siteprofile.apps.SiteprofileConfig',
+    'django_hosts',
     'floppyforms',
     'rest_framework',
     'rest_framework.authtoken',
@@ -84,7 +85,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     # Custom
-    'radon.middleware.virtualhostmiddleware.VirtualHostMiddleware',
+    'django_hosts.middleware.HostsRequestMiddleware',
+    #'radon.middleware.virtualhostmiddleware.VirtualHostMiddleware',
     #
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -107,7 +109,7 @@ DEBUG = env.bool('DJANGO_DEBUG', False)
 
 
 ROOT_URLCONF = 'radon.config.urls'
-
+ROOT_HOSTCONF = 'radon.config.hosts'
 
 WSGI_APPLICATION = 'radon.config.wsgi.application'
 
