@@ -19,6 +19,7 @@ django-bootstrap4==1.1.1  # via -r requirements/base.in
 django-dynamic-model-validation==0.1.13  # via -r requirements/base.in
 django-environ==0.4.5     # via -r requirements/base.in
 django-floppyforms==1.9.0  # via -r requirements/base.in
+django-hosts==4.0         # via -r requirements/base.in
 django-phonenumber-field==4.0.0  # via -r requirements/base.in
 django==2.2.10            # via -r requirements/base.in, dj-rest-auth, django-allauth, django-appconf, django-phonenumber-field, django-pwa, djangorestframework-simplejwt
 django_compressor==2.4    # via -r requirements/base.in
