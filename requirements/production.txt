@@ -16,11 +16,15 @@ cffi==1.14.0              # via -r requirements/base.txt, validate-aws-sns-messa
 chardet==3.0.4            # via -r requirements/base.txt, requests
 defusedxml==0.6.0         # via -r requirements/base.txt, python3-openid
 dj-rest-auth==1.0.1       # via -r requirements/base.txt
+django-admin-interface==0.13.2  # via -r requirements/base.txt
 django-allauth==0.41.0    # via -r requirements/base.txt
 django-appconf==1.0.4     # via -r requirements/base.txt, django-compressor
 django-bootstrap4==1.1.1  # via -r requirements/base.txt
+django-colorfield==0.3.2  # via -r requirements/base.txt, django-admin-interface
 django-dynamic-model-validation==0.1.13  # via -r requirements/base.txt
 django-environ==0.4.5     # via -r requirements/base.txt
+django-flat-responsive==2.0  # via -r requirements/base.txt, django-admin-interface
+django-flat-theme==1.1.4  # via -r requirements/base.txt, django-admin-interface
 django-floppyforms==1.9.0  # via -r requirements/base.txt
 django-hosts==4.0         # via -r requirements/base.txt
 django-phonenumber-field==4.0.0  # via -r requirements/base.txt
@@ -51,7 +55,7 @@ requests==2.23.0          # via -r requirements/base.txt, django-allauth, openro
 rjsmin==1.1.0             # via -r requirements/base.txt, django-compressor
 s3transfer==0.1.13        # via boto3
 sentry-sdk==0.16.3        # via -r requirements/production.in
-six==1.14.0               # via -r requirements/base.txt, django-compressor, django-dynamic-model-validation, python-dateutil, validate-aws-sns-message
+six==1.14.0               # via -r requirements/base.txt, django-admin-interface, django-compressor, django-dynamic-model-validation, python-dateutil, validate-aws-sns-message
 soupsieve==2.0.1          # via -r requirements/base.txt, beautifulsoup4
 sqlparse==0.3.0           # via -r requirements/base.txt, django
 unidecode==1.1.1          # via -r requirements/base.txt

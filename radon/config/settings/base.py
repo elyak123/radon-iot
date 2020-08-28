@@ -74,6 +74,8 @@ INSTALLED_APPS = [
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
     'dj_rest_auth',
+    'admin_interface',
+    'colorfield',
     'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.contenttypes',
@@ -86,8 +88,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     # Custom
     'django_hosts.middleware.HostsRequestMiddleware',
-    #'radon.middleware.virtualhostmiddleware.VirtualHostMiddleware',
-    #
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
