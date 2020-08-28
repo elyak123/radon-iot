@@ -13,6 +13,7 @@ from allauth.account.adapter import get_adapter
 from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
+from radon.users.models import Gasera
 from .utils import create_user_and_dispositivo, create_user_password
 
 User = get_user_model()
@@ -164,7 +165,10 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
     capacidad = serializers.IntegerField(required=False)
 
     def validate_gasera(self, gasera):
-        return self.context['request'].user.gasera
+        if hasattr(self.context['request'].user, 'gasera'):
+            return self.context['request'].user.gasera
+        else:
+            return Gasera.objects.get(nombre=settings.DEFAULT_GASERA)
 
     def get_cleaned_data(self):
         user_data = {

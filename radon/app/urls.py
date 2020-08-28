@@ -1,13 +1,17 @@
 from django.urls import path, include, re_path
-from radon.users.views import UsersLoginView, RefreshUsersView
-from radon.app.views import DashboardView, GraphView
-from radon.users.views import UserUpdateView
+from radon.users.views import UsersLoginView, RefreshUsersView, UserUpdateView
+from radon.app.views import DashboardView, GraphView, RegisterView, PedidoView
+from radon.operador.views import ChecarEmailView
 
 
 urlpatterns = [
     path('', DashboardView.as_view(), name="inicio"),
     path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix
     path('users/', include('radon.users.urls'), name="users"),
+    path('register/', RegisterView.as_view(), name="register"),
+    path('pedido/', PedidoView.as_view(), name="pedido"),
+    path('checar-email/', ChecarEmailView, name="checar-email"),
+    path('iot/', include('radon.iot.urls')),
     re_path(r'^auth/login/$', UsersLoginView.as_view(), name='rest_login'),
     re_path(r'^auth/refresh/$', RefreshUsersView.as_view(), name='token_refresh'),
     re_path(r'^auth/', include('dj_rest_auth.urls')),

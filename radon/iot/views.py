@@ -24,7 +24,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Dispositivo.objects.all()
     serializer_class = serializers.DispositivoSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     lookup_field = 'wisol__serie'
 
 
@@ -48,7 +48,7 @@ class WisolViewSet(viewsets.ModelViewSet):
 
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated]) # por lo pronto....
+@permission_classes([permissions.AllowAny]) # por lo pronto....
 def wisol_initial_validation(request):
     serializer = serializers.WisolValidation(data=request.data)
     serializer.is_valid(raise_exception=True)
