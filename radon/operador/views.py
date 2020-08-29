@@ -22,7 +22,7 @@ class CreacionUsuarioView(LoginRequiredMixin, generic.TemplateView, BaseTemplate
 
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
+@permission_classes([permissions.AllowAny])
 def ChecarEmailView(request):
     serializer = serializers.EmailValidator(data=request.data)
     serializer.is_valid(raise_exception=True)

@@ -6,7 +6,7 @@ from django.views.generic.base import ContextMixin
 class BaseTemplateSelector(ContextMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        template = 'app/base.html'
+        template = 'base.html'
         if hasattr(self.request.user, 'tipo'):
             if self.request.user.tipo == 'OPERARIO':
                 template = 'operador/base.html'
@@ -27,6 +27,14 @@ class DashboardView(LoginRequiredMixin, BaseTemplateSelector, generic.TemplateVi
         lectura = dispositivo.get_ultima_lectura() if dispositivo else None
         context['ultima_lectura'] = lectura
         return context
+
+
+class RegisterView(BaseTemplateSelector, generic.TemplateView):
+    template_name = "app/creacion-usuario.html"
+    
+
+class PedidoView(BaseTemplateSelector, generic.TemplateView):
+    template_name = "app/pedido.html"
 
 
 class GraphView(generic.TemplateView, BaseTemplateSelector):

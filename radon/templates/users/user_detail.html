@@ -37,9 +37,9 @@
             <small><a
                     href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
         </div>
-        <a href="{% url 'dashboard:dispositivo_detail' dispositivo.wisol.serie %}"
+        <a href="#"
             class="badge badge-pill badge-primary">Detalles</a>
-        <a href="{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}"
+        <a href="#"
             class="badge badge-pill badge-primary float-right">Crear Pedido</a>
         <a href="#" class="badge badge-{{ dispositivo.get_ultima_lectura.lectura | badge }}">Actual:
             {{ dispositivo.get_ultima_lectura.lectura }}%</a>
