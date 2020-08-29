@@ -74,7 +74,7 @@ class Dispositivo(models.Model):
     def get_ultima_lectura(self):
         lectura = self.lectura_set.order_by('-fecha').first()
         if lectura:
-            return {'lectura': lectura.nivel, 'fecha': lectura.fecha}
+            return lectura.nivel
         return None
 
     def lecturas_ordenadas(self):

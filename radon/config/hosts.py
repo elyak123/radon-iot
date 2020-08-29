@@ -7,6 +7,6 @@ host_patterns = patterns(
     host(r'app', 'radon.app.urls', name='app'),
     host(r'operador', 'radon.operador.urls', name='operador'),
     host(r'api', 'radon.api.urls', name='api'),
-    #host(r'www', 'radon.www.urls', name='www'),
-    #host(r'empresarial', 'radon.empresarial.urls', name='empresarial'),
+    # host(r'www', 'radon.www.urls', name='www'),
+    # host(r'empresarial', 'radon.empresarial.urls', name='empresarial'),
 )
