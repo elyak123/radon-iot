@@ -98,7 +98,7 @@
                 <div class="card">
                     <div class="card-header" id="headingTwo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
+                            <button id="llenar" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
                                 aria-expanded="false" aria-controls="collapseTwo">
                                 Hasta llegar a 85%
                             </button>
@@ -120,7 +120,7 @@
                 </div>
             </div>
         </div>
-        <div class="btn bg-primario my-2" href="#">Terminar Pedido</div>
+        <div id="terminar-pedido" class="btn bg-primario my-2">Terminar Pedido</div>
     </div>
     <div class="col-md-3"></div>
 </div>
@@ -129,6 +129,9 @@
 {% block scripts %}
 <script type="text/javascript">
     $(window).on("load", function () {
+        $("#accordion").on("shown.bs.collapse", function(){
+            location.href = "#terminar-pedido";
+        });
         $('#carouselExampleControls').carousel({
             interval: false,
         });
