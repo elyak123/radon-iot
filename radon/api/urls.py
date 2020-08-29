@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 from django.conf import settings
-from radon.users.views import UsersLoginView, RefreshUsersView
 from rest_framework import routers
+from .views import APIUsersLoginView, APIRefreshUsersView
 from . import views
 
 app_name = 'api'
@@ -41,8 +41,8 @@ urlpatterns = [
     ################################
     #  URLS PARA AUTENTICACION API #
     ################################
-    re_path(r'^auth/login/$', UsersLoginView.as_view(), name='rest_login'),
-    re_path(r'^auth/refresh/$', RefreshUsersView.as_view(), name='token_refresh'),
+    re_path(r'^auth/login/$', APIUsersLoginView.as_view(), name='rest_login'),
+    re_path(r'^auth/refresh/$', APIRefreshUsersView.as_view(), name='token_refresh'),
     re_path(r'^auth/', include('dj_rest_auth.urls')),
 
 ]

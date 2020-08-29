@@ -6,8 +6,6 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions
 from rest_framework.generics import ListAPIView
-from rest_framework_simplejwt.views import TokenRefreshView
-from dj_rest_auth.views import LoginView
 from dj_rest_auth.registration.views import RegisterView
 from django.views.generic import (
     CreateView, ListView, DetailView, DeleteView,
@@ -118,18 +116,6 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return User.objects.all().order_by('-date_joined')
-
-
-class UsersLoginView(LoginView):
-    permission_classes = ()
-    authentication_classes = ()
-
-    def get_response_serializer(self):
-        return serializers.ExpirationJWTSerializer
-
-
-class RefreshUsersView(TokenRefreshView):
-    serializer_class = serializers.ExpirationRefreshJWTSerializer
 
 
 class RegisterUsersView(RegisterView):

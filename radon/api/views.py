@@ -1,7 +1,26 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
+from rest_framework_simplejwt.views import TokenRefreshView
+from dj_rest_auth.views import LoginView
 from radon.users import views as userviews
 from radon.iot import views as iotviews
+from radon.api import serializers
+
+###########################################
+#  VIEWS AUTENTICACION Y AUTORIZACION API #
+###########################################
+
+
+class APIUsersLoginView(LoginView):
+    permission_classes = ()
+    authentication_classes = ()
+
+    def get_response_serializer(self):
+        return serializers.ExpirationJWTSerializer
+
+
+class APIRefreshUsersView(TokenRefreshView):
+    serializer_class = serializers.ExpirationRefreshJWTSerializer
 
 ####################
 #  VIEWS PARA USER #
@@ -13,14 +32,6 @@ class APILeadsView(userviews.LeadsView):
 
 
 class APIUserViewSet(userviews.UserViewSet):
-    pass
-
-
-class APIUsersLoginView(userviews.UsersLoginView):
-    pass
-
-
-class APIRefreshUsersView(userviews.RefreshUsersView):
     pass
 
 

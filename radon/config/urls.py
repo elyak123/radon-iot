@@ -21,19 +21,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('', admin.site.urls),
-    # path('', include('radon.dashboard.urls')),
-    # re_path(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-    #         TemplateView.as_view(template_name="account/password_reset_confirm.html"),
-    #         name='password_reset_confirm'),
-    # re_path(r'^auth/login/$', UsersLoginView.as_view(), name='rest_login'),
-    # re_path(r'^auth/refresh/$', RefreshUsersView.as_view(), name='token_refresh'),
-    # re_path(r'^auth/', include('dj_rest_auth.urls')),
-    # path('usuarios/', include('radon.accounts.urls')),
-    # path('usuarios/', include('radon.users.urls')),
-    # path('iot/', include('radon.iot.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += [
         path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-        #path('operador/', include('radon.operador.urls')),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
