@@ -108,7 +108,8 @@ class Instalacion(models.Model):
 
 class Lectura(models.Model):
     fecha = models.DateTimeField(auto_now=True)
-    nivel = models.IntegerField()  # 0 - 100
+    sensor = models.IntegerField()  # 0 - 4095
+    porcentaje = models.DecimalField(max_digits=5, decimal_places=2)  # 0 - 100.00%
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
 
     class Meta:
@@ -116,4 +117,4 @@ class Lectura(models.Model):
         verbose_name_plural = "Lecturas"
 
     def __str__(self):
-        return "Disp:{}, {}%".format(self.dispositivo, self.nivel)
+        return f'{self.fecha.isoformat(timespec="minutes")}-{self.dispositivo.wisol.serie}-{self.porcentaje}%'

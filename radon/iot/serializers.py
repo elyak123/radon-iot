@@ -69,9 +69,14 @@ class NestedDispositivoSerializer(DispositivoSerializer):
 
 
 class LecturaSerializer(serializers.ModelSerializer):
+    fecha = serializers.DateTimeField(read_only=True)
+    sensor = serializers.IntegerField(read_only=True)
+    porcentaje = serializers.DecimalField(read_only=True)
+    dispositivo = DispositivoSerializer(read_only=True)
+
     class Meta:
         model = models.Lectura
-        fields = ['pk', 'fecha', 'nivel', 'dispositivo']
+        fields = ['pk', 'fecha', 'sensor', 'porcentaje', 'dispositivo']
 
 
 class InstalacionSerializer(serializers.ModelSerializer):
