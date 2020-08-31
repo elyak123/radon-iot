@@ -25,6 +25,7 @@ class DashboardView(LoginRequiredMixin, BaseTemplateSelector, generic.TemplateVi
         context = super(DashboardView, self).get_context_data(**kwargs)
         dispositivo = self.request.user.dispositivo_set.first()
         lectura = dispositivo.get_ultima_lectura() if dispositivo else None
+        context['dispositivo'] = dispositivo
         context['ultima_lectura'] = lectura
         return context
 

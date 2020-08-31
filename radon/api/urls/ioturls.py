@@ -19,9 +19,11 @@ urlpatterns = [
     ####################
     path('registro-lectura/', views.api_registrolectura, name='registrolectura'),
     path('disponibilidad-wisol/', views.api_wisol_initial_validation, name='dispwisol'),
+    # path('get-lecturas/', views.api_wisol_get_lecturas, name='getlecturas'),
     path(r'', include(iotrouter.urls)),
 ]
 if settings.DEBUG:
     urlpatterns += [
         path('mock_lectura/', views.api_mock_lectura, name='mock_lectura'),
+        path('mock_lecturas/', views.api_mock_lecturas, name='mock_lecturas'),
     ]

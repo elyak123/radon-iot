@@ -1,5 +1,7 @@
 import json
 import requests
+import datetime
+from random import random
 from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 from rest_framework import viewsets
@@ -72,6 +74,21 @@ def mock_lectura(request):
     disp = models.Dispositivo.objects.get(wisol__serie=request.data['dispositivo'])
     models.Lectura.objects.create(nivel=request.data['nivel'], dispositivo=disp)
     return HttpResponse('Registro Creado', status=201)
+
+
+def mock_lecturas(request):
+    disp = models.Dispositivo.objects.get(wisol__serie=request.data['dispositivo'])
+    inicial = 80 + round(random()*10, 2)
+    hoy = datetime.datetime.now()
+    delta = datetime.timedelta(days=0.5)
+    registros = round(random()*100)
+    for i in range(0, registros):
+        if inicial < 0:
+            inicial = 80 + round(random()*10, 2)
+        models.Lectura.objects.create(nivel=inicial, dispositivo=disp, fecha=hoy)
+        inicial = inicial - round(random()*3, 2)
+        hoy = hoy + delta
+    return HttpResponse(f'{registros} registros creados', status=201)
 
 
 def registro_wisol(request):
