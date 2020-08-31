@@ -30,6 +30,7 @@ class _LoginView(BaseContext, BaseTemplateSelector, LoginView):
     def get_context_data(self, **kwargs):
         context = super(_LoginView, self).get_context_data(**kwargs)
         context['allow_register'] = settings.ACCOUNT_ALLOW_REGISTRATION
+        context['subdominio'] = self.request.host.regex if not settings.ACCOUNT_ALLOW_REGISTRATION else None
         return context
 
     def get_success_url(self):
