@@ -9,4 +9,6 @@ urlpatterns = [
     path('', include('pwa.urls')),  # You MUST use an empty string as the URL prefix
     path('', include('radon.accounts.urls')),
     path('users/', include('radon.users.urls')),
+    path('users/', include('radon.api.urls.usersurls'), name='usersapi'),
+    path('iot/', include('radon.api.urls.ioturls')),
 ]
