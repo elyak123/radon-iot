@@ -11,7 +11,7 @@ Para que el algoritmo nunca pierda el sentido.
 """
 
 
-def convertir_lectura(lectura, tipo=1):
+def convertir_lectura(lectura, tipo=1, modo=0):
     rangos = [
         [
             {
@@ -84,16 +84,23 @@ def convertir_lectura(lectura, tipo=1):
     ]
 
     topes = rangos[tipo-1]
-
-    for i in range(0, len(topes)-1):
-        tope_1 = topes[i]
-        tope_2 = topes[i+1]
-        if not tope_1['lectura'] < tope_2['lectura']:
-            if lectura < tope_1['lectura'] and lectura >= tope_2['lectura']:
-                distancia = abs(tope_2['lectura'] - tope_1['lectura'])
-                distancia_lectura = abs(lectura - tope_1['lectura'])
-                porcentaje = distancia_lectura / distancia
-                print(f"porcentaje: {porcentaje}")
-                print(f"distancia: {distancia}")
-                print(f"distancia_lectura: {distancia_lectura}")
-                return abs(tope_2['valor'] - tope_1['valor']) * porcentaje + tope_1['valor']
+    if not modo:
+        for i in range(0, len(topes)-1):
+            tope_1 = topes[i]
+            tope_2 = topes[i+1]
+            if not tope_1['lectura'] < tope_2['lectura']:
+                if lectura < tope_1['lectura'] and lectura >= tope_2['lectura']:
+                    distancia = abs(tope_2['lectura'] - tope_1['lectura'])
+                    distancia_lectura = abs(lectura - tope_1['lectura'])
+                    porcentaje = distancia_lectura / distancia
+                    return abs(tope_2['valor'] - tope_1['valor']) * porcentaje + tope_1['valor']
+    else:
+        for i in range(0, len(topes)-1):
+            tope_1 = topes[i]
+            tope_2 = topes[i+1]
+            if not tope_1['valor'] > tope_2['valor']:
+                if lectura > tope_1['valor'] and lectura <= tope_2['valor']:
+                    distancia = abs(tope_2['valor'] - tope_1['valor'])
+                    distancia_lectura = abs(lectura - tope_1['valor'])
+                    porcentaje = distancia_lectura / distancia
+                    return - abs(tope_2['lectura'] - tope_1['lectura']) * porcentaje + tope_1['lectura']

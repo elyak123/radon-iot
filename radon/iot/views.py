@@ -92,7 +92,8 @@ def mock_lecturas(request):
     for i in range(0, registros):
         if inicial < 0:
             inicial = 80 + round(random()*10, 2)
-        models.Lectura.objects.create(nivel=inicial, dispositivo=disp, fecha=hoy)
+        models.Lectura.objects.create(porcentaje=inicial, sensor=utils.convertir_lectura(
+            inicial, 1, 1), dispositivo=disp, fecha=hoy)
         inicial = inicial - round(random()*3, 2)
         hoy = hoy + delta
     return HttpResponse(f'{registros} registros creados', status=201)
@@ -102,9 +103,9 @@ def registro_wisol(request):
     url = 'https://api.sigfox.com/v2/{}'
     creds = (settings.SIGFOX_CREDENTIAL_ID, settings.SIGFOX_CREDENTIAL_KEY)
     r = requests.post(
-            url.format('devices/'),
-            auth=creds,
-            json={
-                'name': '', 'deviceTypeId': '', 'id': '', 'pac': '', 'prototype': True
-            }
-        )
+        url.format('devices/'),
+        auth=creds,
+        json={
+            'name': '', 'deviceTypeId': '', 'id': '', 'pac': '', 'prototype': True
+        }
+    )
