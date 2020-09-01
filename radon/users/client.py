@@ -28,6 +28,8 @@ class RadonCookieRequests(object):
             json=data
         )
         response = req.json()
+        if bool([x for x in response.keys() if 'error' in x]):
+            return response
         self.refresh_token = response['refresh_token']['token']
         self.refresh_exp = response['refresh_token']['exp']
         return response
