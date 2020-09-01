@@ -6,8 +6,10 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.conf import settings
 from rest_framework import viewsets
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import permissions
 from rest_framework import status
+from rest_framework import generics
 import validate_aws_sns_message
 from radon.iot import serializers, models, utils
 from .captura import sigfox_decode
@@ -49,9 +51,17 @@ class WisolViewSet(viewsets.ModelViewSet):
 
 
 class LecturaViewSet(viewsets.ModelViewSet):
-    queryset = models.Lectura.objects.all()
     serializer_class = serializers.LecturaSerializer
+    pagination_class = LimitOffsetPagination
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        disp = self.kwargs.get('dispositivo') or self.request.GET['dispositivo']
+        if disp:
+            return models.Lectura.objects.filter(
+                dispositivo__wisol__serie=disp
+            ).order_by('fecha')
+        return models.Lectura.objects.all()
 
 
 def wisol_initial_validation(request):
