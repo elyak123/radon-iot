@@ -60,7 +60,7 @@ class LecturaViewSet(viewsets.ModelViewSet):
         if disp:
             return models.Lectura.objects.filter(
                 dispositivo__wisol__serie=disp
-            ).order_by('fecha')
+            ).order_by('-fecha')
         return models.Lectura.objects.all()
 
 
