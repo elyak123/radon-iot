@@ -87,13 +87,15 @@
                 });
             }
             const csrftoken = $("[name=csrfmiddlewaretoken]").val();
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            if (csrftoken) {
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                        }
                     }
-                }
-            });
+                });
+            }
             {% block validaciones %}
             {% endblock %}
         });

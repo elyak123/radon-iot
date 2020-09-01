@@ -36,24 +36,28 @@
     }
 
     // Hacer petición AJAX
-    $.get("../iot/get-lecturas/id_dispositivo", function (data) {
-        generar_grafica(JSON.parse(data));
+    $.get("../iot/lecturas/", function (data) {
+        var paginas = Math.ceil(data["count"] / 10);
+        for (var i = paginas; i > paginas - 6 && i > 0; i--) {
+            $.get(`../iot/lecturas/?page=${i}`, function (response) {
+                var resultados = response["results"];
+                // Consideremos que respuesta es un array de objetos:
+                // [{porcentaje, fecha},...]
+                // Pudiéramos generar el array a partir de la longitud de la respuesta.
+                for (var j = 0; j < resultados.length; j++) {
+                    var fecha = new Date(resultados[j]['fecha']);
+                    var obj = [resultados[j]['porcentaje'], dateToString(fecha)];
+                    arreglo.push(obj);
+                }
+
+            });
+        }
     });
 
-    function generar_grafica(respuesta) {
-        // Consideremos que respuesta es un array de objetos de pares:
-        // [{porcentaje, fecha},...]
-        // Pudiéramos generar el array a partir de la longitud de la respuesta.
-        for (var i = 0; i < respuesta.length; i++) {
-            var fecha = new Date(respuesta[i]['fecha']);
-            var obj = [respuesta[i]['porcentaje'], dateToString(fecha)];
-            arreglo.push(obj);
-        }
-
+    function generar_grafica() {
         var x = [];
         var y = [];
         var count = 0;
-
         var fechas = [];
         var lecturas = [];
         var fechas_predict = [];
@@ -63,7 +67,7 @@
         var promedio = 0;
 
         for (var i = 0; i < arreglo.length; i++) {
-            if (i >= arreglo.length/2) {
+            if (i >= arreglo.length / 2) {
                 lecturas.push(arreglo[i][0]);
                 fechas.push(arreglo[i][1]);
                 fechas_predict.push(arreglo[i][1]);
@@ -83,16 +87,14 @@
         var promedio_mas = promedio * 1.10;
         var promedio_menos = promedio * 0.9;
 
-        var regresion = linearRegression(x, y);
-
-        var res = l_inicial;
-        var res_mas = l_inicial;
-        var res_menos = l_inicial;
+        var res = arreglo[arreglo.length-1][0];
+        var res_mas = arreglo[arreglo.length-1][0];
+        var res_menos = arreglo[arreglo.length-1][0];
         var fecha_prediccion;
         var fecha_menos;
         var fecha_mas;
 
-        var f_actual = fecha;
+        // var f_actual = fecha;
 
         for (var i = 0; res > 0 || res_mas > 0 || res_menos > 0; i++) {
             res += promedio;
@@ -162,9 +164,9 @@
                 }
             }
         });
+        document.getElementById("fecha_estimada").innerHTML = `Tu gas se termina entre ${fecha_mas} y ${dateToString(fecha)}`;
     }
 
-    document.getElementById("fecha_estimada").innerHTML = `Tu gas se termina entre ${fecha_mas} y ${dateToString(fecha)}`;
 </script>
 {% endblock scripts %}
 {% endblock content %}

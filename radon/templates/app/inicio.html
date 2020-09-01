@@ -228,7 +228,8 @@
                 });
         }
     }
-    var value = JSON.parse(document.getElementById('nivelLectura').innerText).lectura;
+
+    var value = parseInt(JSON.parse(document.getElementById('nivelLectura').innerText).lectura);
     if (typeof (value) === 'number' && value > 0) {
         loadLiquidFillGauge("fillgauge1", parseInt(JSON.parse(document.getElementById('nivelLectura').innerText).lectura));
     }
