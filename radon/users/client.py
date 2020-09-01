@@ -58,12 +58,14 @@ class RadonCookieRequests(object):
         headers = {**main_headers, **specific_headers}
         return URL, headers
 
-    def send(self, method, url_specific, payload={}, specific_headers={}, pretty=False):
+    def send(self, method, url_specific, payload={}, specific_headers={}, pretty=False, params=None):
         URL, headers = self.prepare_request(url_specific, specific_headers)
         handler = getattr(self.session, method.lower())
         kwargs = {'headers': headers}
         if method in ['post', 'put', 'patch']:
             kwargs['json'] = payload
+        if method == 'get' and params:
+            kwargs['params'] = params
         response = handler(URL, **kwargs)
         if response.status_code == 401:
             if hasattr(self, 'refresh_token'):
@@ -82,8 +84,8 @@ class RadonCookieRequests(object):
     def post(self, url_specific, payload, specific_headers={}):
         return self.send('post', url_specific, payload, specific_headers)
 
-    def get(self, url, specific_headers={}, pretty=False):
-        return self.send('get', url, specific_headers, pretty=pretty)
+    def get(self, url, params=None, specific_headers={}, pretty=False):
+        return self.send('get', url, specific_headers, pretty=pretty, params=params)
 
 
 client = RadonCookieRequests()
