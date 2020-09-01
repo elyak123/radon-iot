@@ -68,15 +68,16 @@ class NestedDispositivoSerializer(DispositivoSerializer):
         depth = 2
 
 
-class LecturaSerializer(serializers.ModelSerializer):
+class LecturaSerializer(serializers.HyperlinkedModelSerializer):
     fecha = serializers.DateTimeField(read_only=True)
     sensor = serializers.IntegerField(read_only=True)
-    porcentaje = serializers.DecimalField(read_only=True)
-    dispositivo = DispositivoSerializer(read_only=True)
+    porcentaje = serializers.DecimalField(read_only=True, max_digits=5, decimal_places=2)
+    dispositivo = serializers.HyperlinkedRelatedField(
+        view_name='dispositivo-detail', lookup_field='wisol__serie', read_only=True)
 
     class Meta:
         model = models.Lectura
-        fields = ['pk', 'fecha', 'sensor', 'porcentaje', 'dispositivo']
+        fields = ['url', 'fecha', 'sensor', 'porcentaje', 'dispositivo']
 
 
 class InstalacionSerializer(serializers.ModelSerializer):

@@ -11,7 +11,7 @@ Para que el algoritmo nunca pierda el sentido.
 """
 
 
-def convertir_lectura(lectura, tipo):
+def convertir_lectura(lectura, tipo=1):
     rangos = [
         [
             {

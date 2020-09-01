@@ -8,9 +8,10 @@ from radon.api import views
 #  ROUTER PARA IOT #
 ####################
 iotrouter = routers.DefaultRouter()
-iotrouter.register(r'dispositivos', views.APIDeviceViewSet)
+iotrouter.register(r'dispositivos', views.APIDeviceViewSet, basename='dispositivo')
 iotrouter.register(r'devicetype', views.APIDeviceTypeViewSet)
 iotrouter.register(r'wisol', views.APIWisolViewSet)
+iotrouter.register(r'lecturas', views.APILecturaViewSet, basename='lectura')
 iotrouter.register(r'instalaciones', views.APIInstalacionViewSet, basename='instalacion')
 
 urlpatterns = [

@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import status
 import validate_aws_sns_message
-from radon.iot import serializers, models
+from radon.iot import serializers, models, utils
 from .captura import sigfox_decode
 
 
@@ -48,6 +48,12 @@ class WisolViewSet(viewsets.ModelViewSet):
     lookup_field = 'serie'
 
 
+class LecturaViewSet(viewsets.ModelViewSet):
+    queryset = models.Lectura.objects.all()
+    serializer_class = serializers.LecturaSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+
 def wisol_initial_validation(request):
     serializer = serializers.WisolValidation(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -72,7 +78,8 @@ def registrolectura(request):
 
 def mock_lectura(request):
     disp = models.Dispositivo.objects.get(wisol__serie=request.data['dispositivo'])
-    models.Lectura.objects.create(nivel=request.data['nivel'], dispositivo=disp)
+    porcentaje = utils.convertir_lectura(int(request.data['sensor']))
+    models.Lectura.objects.create(sensor=request.data['sensor'], porcentaje=porcentaje, dispositivo=disp)
     return HttpResponse('Registro Creado', status=201)
 
 

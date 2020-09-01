@@ -74,8 +74,12 @@ class Dispositivo(models.Model):
     def get_ultima_lectura(self):
         lectura = self.lectura_set.order_by('-fecha').first()
         if lectura:
-            return {'lectura': lectura.nivel, 'fecha': lectura.fecha}
+            return {'lectura': lectura.porcentaje, 'fecha': lectura.fecha}
         return None
+
+    @property
+    def wisol__serie(self):
+        return self.wisol.serie
 
     def lecturas_ordenadas(self):
         return self.lectura_set.order_by('-fecha')

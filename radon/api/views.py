@@ -65,6 +65,10 @@ class APIWisolViewSet(iotviews.WisolViewSet):
     pass
 
 
+class APILecturaViewSet(iotviews.LecturaViewSet):
+    pass
+
+
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])  # por lo pronto....
 def api_wisol_initial_validation(request):
