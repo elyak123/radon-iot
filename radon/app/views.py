@@ -36,6 +36,12 @@ class RegisterView(BaseTemplateSelector, generic.TemplateView):
 
 class PedidoView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/pedido.html"
+    
+    def get_context_data(self, **kwargs):
+        context = super(PedidoView, self).get_context_data(**kwargs)
+        dispositivo = self.request.user.dispositivo_set.first()
+        context['dispositivo'] = dispositivo
+        return context
 
 
 class GraphView(generic.TemplateView, BaseTemplateSelector):

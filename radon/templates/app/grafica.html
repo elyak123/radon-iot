@@ -32,7 +32,7 @@
     var meses = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEPT", "OCT", "NOV", "DIC"]
 
     function dateToString(fecha) {
-        return fecha.getDate() + "-" + meses[fecha.getMonth() - 1]
+        return fecha.getDate() + "-" + meses[fecha.getMonth()]
     }
 
     // Hacer petición AJAX
@@ -42,7 +42,7 @@
         resultados = resultados['results'];
         for (var j = resultados.length - 1; j >= 0; j--) {
             var fecha_lectura = new Date(resultados[j]['fecha']);
-            var obj = [resultados[j]['porcentaje'], dateToString(fecha_lectura)];
+            var obj = [parseFloat(resultados[j]['porcentaje']), dateToString(fecha_lectura)];
             arreglo.push(obj);
             if (j == 0) {
                 fecha = fecha_lectura;
@@ -52,8 +52,6 @@
     });
 
     function generar_grafica() {
-        var x = [];
-        var y = [];
         var count = 0;
         var fechas = [];
         var lecturas = [];
@@ -72,11 +70,9 @@
                 lecturas_predict_mas.push(i == arreglo.length - 1 ? arreglo[i][0] : 0)
                 lecturas_predict_menos.push(i == arreglo.length - 1 ? arreglo[i][0] : 0)
             }
-            if (!(arreglo[i][2] > 0)) {
-                x.push(count);
+            if (i > 0 && (arreglo[i][0] - arreglo[i - 1][0]) < 0) {
                 count++;
-                y.push(arreglo[i][2]);
-                promedio += arreglo[i][2];
+                promedio += (arreglo[i][0] - arreglo[i - 1][0]);
             }
         }
 
@@ -87,7 +83,6 @@
         var res = arreglo[arreglo.length - 1][0];
         var res_mas = arreglo[arreglo.length - 1][0];
         var res_menos = arreglo[arreglo.length - 1][0];
-        
 
         var fecha_prediccion;
         var fecha_menos;
@@ -161,7 +156,7 @@
                 }
             }
         });
-        document.getElementById("fecha_estimada").innerHTML = `Tu gas se termina entre ${fecha_mas} y ${dateToString(fecha)}`;
+        document.getElementById("fecha_estimada").innerHTML = `Tu gas se termina entre ${fecha_mas == undefined ? dateToString(fecha) : fecha_mas} y ${dateToString(fecha)}`;
     }
 
 </script>
