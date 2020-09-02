@@ -93,12 +93,6 @@
         </div>
         <div id="step-5" class="d-none">
             <h3>Registro Terminado</h3>
-            <h3 class="mt-5">Folio de Operación:</h3>
-            <input class="form-control" type="text" name="" id="folio">
-            <button class="btn bg-secundario mt-5 w-100" id="finalizar" disabled="true">Finalizar</button>
-        </div>
-        <div id="step-6" class="d-none">
-            <h3>Registro Terminado</h3>
             <p class="mt-3">La contraseña es:</p>
             <b id="pwd-wrapper"></b>
             <a class="btn bg-secundario mt-5 w-100" id="inicio" href="{% url 'inicio' %}">Ir a Inicio</a>
@@ -145,11 +139,6 @@
         } else {
             accionarValidacion(evt.target, false);
         }
-    });
-
-    $("#folio").on("keyup", function (evt) {
-        payload_instalacion.folio = evt.target.value;
-        $("#finalizar").prop({ 'disabled': !(evt.target.value.length == 6) });
     });
 
     var phone_reg = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]‌​)\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]‌​|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})\s*(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+)\s*)?$/gm;
@@ -342,11 +331,6 @@
     }
 
     $(window).on("load", function () {
-        $("#modal").on("hidden.bs.modal", function () {
-            if (step == 5) {
-                $(document).trigger("stepChange");
-            }
-        });
         anime.timeline()
         /* .add({
           targets: '.starting-text',
@@ -404,7 +388,7 @@
             $(document).trigger("stepChange");
         });
 
-        $("#finalizar").on("click", function () {
+        $("#geo-control").on("click", function () {
             $.ajax({
                 url: "../users/user-dispositivo-registration/",
                 method: "POST",
