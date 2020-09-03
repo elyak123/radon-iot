@@ -9,7 +9,6 @@ from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import permissions
 from rest_framework import status
-from rest_framework import generics
 import validate_aws_sns_message
 from radon.iot import serializers, models, utils
 from .captura import sigfox_decode
@@ -56,12 +55,13 @@ class LecturaViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        disp = self.kwargs.get('dispositivo') or self.request.GET['dispositivo']
-        if disp:
+        try:
             return models.Lectura.objects.filter(
-                dispositivo__wisol__serie=disp
+                dispositivo__wisol__serie=self.request.GET['dispositivo']
             ).order_by('-fecha')
-        return models.Lectura.objects.all()
+        except KeyError:
+            return models.Lectura.objects.filter(
+                dispositivo__usuario__gasera=self.request.user.gasera).order_by('-fecha')
 
 
 def wisol_initial_validation(request):

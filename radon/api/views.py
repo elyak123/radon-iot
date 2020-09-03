@@ -85,6 +85,7 @@ def api_registrolectura(request):
 def api_mock_lectura(request):
     return iotviews.mock_lectura(request)
 
+
 @api_view(['POST'])
 def api_mock_lecturas(request):
     return iotviews.mock_lecturas(request)
