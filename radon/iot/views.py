@@ -95,15 +95,20 @@ def mock_lectura(request):
 
 def mock_lecturas(request):
     disp = models.Dispositivo.objects.get(wisol__serie=request.data['dispositivo'])
-    inicial = 80 + round(random()*10, 2)
-    hoy = datetime.datetime.now()
+    if not disp.lectura_set.last():
+        inicial = 85 + round(random()*10, 2)
+        hoy = datetime.datetime.now()
+    else:
+        inicial = disp.lectura_set.last().porcentaje
+        hoy = disp.lectura_set.last().fecha
     delta = datetime.timedelta(days=0.5)
-    registros = round(random()*100)
+    registros = 5 + round(random()*20)
     for i in range(0, registros):
         if inicial < 0:
             inicial = 80 + round(random()*10, 2)
-        models.Lectura.objects.create(porcentaje=inicial, sensor=utils.convertir_lectura(inicial, 1, 1), dispositivo=disp, fecha=hoy)
-        inicial = inicial - round(random()*3, 2)
+        lectura = models.Lectura.objects.create(porcentaje=inicial, sensor=utils.convertir_lectura(
+            inicial, 1, 1), dispositivo=disp, fecha=hoy)
+        inicial = float(inicial) - round(random()*3, 2)
         hoy = hoy + delta
     return HttpResponse(f'{registros} registros creados', status=201)
 

@@ -13,7 +13,8 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active" data-oferta="0">
                             <div class="card p-2 text-center">
-                                <img class="card-img-top my-2" style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
+                                <img class="card-img-top my-2"
+                                    style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
                                     src="https://facturasnoel.com/assets/facturacion//images/noel.png">
                                 <div class="card-body">
                                     <h5 class="card-title my-2">Gas Noel</h5>
@@ -25,7 +26,8 @@
                         </div>
                         <div class="carousel-item" data-oferta="1">
                             <div class="card p-2 text-center">
-                                <img class="card-img-top my-2" style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
+                                <img class="card-img-top my-2"
+                                    style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
                                     src="https://gasimperialdgo.com/img/3513/650.png">
                                 <div class="card-body">
                                     <h5 class="card-title my-2">Gas Imperial</h5>
@@ -37,7 +39,8 @@
                         </div>
                         <div class="carousel-item" data-oferta="2">
                             <div class="card p-2 text-center">
-                                <img class="card-img-top my-2" style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
+                                <img class="card-img-top my-2"
+                                    style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
                                     src="https://tarifasdeluz.mx/sites/default/files/images/gas-nieto.jpg">
                                 <div class="card-body">
                                     <h5 class="card-title my-2">Gas Nieto <span
@@ -98,20 +101,24 @@
                 <div class="card">
                     <div class="card-header" id="headingTwo">
                         <h5 class="mb-0">
-                            <button id="llenar" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo"
-                                aria-expanded="false" aria-controls="collapseTwo">
+                            <button id="llenar" class="btn btn-link collapsed" data-toggle="collapse"
+                                data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                 Hasta llegar a 85%
                             </button>
                         </h5>
                     </div>
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                         <div class="card-body">
-                            <i class="text-muted" style="font-size: 12px;"><b>¿Por qué al 85%?: </b> Es el límite seguro para cargar gas.</i>
+                            <i class="text-muted" style="font-size: 12px;"><b>¿Por qué al 85%?: </b> Es el límite seguro
+                                para cargar gas.</i>
                             <p class="my-2"><b>Considerando:</b></p>
-                            Tu tanque estacionario tiene capacidad de <b id="capacidad">300L</b> de gas. <br>
-                            El porcentaje actual de tu tanque es: <b id="ultima-lectura">18.66%</b>. <br>
+                            Tu tanque estacionario tiene capacidad de <b id="capacidad">{{ dispositivo.capacidad }}L</b>
+                            de gas. <br>
+                            El porcentaje actual de tu tanque es: <b
+                                id="ultima-lectura">{{ dispositivo.lectura_set.last.porcentaje }}%</b>. <br>
                             Entonces actualmente posees <b id="nivel-actual">55.98l</b> de gas. <br>
-                            Por lo que necesitas actualmente <b id="nivel-faltante">66.34%</b> para llenar tu tanque. <br>
+                            Por lo que necesitas actualmente <b id="nivel-faltante">66.34%</b> para llenar tu tanque.
+                            <br>
                             Que son <b id="gas-necesario">199.02l</b> de gas. <br>
                             El monto total es: <b id="monto-total">$4,203.30</b> MXN. <br>
                             <b>¿Deseas pedirlo?</b>
@@ -129,7 +136,7 @@
 {% block scripts %}
 <script type="text/javascript">
     $(window).on("load", function () {
-        $("#accordion").on("shown.bs.collapse", function(){
+        $("#accordion").on("shown.bs.collapse", function () {
             location.href = "#terminar-pedido";
         });
         $('#carouselExampleControls').carousel({
@@ -161,12 +168,12 @@
         });
     });
     function generarNiveles() {
-        capacidad = parseInt($("#capacidad").html().split("L")[0]);
+        capacidad = parseInt($("#capacidad").html().split("L")[0].replace(",", ""));
         ultima_lectura = parseFloat($("#ultima-lectura").html().split("%")[0]);
-        $("#nivel-actual").html((capacidad * (ultima_lectura / 100)).toString() + "L");
-        var nivel_faltante = 85 - ultima_lectura;
+        $("#nivel-actual").html((capacidad * (ultima_lectura / 100)).toFixed(2).toString() + "L");
+        var nivel_faltante = (85 - ultima_lectura).toFixed(2);
         $("#nivel-faltante").html(nivel_faltante.toString() + "%");
-        var gas_necesario = capacidad * nivel_faltante / 100;
+        var gas_necesario = (capacidad * nivel_faltante / 100).toFixed(2);
         $("#gas-necesario").html(gas_necesario.toString() + "L");
         var factor = $("#oferta-" + $(".carousel-item.active").data("oferta")).data("precio");
         $("#monto-total").html("$" + (numberWithCommas((factor * gas_necesario).toFixed(2))).toString());
