@@ -1,7 +1,5 @@
 {% extends template %}
-{% load bootstrap4 %}
-{% load l10n %}
-{% load rutastags %}
+{% load bootstrap4 l10n rutastags hosts %}
 
 {% block content %}
 <h2>Creación de Pedido</h2>
@@ -63,7 +61,7 @@
     });
     $(".selector").on("change", function(evt){
         var semana = evt.target.value;
-        var url = "{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}";
+        var url = "{% host_url 'pedido_creation' dispositivo.wisol.serie hots 'crm' %}";
         window.location.href = url+semana;
     });
 </script>

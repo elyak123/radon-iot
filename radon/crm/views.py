@@ -1,4 +1,4 @@
-from django.urls import reverse
+from django_hosts.resolvers import reverse
 from django.views import generic
 from django.http import JsonResponse
 from radon.users.auth import AuthenticationTestMixin
@@ -20,7 +20,7 @@ class DashboardView(AuthenticationTestMixin, generic.TemplateView, BaseTemplateS
 
 
 class JornadaView(AuthenticationTestMixin, generic.DetailView, BaseTemplateSelector):
-    template_name = "dashboard/index.html"
+    template_name = "crm/index.html"
     model = Jornada
 
     def get_object(self, queryset=None):
@@ -57,7 +57,7 @@ def get_geojsons(request, fecha):
 class DispositivoListView(AuthenticationTestMixin, generic.ListView, BaseTemplateSelector):
     paginate_by = 10
     model = Dispositivo
-    template_name = "dashboard/dispositivo_list.html"
+    template_name = "crm/dispositivo_list.html"
 
     def get_queryset(self):
         query = self.model.especial.filter(
@@ -67,7 +67,7 @@ class DispositivoListView(AuthenticationTestMixin, generic.ListView, BaseTemplat
 
 
 class DispositivoCriticoListView(DispositivoListView, BaseTemplateSelector):
-    template_name = "dashboard/leads.html"
+    template_name = "crm/leads.html"
 
     def get_queryset(self):
         query = User.especial.leads(self.request.user.gasera)
@@ -76,7 +76,7 @@ class DispositivoCriticoListView(DispositivoListView, BaseTemplateSelector):
 
 class DispositivoDetailView(generic.DetailView, BaseTemplateSelector):
     model = Dispositivo
-    template_name = "dashboard/dispositivo_detail.html"
+    template_name = "crm/dispositivo_detail.html"
 
     def get_object(self, queryset=None):
         self.object = self.model.objects.select_related('usuario').select_related('wisol').get(
@@ -84,22 +84,21 @@ class DispositivoDetailView(generic.DetailView, BaseTemplateSelector):
             usuario__gasera=self.request.user.gasera
         )
         return self.object
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["lecturas"] = self.object.lecturas_ordenadas()[:10]
         context["pedidos"] = self.object.pedidos_ordenados()[:10]
         return context
-    
 
     def get_success_url(self):
-        return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
+        return reverse('crm:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
 class DispositivoUpdateView(generic.UpdateView, BaseTemplateSelector):
     form_class = DispositivoForm
     model = Dispositivo
-    template_name = "dashboard/dispositivo_update.html"
+    template_name = "crm/dispositivo_update.html"
 
     def get_object(self, queryset=None):
         self.object = self.model.objects.get(
@@ -109,12 +108,12 @@ class DispositivoUpdateView(generic.UpdateView, BaseTemplateSelector):
         return self.object
 
     def get_success_url(self):
-        return reverse('dashboard:dispositivo_detail', kwargs={'pk': self.object.pk})
+        return reverse('dispositivo_detail', kwargs={'serie': self.object.wisol.serie}, host='crm')
 
 
 class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView, BaseTemplateSelector):
     model = Dispositivo
-    template_name = "dashboard/dispositivo_delete.html"
+    template_name = "crm/dispositivo_delete.html"
 
     def get_object(self, queryset=None):
         self.object = self.model.objects.get(
@@ -124,11 +123,11 @@ class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView, BaseTem
         return self.object
 
     def get_success_url(self):
-        return reverse('dashboard:dispositivo_list', kwargs={'pk': self.object.pk})
+        return reverse('crm:dispositivo_list', kwargs={'pk': self.object.pk})
 
 
 class PedidoView(generic.TemplateView, BaseTemplateSelector):
-    template_name = "dashboard/pedidos.html"
+    template_name = "crm/pedidos.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -147,7 +146,7 @@ class PedidoView(generic.TemplateView, BaseTemplateSelector):
 class PedidoCreateView(generic.CreateView, BaseTemplateSelector):
     model = Pedido
     form_class = PedidoCreationForm
-    template_name = "dashboard/pedido_creation.html"
+    template_name = "crm/pedido_creation.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -181,4 +180,4 @@ class PedidoCreateView(generic.CreateView, BaseTemplateSelector):
         return initial_obj
 
     def get_success_url(self):
-        return reverse('dashboard:histograma_pedidos')
+        return reverse('crm:histograma_pedidos')

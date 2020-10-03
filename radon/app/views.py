@@ -13,10 +13,10 @@ class BaseTemplateSelector(ContextMixin):
             elif self.request.user.tipo == 'CONSUMIDOR':
                 template = 'app/base.html'
             elif self.request.user.tipo == 'CLIENTE':
-                template = 'cambiar template'
+                template = 'base.html'
         context["template"] = template
         return context
-    
+
 
 class DashboardView(LoginRequiredMixin, BaseTemplateSelector, generic.TemplateView):
     template_name = "app/inicio.html"
@@ -32,11 +32,11 @@ class DashboardView(LoginRequiredMixin, BaseTemplateSelector, generic.TemplateVi
 
 class RegisterView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/creacion-usuario.html"
-    
+
 
 class PedidoView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/pedido.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super(PedidoView, self).get_context_data(**kwargs)
         dispositivo = self.request.user.dispositivo_set.first()
@@ -46,7 +46,7 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
 
 class GraphView(generic.TemplateView, BaseTemplateSelector):
     template_name = "app/grafica.html"
-    
+
     def get_context_data(self, **kwargs):
         context = super(GraphView, self).get_context_data(**kwargs)
         dispositivo = self.request.user.dispositivo_set.first()

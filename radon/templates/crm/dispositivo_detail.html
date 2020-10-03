@@ -1,4 +1,5 @@
 {% extends template %}
+{% load hosts %}
 
 {% block content %}
 <div class="card p-3">
@@ -16,8 +17,8 @@
                     <p class="card-text">{{ object.usuario.email }}</p>
                     <p class="card-text">{{ object.usuario.telefono }}</p>
                     <p class="card-text"><b>Nivel actual: </b> {{ object.get_ultima_lectura.nivel }} </p>
-                    <a href="{% url 'dashboard:dispositivo_update' object.wisol %}" class="btn btn-primary btn-block">Editar Dispositivo</a>
-                    <!-- <a href="{% url 'dashboard:dispositivo_delete' object.id %}" class="btn btn-danger btn-block">Eliminar Dispositivo</a> -->
+                    <a href="{% host_url 'dispositivo_update' serie=object.wisol host 'crm' %}" class="btn btn-primary btn-block">Editar Dispositivo</a>
+                    {# <a href="{% url 'crm:dispositivo_delete' object.id %}" class="btn btn-danger btn-block">Eliminar Dispositivo</a> #}
                 </div>
             </div>
         </div>

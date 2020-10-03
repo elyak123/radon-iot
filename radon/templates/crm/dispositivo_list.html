@@ -1,5 +1,5 @@
 {% extends template %}
-{% load dashboard_tags %}
+{% load dashboard_tags hosts %}
 
 {% block content %}
 <div>
@@ -12,8 +12,7 @@
             <h5 class="mb-1">Dispositivo: {{ dispositivo.wisol.serie }}</h5>
             <small><a href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
             </div>
-            <a href="{% url 'dashboard:dispositivo_detail' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary">Detalles</a>
-            <a href="{% url 'dashboard:pedido_creation' dispositivo.wisol.serie %}" class="badge badge-pill badge-primary float-right">Crear Pedido</a>
+            <a href="{% host_url 'dispositivo_detail' serie=dispositivo.wisol.serie host 'crm' %}" class="badge badge-pill badge-primary">Detalles</a>
             <a href="#" class="badge badge-{{ dispositivo.get_ultima_lectura.nivel | badge }}">Actual: {{ dispositivo.get_ultima_lectura.nivel }}%</a>
             <div class="w-100 map-container" style="transition: 0.3s;" data-expanded="false"></div>
         </div>
@@ -26,9 +25,10 @@
     <hr>
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center pagination-sm">
+            {% host_url 'dispositivo_list' host 'crm'  as dispositivolist %}
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
+                <a class="page-link" href="{{ dispositivolist }}?page={{ page_obj.previous_page_number }}" tabindex="-1">Previous</a>
             </li>
             {% else %}
             <li class="page-item disabled">
@@ -36,11 +36,10 @@
             </li>
             {% endif %} 
             {% for object in page_obj.paginator.page_range %}
-                <li class="page-item"><a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
+                <li class="page-item"><a class="page-link" href="{{ dispositivolist }}?page={{ forloop.counter }}">{{ forloop.counter }}</a></li>
             {% endfor %} 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="page-link" href="{% url 'dashboard:dispositivo_list' %}?page={{ page_obj.next_page_number }}">Next</a>
             </li>
             {% else %}
             <li class="page-item disabled">

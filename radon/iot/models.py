@@ -41,7 +41,7 @@ class DispositivoSet(models.QuerySet):
 
     def anotar_lecturas(self):
         qs = Lectura.objects.filter(dispositivo=OuterRef('pk')).order_by('-fecha')[:1]
-        return self.annotate(ultima_lectura=Subquery(qs.values('nivel'), output_field=models.IntegerField()))
+        return self.annotate(ultima_lectura=Subquery(qs.values('porcentaje'), output_field=models.DecimalField()))
 
     def calendarizables(self):
         return self.anotar_lecturas().filter(ultima_lectura__lte=20, calendarizado=False)

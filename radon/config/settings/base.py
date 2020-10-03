@@ -41,6 +41,7 @@ if READ_DOT_ENV_FILE:
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS')
 DEFAULT_HOST = env('DJANGO_HOSTS_DEFAULT_HOST')
+PARENT_HOST = env('DJANGO_PARENT_HOST')
 # checar estos settings:
 FAVICON_URL = ''
 ACCOUNT_ALLOW_REGISTRATION = False
@@ -58,7 +59,7 @@ INSTALLED_APPS = [
     'radon.users.apps.UsersConfig',
     'radon.operador.apps.OperadorConfig',
     'radon.accounts.apps.AccountsConfig',
-    'radon.dashboard.apps.DashboardConfig',
+    'radon.crm.apps.CrmConfig',
     'radon.siteprofile.apps.SiteprofileConfig',
     'django_hosts',
     'floppyforms',

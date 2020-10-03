@@ -1,5 +1,5 @@
 {% extends template %}
-{% load l10n %}
+{% load l10n hosts %}
 {% block content %}
 
 <div class="row">
@@ -21,7 +21,7 @@
 <script type="text/javascript">
     $(".selector").on("change", function(evt){
         var semana = evt.target.value;
-        var url = "{% url 'dashboard:histograma_pedidos' %}";
+        var url = "{% host_url 'histograma_pedidos' host 'crm' %}";
         window.location.href = url+semana;
     });
     var ctx = document.getElementById('myChart').getContext('2d');

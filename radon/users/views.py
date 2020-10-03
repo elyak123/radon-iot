@@ -34,7 +34,7 @@ class UserCreateView(CreateView, AuthenticationTestMixin, BaseTemplateSelector):
         return super(UserCreateView, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('dashboard:inicio')
+        return reverse('crm:inicio')
 
 
 class UserListView(ListView, AuthenticationTestMixin, BaseTemplateSelector):
