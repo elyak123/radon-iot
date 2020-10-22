@@ -1,11 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import View
+from django.http import JsonResponse
 
-# Create your views here.
 
-def PedidosDiaView(View):
-    def get(self, request, *args, **kwargs):
-        return HttpResponseBadRequest("No funciona así.")
-
-    def post(self, request, *args, **kwargs):
-        import pdb; pdb.set_trace()
+def endpointgps(request):
+    if request.method == 'GET':
+        JsonResponse({'metodo': 'GET', 'contenido': 'Hola desde GET'})
+    elif request.method == 'POST':
+        JsonResponse({'metodo': 'POST', 'contenido': 'Hola desde POST'})
