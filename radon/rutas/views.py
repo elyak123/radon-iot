@@ -8,7 +8,7 @@ def endpointgps(request):
     if request.method == 'GET':
         return JsonResponse({'metodo': 'GET', 'contenido': 'Hola desde GET'})
     elif request.method == 'POST':
-        pos = Position.objects.create(location=f'POINT{request.POST["lat"]} {request.POST["lon"]}')
+        pos = Position.objects.create(location=f'POINT({request.POST["lat"]} {request.POST["lon"]})')
         return JsonResponse({'metodo': 'POST', 'contenido': 'Hola desde POST', 'pos': pos.location})
 
 
