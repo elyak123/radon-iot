@@ -13,8 +13,7 @@ def endpointgps(request):
 
 
 def last_pos(request):
-    try:
-        pos = Position.objects.all().order_by('-fecha_creacion').first()
-    except Position.DoesNoeExist:
-        return JsonResponse({'disps': 'todavia no tienes dispositivos'})
-    return JsonResponse({'lat': pos.location.x, 'lon': pos.location.y})
+    pos = Position.objects.all().order_by('-fecha_creacion').first()
+    if pos:
+        return JsonResponse({'lat': pos.location.x, 'lon': pos.location.y})
+    return JsonResponse({'disps': 'todavia no tienes dispositivos'})
