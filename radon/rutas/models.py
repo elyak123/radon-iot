@@ -177,3 +177,15 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
 
     def pedido_en_dinero(self):
         return round(self.cantidad * self.precio.precio, 2)
+
+
+class Position(models.Model):
+    fecha_creacion = models.DateTimeField(auto_now=True)
+    location = models.PointField(null=True)
+
+    class Meta:
+        verbose_name = "Position"
+        verbose_name_plural = "Positions"
+
+    def __str__(self):
+        pass
