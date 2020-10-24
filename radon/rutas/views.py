@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.shortcuts import render
 from radon.rutas.models import Position
 from django.views.decorators.csrf import csrf_exempt
 
@@ -19,3 +20,7 @@ def last_pos(request):
     if pos:
         return JsonResponse({'lat': pos.location.x, 'lon': pos.location.y})
     return JsonResponse({'disps': 'todavia no tienes dispositivos'})
+
+
+def mapa(request):
+    return render(request, 'rutas/gps_display.html')
