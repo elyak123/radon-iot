@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  django: &django
+  build:
+    context: .
+    dockerfile: .docker/production/django/Dockerfile
+    env_file: .env
+    command: /app/gunicorn.sh
+
+  postgis:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgis/Dockerfile
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - postgis_backup:/backups
+    env_file: .env
+
+volumes:
+  postgres_data: {}
+  postgres_backup: {}
