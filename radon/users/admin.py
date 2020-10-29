@@ -16,6 +16,5 @@ class UserAdmin(UserAdmin):
     )
 
 
-# Re-register UserAdmin
-admin.site.unregister(User)
+
 admin.site.register(User, UserAdmin)
