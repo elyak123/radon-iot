@@ -25,4 +25,10 @@ class Leadsadmin(admin.ModelAdmin):
         return format_html('<a class="addlink" href="#">Enviar</a>')
 
 
-admin.site.register(Dispositivo, Leadsadmin, Wisol)
+class WisolAdmin(admin.ModelAdmin):
+    list_display = ('serie', 'pac', 'prototype', 'deviceTypeId')
+
+
+admin.site.register(Dispositivo, Leadsadmin)
+
+admin.site.register(Wisol, WisolAdmin)
