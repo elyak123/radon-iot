@@ -6,15 +6,8 @@ from .forms import UserForm
 User = get_user_model()
 
 
-class UserCreateForm(UserForm):
-
-    class Meta:
-        model = User
-        fields = fields = ['username', 'first_name', 'last_name', 'email', "password1", "password2", 'telefono', 'tipo']
-
-
 class UserAdmin(UserAdmin):
-    add_form = UserCreateForm
+    add_form = UserForm
     prepopulated_fields = {'username': ('first_name', 'last_name', )}
 
     add_fieldsets = (
