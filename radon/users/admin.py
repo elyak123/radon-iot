@@ -1,12 +1,21 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.auth.models import User
-from .forms import UserForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+
+class UserCreateForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = fields = ['username', 'first_name', 'last_name', 'email', "password1", "password2", 'telefono', 'tipo']
 
 
 class UserAdmin(UserAdmin):
-    add_form = UserForm
-    prepopulated_fields = {'username': ('first_name' , 'last_name', )}
+    add_form = UserCreateForm
+    prepopulated_fields = {'username': ('first_name', 'last_name', )}
 
     add_fieldsets = (
         (None, {
@@ -16,5 +25,6 @@ class UserAdmin(UserAdmin):
     )
 
 
-
+# Re-register UserAdmin
+admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
