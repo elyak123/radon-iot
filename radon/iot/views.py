@@ -75,11 +75,10 @@ def registrolectura(request):
     aws_arn = request.headers.get('x-amz-sns-topic-arn')
     sns_types = ['SubscriptionConfirmation', 'Notification', 'UnsubscribeConfirmation']
     post_data = request.POST
-    body = request.body
     if message_type not in sns_types or aws_arn != settings.SNS_SIGFOX_ARN:
         return HttpResponseBadRequest('<h1>400 Bad Request</h1>', content_type='text/html')
     try:
-        body = json.loads(body)
+        body = json.loads(request.body)
         validate_aws_sns_message.validate(body)
     except validate_aws_sns_message.ValidationError:
         return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
