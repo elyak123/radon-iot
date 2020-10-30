@@ -341,7 +341,7 @@
         */
         function problemasEjecucion() {
             $("#mensaje-problemas").removeClass("d-none");
-            $("#scannedTextMemo").prop({ disabled: false });
+            // $("#scannedTextMemo").prop({ disabled: false });
             $("#scannedTextMemo").on("keyup", function (evt) {
                 if (reg.test(evt.target.value)) {
                     onQRCodeScanned(evt.target.value);
