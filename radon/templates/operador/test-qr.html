@@ -1,0 +1,17 @@
+{% extends template %}
+
+{% block content %}
+<video id="test-scanner"></video>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+
+    $(window).on("load", function () {
+        var videoElem = document.getElementById("test-scanner");
+                        const qrScanner = new QrScanner(videoElem, result => console.log('decoded qr code:', result));
+                        qrScanner.start();
+    });
+</script>
+{% endblock scripts %}
