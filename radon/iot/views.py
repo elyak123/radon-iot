@@ -88,7 +88,7 @@ def registrolectura(request):
     # message = json.loads(body['Message'])
     angulo = body['Gas_Angulo']
     # angulo = decode_int_little_endian(message['data'])
-    porcentaje = utils.convertir_lectura((angulo*4095)/360, 1)
+    porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, 1)
     dispositivo = models.Dispositivo.objects.get(wisol__serie=body['device'])
     models.Lectura.objects.create(nivel=porcentaje, dispositivo=dispositivo, sensor=angulo)
     return HttpResponse('Registro Creado', status=201)
