@@ -76,7 +76,7 @@ def api_wisol_initial_validation(request):
 
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAdminUser])
+@permission_classes([permissions.AllowAny])
 def api_registrolectura(request):
     return iotviews.registrolectura(request)
 
