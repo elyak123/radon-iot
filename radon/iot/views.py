@@ -77,12 +77,11 @@ def registrolectura(request):
     data = request.data
     if message_type not in sns_types or aws_arn != settings.SNS_SIGFOX_ARN:
         return HttpResponseBadRequest('<h1>400 Bad Request</h1>', content_type='text/html')
-    try:
-        body = json.loads(data)
-        validate_aws_sns_message.validate(body)
-    except validate_aws_sns_message.ValidationError as e:
-        raise e
-        #return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
+    # try:
+    body = json.loads(data)
+    #     validate_aws_sns_message.validate(body)
+    # except validate_aws_sns_message.ValidationError as e:
+    #     return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
     if message_type == 'SubscriptionConfirmation':
         requests.get(body['SubscribeURL'])
         return HttpResponse('Suscripcion Realizada', status=200)
