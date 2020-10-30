@@ -84,6 +84,7 @@ def registrolectura(request):
         return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
     if message_type == 'SubscriptionConfirmation':
         requests.get(body['SubscribeURL'])
+        return HttpResponse('Suscripcion Realizada', status=200)
     message = json.loads(body['Message'])
     angulo = decode_int_little_endian(message['data'])
     porcentaje = utils.convertir_lectura((angulo*4095)/360, 1)
