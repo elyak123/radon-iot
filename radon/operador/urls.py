@@ -11,4 +11,5 @@ urlpatterns = [
     path('users/', include('radon.users.urls')),
     path('users/', include('radon.api.urls.usersurls'), name='usersapi'),
     path('iot/', include('radon.api.urls.ioturls')),
+    path('qr/', views.TestQRView.as_view(), name="probar-qr"),
 ]

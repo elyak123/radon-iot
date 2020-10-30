@@ -62,6 +62,7 @@
         <div id="step-3" class="d-none">
             <!-- if django: Sólo para usuario normal -->
             <h1 class="starting-text"><b>Lee el código QR</b></h1>
+            <video id="test-scanner"></video>
             <div id="scanner">
             </div>
             <label for="scannedTextMemo"><b>ID</b></label><br>
@@ -377,7 +378,10 @@
             if (step) {
                 switch (step) {
                     case 2:
-                        jbScanner.appendTo(scannerParentElement);
+                        // jbScanner.appendTo(scannerParentElement);
+                        var videoElem = document.getElementById("test-scanner");
+                        const qrScanner = new QrScanner(videoElem, result => console.log('decoded qr code:', result));
+                        qrScanner.start();
                         setTimeout(problemasEjecucion, 7500);
                         break;
                     case 3:
