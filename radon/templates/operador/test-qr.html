@@ -10,7 +10,7 @@
 
     $(window).on("load", function () {
         var videoElem = document.getElementById("test-scanner");
-                        const qrScanner = new QrScanner(videoElem, result => console.log('decoded qr code:', result));
+                        const qrScanner = new QrScanner(videoElem, result => alert('decoded qr code:', result));
                         qrScanner.start();
     });
 </script>
