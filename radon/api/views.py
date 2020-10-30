@@ -1,10 +1,11 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions
 from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework.decorators import parser_classes
 from dj_rest_auth.views import LoginView
 from radon.users import views as userviews
 from radon.iot import views as iotviews
-from radon.api import serializers
+from radon.api import serializers, parsers
 
 ###########################################
 #  VIEWS AUTENTICACION Y AUTORIZACION API #
@@ -76,6 +77,7 @@ def api_wisol_initial_validation(request):
 
 
 @api_view(['POST'])
+@parser_classes([parsers.PlainTextParser])
 @permission_classes([permissions.AllowAny])
 def api_registrolectura(request):
     return iotviews.registrolectura(request)
