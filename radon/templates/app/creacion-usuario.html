@@ -172,7 +172,9 @@
 
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText;
-            var data = { 'wisol': id_dispositivo };
+            var numero = parseInt(id_dispositivo, 16);
+            var hexstring = numero.toString(16).toUpperCase();
+            var data = { 'wisol': hexstring };
 
             payload.wisol = id_dispositivo;
 

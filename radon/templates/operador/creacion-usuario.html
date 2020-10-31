@@ -90,7 +90,7 @@
         </div>
         <div id="step-5" class="d-none">
             <h3>Registro Terminado</h3>
-            <h3 class="mt-5">Folio de Operación:</h3>
+            <h3 class="mt-5">Introduce el Folio de Operación a 6 dígitos:</h3>
             <input class="form-control" type="text" name="" id="folio">
             <button class="btn bg-secundario mt-5 w-100" id="finalizar" disabled="true">Finalizar</button>
         </div>
@@ -154,7 +154,7 @@
     $("#phone").on("keyup", function (evt) {
         payload.telefono = evt.target.value;
         accionarValidacion(evt.target, (phone_reg.test(evt.target.value) && evt.target.value.length == 10));
-        $("#phone-control").prop({ 'disabled': !phone_reg.test(evt.target.value) && !evt.target.value.length == 10 });
+        $("#phone-control").prop({ 'disabled': (phone_reg.test(evt.target.value) && evt.target.value.length == 10) });
     });
 
     $("#phone-control").on("click", function (evt) {
@@ -167,7 +167,7 @@
 <script type="text/javascript">
     var jbScanner;
     var scannerParentElement = document.getElementById("scanner");
-    var reg = new RegExp(/^[0-9a-fA-F]{6}$/);
+    var reg = new RegExp(/^[0-9a-fA-F]{8}$/);
     var scanning = false;
     function onQRCodeScanned(scannedText) {
         var error;
