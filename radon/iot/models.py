@@ -62,8 +62,12 @@ class DispositivoSet(models.QuerySet):
 
 
 class Dispositivo(models.Model):
+    nombre = models.CharField('Nombre del dispositivo', max_length=45, default='Casa')
     wisol = models.OneToOneField(Wisol, on_delete=models.CASCADE)
     capacidad = models.IntegerField('Capacidad del tanque', null=True)
+    entidad = models.IntegerField('Entidad federativa', null=True)
+    municipio = models.IntegerField('Municipio', null=True)
+    localidad = models.IntegerField('Localidad del dispositivo', null=True)
     usuario = models.ForeignKey(User, default=get_default_user, on_delete=models.SET(get_default_user))
     location = models.PointField(null=True)
     calendarizado = models.BooleanField('Indica si se esta a la espera de ser surtido.', default=False)
@@ -111,7 +115,7 @@ class Instalacion(models.Model):
 
 
 class Lectura(models.Model):
-    fecha = models.DateTimeField()
+    fecha = models.DateTimeField(auto_now=True)
     sensor = models.IntegerField()  # 0 - 4095
     porcentaje = models.DecimalField(max_digits=5, decimal_places=2)  # 0 - 100.00%
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)

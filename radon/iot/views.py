@@ -2,7 +2,7 @@ import json
 import requests
 import datetime
 from random import random
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.conf import settings
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -11,7 +11,7 @@ from rest_framework import permissions
 from rest_framework import status
 import validate_aws_sns_message
 from radon.iot import serializers, models, utils
-from .captura import sigfox_decode
+from .captura import decode_int_little_endian
 
 
 class DeviceTypeViewSet(viewsets.ModelViewSet):
@@ -71,18 +71,27 @@ def wisol_initial_validation(request):
 
 
 def registrolectura(request):
+    message_type = request.headers.get('x-amz-sns-message-type')
+    aws_arn = request.headers.get('x-amz-sns-topic-arn')
+    sns_types = ['SubscriptionConfirmation', 'Notification', 'UnsubscribeConfirmation']
+    data = request.data
+    if message_type not in sns_types or aws_arn != settings.SNS_SIGFOX_ARN:
+        return HttpResponseBadRequest('<h1>400 Bad Request</h1>', content_type='text/html')
     try:
-        body = json.loads(request.body)
+        body = json.loads(data)
         validate_aws_sns_message.validate(body)
-    except validate_aws_sns_message.ValidationError:
-        return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
-    if body['Type'] == 'SubscriptionConfirmation':
+    except validate_aws_sns_message.ValidationError as e:
+        # pass
+        raise e
+        #return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
+    if message_type == 'SubscriptionConfirmation':
         requests.get(body['SubscribeURL'])
+        return HttpResponse('Suscripcion Realizada', status=200)
     message = json.loads(body['Message'])
-    angulo, temperatura, humedad = sigfox_decode(message['data'])
-    porcentaje = (angulo * 100) / 360
+    angulo = decode_int_little_endian(message['data'])
+    porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, 1)
     dispositivo = models.Dispositivo.objects.get(wisol__serie=message['device'])
-    models.Lectura.objects.create(nivel=porcentaje, dispositivo=dispositivo)
+    models.Lectura.objects.create(porcentaje=porcentaje, dispositivo=dispositivo, sensor=angulo)
     return HttpResponse('Registro Creado', status=201)
 
 

@@ -21,6 +21,10 @@ class CreacionUsuarioView(LoginRequiredMixin, generic.TemplateView, BaseTemplate
     template_name = "operador/creacion-usuario.html"
 
 
+class TestQRView(LoginRequiredMixin, generic.TemplateView, BaseTemplateSelector):
+    template_name = "operador/test-qr.html"
+
+
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def ChecarEmailView(request):

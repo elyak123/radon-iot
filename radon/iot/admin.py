@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Dispositivo
+from .models import Dispositivo, Wisol, DeviceType
 
 # Register your models here.
 
@@ -25,4 +25,14 @@ class Leadsadmin(admin.ModelAdmin):
         return format_html('<a class="addlink" href="#">Enviar</a>')
 
 
+class WisolAdmin(admin.ModelAdmin):
+    list_display = ('serie', 'pac', 'prototype', 'deviceTypeId')
+
+
+class DeviceTypeAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(Dispositivo, Leadsadmin)
+admin.site.register(Wisol, WisolAdmin)
+admin.site.register(DeviceType, DeviceTypeAdmin)

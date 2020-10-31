@@ -172,7 +172,9 @@
 
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText;
-            var data = { 'wisol': id_dispositivo };
+            var numero = parseInt(id_dispositivo, 16);
+            var hexstring = numero.toString(16).toUpperCase();
+            var data = { 'wisol': hexstring };
 
             payload.wisol = id_dispositivo;
 
@@ -341,7 +343,7 @@
         */
         function problemasEjecucion() {
             $("#mensaje-problemas").removeClass("d-none");
-            $("#scannedTextMemo").prop({ disabled: false });
+            // $("#scannedTextMemo").prop({ disabled: false });
             $("#scannedTextMemo").on("keyup", function (evt) {
                 if (reg.test(evt.target.value)) {
                     onQRCodeScanned(evt.target.value);

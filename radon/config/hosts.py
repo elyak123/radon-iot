@@ -3,7 +3,7 @@ from django_hosts import patterns, host
 
 host_patterns = patterns(
     '',
-    host(r'admin', settings.ROOT_URLCONF, name='admin'),
+    host(r'soporte', settings.ROOT_URLCONF, name='soporte'),
     host(r'app', 'radon.app.urls', name='app'),
     host(r'operador', 'radon.operador.urls', name='operador'),
     host(r'api', 'radon.api.urls.urls', name='api'),

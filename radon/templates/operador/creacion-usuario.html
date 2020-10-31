@@ -61,11 +61,8 @@
         </div>
         <div id="step-3" class="d-none">
             <!-- if django: Sólo para usuario normal -->
-            <h1 class="starting-text"><b>Lee el código QR</b></h1>
-            <div id="scanner">
-            </div>
+            <h1 class="starting-text"><b>Escribe el código QR</b></h1>
             <label for="scannedTextMemo"><b>ID</b></label><br>
-            <i id="mensaje-problemas" class="d-none">¿Tiene problemas para leer el código?, escríbalo directamente:</i>
             <input class="form-control" type="text" name="" id="scannedTextMemo" disabled="true">
         </div>
         <div id="step-4" class="d-none">
@@ -93,7 +90,7 @@
         </div>
         <div id="step-5" class="d-none">
             <h3>Registro Terminado</h3>
-            <h3 class="mt-5">Folio de Operación:</h3>
+            <h3 class="mt-5">Introduce el Folio de Operación a 6 dígitos:</h3>
             <input class="form-control" type="text" name="" id="folio">
             <button class="btn bg-secundario mt-5 w-100" id="finalizar" disabled="true">Finalizar</button>
         </div>
@@ -152,12 +149,12 @@
         $("#finalizar").prop({ 'disabled': !(evt.target.value.length == 6) });
     });
 
-    var phone_reg = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]‌​)\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]‌​|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})\s*(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+)\s*)?$/gm;
+    var phone_reg = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
     $("#phone").on("keyup", function (evt) {
         payload.telefono = evt.target.value;
         accionarValidacion(evt.target, (phone_reg.test(evt.target.value) && evt.target.value.length == 10));
-        $("#phone-control").prop({ 'disabled': !phone_reg.test(evt.target.value) && !evt.target.value.length == 10 });
+        $("#phone-control").prop({ 'disabled': !(phone_reg.test(evt.target.value) && evt.target.value.length == 10) });
     });
 
     $("#phone-control").on("click", function (evt) {
@@ -170,11 +167,10 @@
 <script type="text/javascript">
     var jbScanner;
     var scannerParentElement = document.getElementById("scanner");
-    var reg = new RegExp(/^[0-9a-fA-F]{7}$/);
+    var reg = new RegExp(/^[0-9a-fA-F]{8}$/);
     var scanning = false;
     function onQRCodeScanned(scannedText) {
         var error;
-        scanning = jbScanner.isScanning()
 
         var scannedTextMemo = document.getElementById("scannedTextMemo");
         if (scannedTextMemo) {
@@ -204,7 +200,6 @@
                         }
                     }).fail(function (error) {
                         if (error.responseJSON.detail == "No encontrado.") {
-                            if (scanning) jbScanner.removeFrom(scannerParentElement);
                             $(document).trigger("stepChange");
                         } else {
                             showModal("Ocurrió un error, por favor contacta a soporte.");
@@ -218,7 +213,6 @@
         } else if (scannedText.split(" ").length > 1) {
             showModal("No permitiste el uso de cámara. Introduce el código manualmente.");
             $("#scannedTextMemo").val("");
-            jbScanner.removeFrom(scannerParentElement);
         } else {
             showModal("El código QR que se leyó es incorrecto.");
         }
@@ -377,8 +371,7 @@
             if (step) {
                 switch (step) {
                     case 2:
-                        jbScanner.appendTo(scannerParentElement);
-                        setTimeout(problemasEjecucion, 7500);
+                        problemasEjecucion();
                         break;
                     case 3:
                         getCoordenadas();
