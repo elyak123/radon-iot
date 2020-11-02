@@ -179,9 +179,15 @@
             // localidad = document.getElementById("entidad").data["localidad"];
             // Lógica para obtener las gaseras.
             $.get( `https://api-reportediario.cre.gob.mx/api/PlantaDistribucion/precio?localidadId=2017&entidadId=01&municipioId=001&reCaptchaResponse=${ response }`, function( data ) {
-                debugger;
-                alert("Load was performed.");
-                alert(data);
+                if(!data.Success || data.Errors.length>0){
+                    console.log("recaptcha fallo");
+                    for(var i=0; i<data.errors){
+                        console.log(data.errors.i);
+                    }
+                }
+                else{
+                    console.log(data);
+                }
                 $("#opciones-gas").removeClass("d-none");
                 $("#captcha-opciones").addClass("d-none");
             });
