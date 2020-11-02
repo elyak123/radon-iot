@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-3"></div>
-    <div class="col-md-6 card p-3">
+    <div class="col-md-6 card p-3 d-none" id="opciones-gas">
         <h4 class="mt-4">Genera tu pedido de gas</h4>
         <p class="my-2"><b>Gaseras locales:</b></p>
         <div class="row">
@@ -129,11 +129,16 @@
         </div>
         <div id="terminar-pedido" class="btn bg-primario my-2">Terminar Pedido</div>
     </div>
+    <div class="col-md-6 card p-3" id="captcha-opciones">
+        <h3>Primero verifica que no eres un robot</h3>
+        <div class="g-recaptcha" data-sitekey="6LdQN94ZAAAAAAT1PHJ6r2SkDE5Y4uHFdSoFOzxH" data-callback="obtenerGaseras"></div>
+    </div>
     <div class="col-md-3"></div>
 </div>
 {% block scriptsnocompress %}
 {% endblock scriptsnocompress %}
 {% block scripts %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script type="text/javascript">
     $(window).on("load", function () {
         $("#accordion").on("shown.bs.collapse", function () {
@@ -167,6 +172,23 @@
             generarNiveles();
         });
     });
+    function obtenerGaseras(response) {
+        if(response.length > 0){
+            entidad = document.getElementById("entidad").data["entidad"];
+            municipio = document.getElementById("entidad").data["municipio"];
+            localidad = document.getElementById("entidad").data["localidad"];
+            // Lógica para obtener las gaseras.
+            $.get( `https://api-reportediario.cre.gob.mx/api/PlantaDistribucion/precio?localidadId=${ localidad }&entidadId=${ entidad }&municipioId=${ municipio }&reCaptchaResponse=${ response }`, function( data ) {
+                alert("Load was performed.");
+                alert(data);
+                $("#opciones-gas").removeClass("d-none");
+                $("#captcha-opciones").addClass("d-none");
+            });
+
+        } else {
+            alert("No completaste el captcha de manera correcta.");
+        }
+    }
     function generarNiveles() {
         capacidad = parseInt($("#capacidad").html().split("L")[0].replace(",", ""));
         ultima_lectura = parseFloat($("#ultima-lectura").html().split("%")[0]);
