@@ -179,6 +179,7 @@
             // localidad = document.getElementById("entidad").data["localidad"];
             // Lógica para obtener las gaseras.
             $.get( `https://api-reportediario.cre.gob.mx/api/PlantaDistribucion/precio?localidadId=2017&entidadId=01&municipioId=001&reCaptchaResponse=${ response }`, function( data ) {
+                debugger;
                 alert("Load was performed.");
                 alert(data);
                 $("#opciones-gas").removeClass("d-none");
