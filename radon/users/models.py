@@ -24,12 +24,11 @@ class Gasera(models.Model):
 class Precio(models.Model):
     precio = models.DecimalField(max_digits=12, decimal_places=2)
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
-    actual = models.BooleanField(default=True)
+    fecha = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Precio"
         verbose_name_plural = "Precios"
-        unique_together = ('gasera', 'actual')
 
     def __str__(self):
         return f'${self.precio} {self.gasera.nombre[:16]}... Actual: {self.actual}'
