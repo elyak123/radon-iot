@@ -7,7 +7,6 @@ from radon.users.utils import get_default_gasera
 
 class Gasera(models.Model):
     nombre = models.CharField(max_length=80, unique=True)
-    capacidad_total = models.IntegerField('Capacidad total de distribucion', null=True)
 
     @property
     def precio_actual(self):
