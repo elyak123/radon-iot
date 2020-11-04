@@ -174,13 +174,21 @@
     });
     function obtenerGaseras(response) {
         if(response.length > 0){
-            entidad = document.getElementById("entidad").data["entidad"];
-            municipio = document.getElementById("entidad").data["municipio"];
-            localidad = document.getElementById("entidad").data["localidad"];
+            // entidad = document.getElementById("entidad").data["entidad"];
+            // municipio = document.getElementById("entidad").data["municipio"];
+            // localidad = document.getElementById("entidad").data["localidad"];
             // Lógica para obtener las gaseras.
-            $.get( `https://api-reportediario.cre.gob.mx/api/PlantaDistribucion/precio?localidadId=${ localidad }&entidadId=${ entidad }&municipioId=${ municipio }&reCaptchaResponse=${ response }`, function( data ) {
-                alert("Load was performed.");
-                alert(data);
+            $.get( `https://api-reportediario.cre.gob.mx/api/PlantaDistribucion/precio?localidadId=2017&entidadId=01&municipioId=001&reCaptchaResponse=${ response }`, function( data ) {
+                debugger;
+                if(!data.Success || data.Errors.length>0){
+                    console.log("recaptcha fallo");
+                    for(var i=0; i<data.Errors; i++){
+                        console.log(data.Errors[i]);
+                    }
+                }
+                else{
+                    console.log(data);
+                }
                 $("#opciones-gas").removeClass("d-none");
                 $("#captcha-opciones").addClass("d-none");
             });
