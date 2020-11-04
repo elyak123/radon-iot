@@ -126,3 +126,14 @@ class Lectura(models.Model):
 
     def __str__(self):
         return f'{self.fecha.isoformat(timespec="minutes")}-{self.dispositivo.wisol.serie}-{self.porcentaje}%'
+
+
+class Estado(models.Model):
+    clave = models.CharField(max_length=15)
+    nombre = models.CharField(max_length=45, unique=True)
+
+
+class Municipio(models.Model):
+    clave = models.CharField(max_length=15)
+    nombre = models.CharField(max_length=30)
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
