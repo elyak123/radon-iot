@@ -1,4 +1,4 @@
-FROM 3.8.6-slim-buster
+FROM debian:3.8.6-slim-buster
 
 RUN useradd --create-home appuser
 
