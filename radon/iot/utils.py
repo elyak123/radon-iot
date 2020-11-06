@@ -79,7 +79,72 @@ def convertir_lectura(lectura, tipo=1, modo=0):
                 'valor': 100
             }
         ],
-        [],
+        [
+            {
+                'lectura': 850,
+                'valor': 0
+            },
+            {
+                'lectura': 580,
+                'valor': 5
+            },
+            {
+                'lectura': 162,
+                'valor': 10
+            },
+            {
+                'lectura': 0,
+                'valor': 15
+            },
+            {
+                'lectura': 4095,
+                'valor': 15
+            },
+            {
+                'lectura': 3839,
+                'valor': 20
+            },
+            {
+                'lectura': 3513,
+                'valor': 30
+            },
+            {
+                'lectura': 3260,
+                'valor': 40
+            },
+            {
+                'lectura': 2970,
+                'valor': 50
+            },
+            {
+                'lectura': 2730,
+                'valor': 60
+            },
+            {
+                'lectura': 2410,
+                'valor': 70
+            },
+            {
+                'lectura': 2080,
+                'valor': 80
+            },
+            {
+                'lectura': 1830,
+                'valor': 85
+            },
+            {
+                'lectura': 1602,
+                'valor': 90
+            },
+            {
+                'lectura': 1274,
+                'valor': 95
+            },
+            {
+                'lectura': 1168,
+                'valor': 100
+            }
+        ],
         []
     ]
 
