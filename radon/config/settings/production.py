@@ -71,7 +71,7 @@ CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=True)
 CSRF_COOKIE_HTTPONLY = env.bool('CSRF_COOKIE_HTTPONLY', default=True)
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-INSTALLED_APPS += ['mod_wsgi.server', ]
+#INSTALLED_APPS += ['mod_wsgi.server', ]
 
 
 # STORAGE CONFIGURATION

@@ -29,7 +29,7 @@ COPY ./requirements /requirements
 COPY . /app/radon
 
 RUN pip install wheel pip-tools && \
-    pip-sync requirements/base.txt && \
+    pip-sync requirements/production.txt && \
     pip uninstall -y pip-tools
 
 RUN sed -i 's/\r//' /app/gunicorn.sh

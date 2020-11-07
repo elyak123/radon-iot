@@ -36,9 +36,9 @@ djangorestframework-simplejwt==4.4.0  # via -r requirements/base.txt
 djangorestframework==3.10.3  # via -r requirements/base.txt, dj-rest-auth, djangorestframework-gis, djangorestframework-simplejwt
 docutils==0.15.2          # via botocore
 future==0.17.1            # via -r requirements/base.txt, django-dynamic-model-validation
+gunicorn==20.0.4          # via -r requirements/production.in
 idna==2.9                 # via -r requirements/base.txt, requests
 jmespath==0.9.3           # via boto3, botocore
-mod-wsgi==4.7.1           # via -r requirements/production.in
 oauthlib==3.1.0           # via -r requirements/base.txt, requests-oauthlib
 openrouteservice==2.3.0   # via -r requirements/base.txt
 oscrypto==1.2.0           # via -r requirements/base.txt, validate-aws-sns-message
@@ -63,3 +63,6 @@ urllib3==1.25.8           # via -r requirements/base.txt, requests, sentry-sdk
 validate_aws_sns_message==0.9.0  # via -r requirements/base.txt
 whitenoise[brotli]==4.1.2  # via -r requirements/production.in
 xkcdpass==1.17.3          # via -r requirements/base.txt
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools

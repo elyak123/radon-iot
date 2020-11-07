@@ -24,7 +24,7 @@ if [ -z "$POSTGRES_USER" ]; then
 fi
 
 if [ -z "$POSTGRES_HOST" ]; then
-        export POSTGRES_HOST=postgres
+        export POSTGRES_HOST=postgis
 fi
 
 export DATABASE_URL=postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:5432/$POSTGRES_USER
