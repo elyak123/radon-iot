@@ -15,69 +15,97 @@ def convertir_lectura(lectura, tipo=1, modo=0):
     rangos = [
         [
             {
-                'lectura': 850,
+                'lectura': 2935,
                 'valor': 0
             },
             {
-                'lectura': 580,
+                'lectura': 2780,
                 'valor': 5
             },
             {
-                'lectura': 162,
+                'lectura': 2420,
                 'valor': 10
             },
             {
-                'lectura': 0,
+                'lectura': 2115,
                 'valor': 15
             },
             {
-                'lectura': 4095,
-                'valor': 15
-            },
-            {
-                'lectura': 3839,
+                'lectura': 1845,
                 'valor': 20
             },
             {
-                'lectura': 3513,
+                'lectura': 1625,
+                'valor': 25
+            },
+            {
+                'lectura': 1440,
                 'valor': 30
             },
             {
-                'lectura': 3260,
+                'lectura': 1320,
+                'valor': 35
+            },
+            {
+                'lectura': 1220,
                 'valor': 40
             },
             {
-                'lectura': 2970,
+                'lectura': 1120,
+                'valor': 45
+            },
+            {
+                'lectura': 1035,
                 'valor': 50
             },
             {
-                'lectura': 2730,
+                'lectura': 940,
+                'valor': 55
+            },
+            {
+                'lectura': 851,
                 'valor': 60
             },
             {
-                'lectura': 2410,
+                'lectura': 760,
+                'valor': 65
+            },
+            {
+                'lectura': 635,
                 'valor': 70
             },
             {
-                'lectura': 2080,
+                'lectura': 446,
+                'valor': 75
+            },
+            {
+                'lectura': 200,
                 'valor': 80
             },
             {
-                'lectura': 1830,
+                'lectura': 0,
+                'valor': 82
+            },
+            {
+                'lectura': 4095,
+                'valor': 82
+            },
+            {
+                'lectura': 3915,
                 'valor': 85
             },
             {
-                'lectura': 1602,
+                'lectura': 3610,
                 'valor': 90
             },
             {
-                'lectura': 1274,
+                'lectura': 3230,
                 'valor': 95
             },
             {
-                'lectura': 1168,
+                'lectura': 3134,
                 'valor': 100
-            }
+            },
         ],
         [
             {
