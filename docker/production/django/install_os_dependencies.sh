@@ -17,15 +17,9 @@ apt-get update
 apt-get -y upgrade
 
 # Install a new package, without unnecessary recommended packages:
-#apt-get -y install --no-install-recommends my-package
+apt-get -y install --no-install-recommends libpq-dev git gcc libc-dev
 
 # Delete cached files we don't need anymore:
 apt-get clean
 
 rm -rf /var/lib/apt/lists/*
-
-pip install pip-tools
-
-pip-sync requirements/base.txt
-
-pip uninstall pip-tools

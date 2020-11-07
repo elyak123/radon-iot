@@ -1,4 +1,4 @@
-FROM postgis:11-3.0-alpine
+FROM postgis/postgis:9.5-3.0-alpine
 
 COPY ./docker/production/postgis/backup.sh /usr/local/bin/backup
 RUN chmod +x /usr/local/bin/backup

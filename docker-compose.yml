@@ -1,21 +1,32 @@
 version: "3.8"
 services:
   django: &django
-  build:
-    context: .
-    dockerfile: .docker/production/django/Dockerfile
-    env_file: .env
-    command: /app/gunicorn.sh
-
-  postgis:
     build:
       context: .
-      dockerfile: ./compose/production/postgis/Dockerfile
-    volumes:
-      - postgis_data:/var/lib/postgresql/data
-      - postgis_backup:/backups
+      dockerfile: ./docker/production/django/Dockerfile
     env_file: .env
+    command: /app/gunicorn.sh
+    expose:
+      - 8000
+    depends_on:
+      - postgis
+
+  postgis:
+      build:
+        context: .
+        dockerfile: ./docker/production/postgis/Dockerfile
+      volumes:
+        - postgis_data:/var/lib/postgresql/data
+        - postgis_backup:/backups
+      env_file: .env
+
+  nginx:
+    build: ./docker/production/nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - django
 
 volumes:
-  postgres_data: {}
-  postgres_backup: {}
+  postgis_data: {}
+  postgis_backup: {}
