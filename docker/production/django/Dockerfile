@@ -23,17 +23,14 @@ USER appuser
 ENV PYTHONUNBUFFERED 1
 
 ENV VIRTUAL_ENV=/home/appuser/.virtualenvs
+
 RUN python3 -m venv $VIRTUAL_ENV
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# COPY ./requirements /requirements
-
-# COPY . /app/radon
-
-RUN pip install wheel pip-tools && \
+RUN pip install wheel pip-tools  -q && \
     pip-sync requirements/production.txt -q && \
-    pip uninstall -y pip-tools
+    pip uninstall -y pip-tools -q
 
 RUN sed -i 's/\r//' /app/gunicorn.sh
 

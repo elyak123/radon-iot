@@ -23,7 +23,7 @@ services:
   nginx:
     build: ./docker/production/nginx
     ports:
-      - 1337:80
+      - "0.0.0.0:80:8000"
     depends_on:
       - django
 
