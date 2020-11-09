@@ -1,0 +1,12 @@
+.DS_Store
+.coverage
+.coveragerc
+.git
+.gitignore
+.gitignore
+Makefile
+Procfile
+db.sqlite3
+htmlcov/
+pytest.ini
+setup.cfg

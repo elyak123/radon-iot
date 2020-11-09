@@ -11,13 +11,13 @@ set -euo pipefail
 export DEBIAN_FRONTEND=noninteractive
 
 # Update the package listing, so we know what package exist:
-apt-get update
+apt-get update > /dev/null
 
 # Install security updates:
-apt-get -y upgrade
+apt-get -y upgrade > /dev/null
 
 # Install a new package, without unnecessary recommended packages:
-apt-get -y install --no-install-recommends libpq-dev git gcc libc-dev binutils libproj-dev gdal-bin
+apt-get -y install --no-install-recommends libpq-dev git gcc libc-dev binutils libproj-dev gdal-bin > /dev/null
 
 # Delete cached files we don't need anymore:
 apt-get clean

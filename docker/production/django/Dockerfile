@@ -8,9 +8,12 @@ RUN ./install_os_dependencies.sh
 
 RUN useradd --create-home appuser
 
+COPY ./requirements /requirements
+
+COPY . /app/radon
+
 COPY ./docker/production/django/gunicorn.sh /app/gunicorn.sh
-RUN chown -R appuser /app/
-RUN chmod 0700 /app/gunicorn.sh
+RUN chown -R appuser:appuser /app/ && chmod -R 0700 /app/
 
 COPY ./docker/production/django/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
@@ -24,12 +27,12 @@ RUN python3 -m venv $VIRTUAL_ENV
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-COPY ./requirements /requirements
+# COPY ./requirements /requirements
 
-COPY . /app/radon
+# COPY . /app/radon
 
 RUN pip install wheel pip-tools && \
-    pip-sync requirements/production.txt && \
+    pip-sync requirements/production.txt -q && \
     pip uninstall -y pip-tools
 
 RUN sed -i 's/\r//' /app/gunicorn.sh
