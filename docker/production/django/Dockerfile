@@ -1,6 +1,10 @@
 FROM python:3.8.6-slim-buster
 
+RUN apt-get install bash
+
 COPY docker/production/django/install_os_dependencies.sh .
+
+RUN sed -i 's/\r//' install_os_dependencies.sh
 
 RUN chmod +x /install_os_dependencies.sh
 
