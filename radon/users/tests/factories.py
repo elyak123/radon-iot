@@ -21,7 +21,6 @@ class GaseraFactory(factory.django.DjangoModelFactory):
 class PrecioFactory(factory.django.DjangoModelFactory):
     precio = factory.LazyAttribute(lambda o: fake.random_int(min=9, max=18))
     gasera = factory.SubFactory(GaseraFactory)
-    actual = factory.LazyAttribute(lambda o: fake.boolean())
 
     class Meta:
         model = Precio

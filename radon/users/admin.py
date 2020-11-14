@@ -24,7 +24,13 @@ class GaseraAdmin(admin.ModelAdmin):
 
 
 class PrecioAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('gasera', 'precio', 'fecha')
+
+    def get_queryset(self, request):
+        queryset = super(PrecioAdmin, self).get_queryset(request)
+        # you logic here to `annotate`the queryset with income
+        return queryset
+
 
 # Re-register UserAdmin
 try:
@@ -33,4 +39,4 @@ except admin.sites.NotRegistered:
     pass
 admin.site.register(User, UserAdmin)
 admin.site.register(Precio, PrecioAdmin)
-admin.site.register(Gasera, PrecioAdmin)
+admin.site.register(Gasera, GaseraAdmin)
