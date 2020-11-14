@@ -8,7 +8,7 @@ from radon.iot.models import Municipio
 
 class Gasera(models.Model):
     nombre = models.CharField(max_length=80, unique=True)
-    municipio = models.ManyToMany(Municipio, through='MunicipioGasera')
+    municipio = models.ManyToManyField(Municipio, through='MunicipioGasera')
 
     @property
     def precio_actual(self):
