@@ -8,9 +8,10 @@ def create_superuser(apps, schema_editor):
     try:
         User.objects.get(email=settings.DJANGO_DEFAULT_SUPERUSER_EMAIL)
     except User.DoesNotExist:
-        User.create_superuser(
+        User.objects.create_superuser(
             email=settings.DJANGO_DEFAULT_SUPERUSER_EMAIL,
-            username=settings.DJANGO_DEFAULT_SUPERUSER_USERNAME
+            username=settings.DJANGO_DEFAULT_SUPERUSER_USERNAME,
+            password=settings.DJANGO_DEFAULT_SUPERUSER_PASSWORD
         )
 
 
