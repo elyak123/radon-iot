@@ -7,7 +7,7 @@ from django_hosts.resolvers import get_host_patterns
 
 def poblar_hosts(apps, schema_editor):
     Site = apps.get_model('sites', 'Site')
-    settings.DJANGO_PARENT_HOST
+    settings.PARENT_HOST
     for host in get_host_patterns():
         domain = f'{host.regex}.{settings.PARENT_HOST}'
         obj, created = Site.objects.get_or_create(domain=domain, name=domain)
