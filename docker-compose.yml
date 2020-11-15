@@ -20,13 +20,42 @@ services:
         - postgis_backup:/backups
       env_file: .env
 
+services:
   nginx:
-    build: ./docker/production/nginx
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "--fail", "http://localhost"]
+      interval: 45s
+      timeout: 5s
+      retries: 3
     ports:
-      - "0.0.0.0:80:8000"
+      - "80:80"
+      - "443:443"
+    env_file: .env_http
+    volumes:
+      - ./docker/production/nginx/conf-templates:/etc/nginx/templates
+      - ssl:/etc/letsencrypt
+      - ssl:/var/www/certbot
     depends_on:
       - django
+
+  certbot:
+    build:
+      context: certbot
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      nginx:
+        condition: service_healthy
+    env_file: .env_http
+    volumes:
+      - ssl:/etc/letsencrypt
+      - ssl:/var/www/certbot
 
 volumes:
   postgis_data: {}
   postgis_backup: {}
+  ssl: {}
