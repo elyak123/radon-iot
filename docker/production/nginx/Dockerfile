@@ -17,7 +17,9 @@ RUN set -x \
 
 RUN curl -s https://raw.githubusercontent.com/nginxinc/docker-nginx/master/mainline/alpine/docker-entrypoint.sh > "/nginx-entrypoint.sh" \
 &&  chmod +x /nginx-entrypoint.sh
-COPY docker-entrypoint.sh /
-ENTRYPOINT ["/docker-entrypoint.sh"]
 
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+RUN sed -i 's/\r//' /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

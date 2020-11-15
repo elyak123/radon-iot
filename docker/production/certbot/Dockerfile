@@ -9,4 +9,6 @@ RUN set -x \
            /var/tmp/*
 
 COPY docker-entrypoint.sh /
+RUN sed -i 's/\r//' /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]

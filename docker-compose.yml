@@ -20,17 +20,16 @@ services:
         - postgis_backup:/backups
       env_file: .env
 
-services:
   nginx:
     build:
-      context: nginx
+      context: docker/production/nginx
       dockerfile: Dockerfile
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "--silent", "--fail", "http://localhost"]
-      interval: 45s
-      timeout: 5s
-      retries: 3
+#    healthcheck:
+#      test: ["CMD", "curl", "--silent", "--fail", "http://localhost"]
+#      interval: 45s
+#      timeout: 5s
+#      retries: 3
     ports:
       - "80:80"
       - "443:443"
@@ -44,12 +43,13 @@ services:
 
   certbot:
     build:
-      context: certbot
+      context: docker/production/certbot
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-      nginx:
-        condition: service_healthy
+      - nginx
+      #nginx:
+        #condition: service_healthy
     env_file: .env_http
     volumes:
       - ssl:/etc/letsencrypt
