@@ -19,3 +19,4 @@ class Command(BaseCommand):
                 tipo='STAFF',
                 password=settings.DJANGO_DEFAULT_SUPERUSER_PASSWORD
             )
+            self.stdout.write(self.style.SUCCESS('Super Usuario Creado con exito.'))
