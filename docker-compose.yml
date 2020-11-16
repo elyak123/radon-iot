@@ -25,17 +25,17 @@ services:
       context: docker/production/nginx
       dockerfile: Dockerfile
     restart: unless-stopped
-#    healthcheck:
-#      test: ["CMD", "curl", "--silent", "--fail", "http://localhost"]
-#      interval: 45s
-#      timeout: 5s
-#      retries: 3
+    healthcheck:
+      test: ["CMD", "curl", "--silent", "--fail", "http://localhost"]
+      interval: 45s
+      timeout: 5s
+      retries: 3
     ports:
       - "80:80"
       - "443:443"
     env_file: .env_http
     volumes:
-      - ./docker/production/nginx/conf-templates:/etc/nginx/templates
+      - ./conf-templates:/etc/nginx/templates
       - ssl:/etc/letsencrypt
       - ssl:/var/www/certbot
     depends_on:
@@ -47,9 +47,8 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-      - nginx
-      #nginx:
-        #condition: service_healthy
+      nginx:
+        condition: service_healthy
     env_file: .env_http
     volumes:
       - ssl:/etc/letsencrypt
