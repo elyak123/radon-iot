@@ -89,8 +89,8 @@ def registrolectura(request):
         return HttpResponse('Suscripcion Realizada', status=200)
     message = json.loads(body['Message'])
     angulo = decode_int_little_endian(message['data'])
-    porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, 1)
     dispositivo = models.Dispositivo.objects.get(wisol__serie=message['device'])
+    porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, dispositivo.tipo)
     models.Lectura.objects.create(porcentaje=porcentaje, dispositivo=dispositivo, sensor=angulo)
     return HttpResponse('Registro Creado', status=201)
 

@@ -24,6 +24,7 @@ staticfiles/
 *.py[cod]
 *$py.class
 .env
+.env_http
 # C extensions
 *.so
 

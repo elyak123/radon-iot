@@ -71,6 +71,7 @@ class Dispositivo(models.Model):
     usuario = models.ForeignKey(User, default=get_default_user, on_delete=models.SET(get_default_user))
     location = models.PointField(null=True)
     calendarizado = models.BooleanField('Indica si se esta a la espera de ser surtido.', default=False)
+    tipo = models.IntegerField(default=1)
 
     objects = models.Manager()
     especial = DispositivoSet.as_manager()
