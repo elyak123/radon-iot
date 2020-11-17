@@ -35,9 +35,10 @@ services:
       - "443:443"
     env_file: .env_http
     volumes:
-      - ./conf-templates:/etc/nginx/conf/
+      - ./docker/production/nginx/conf-templates:/etc/nginx/templates
       - ssl:/etc/letsencrypt
-      - certbot:/usr/share/nginx/html
+      - certbot:/var/www/certbot
+#      - certbot:/usr/share/nginx/html
       - ./log/:/var/log/nginx/
     depends_on:
       - django
