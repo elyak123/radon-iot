@@ -51,7 +51,7 @@ if [ ! -f "$path/privkey.pem" ]; then
     --force-renewal
 
     echo "### Reloading nginx ..."
-    curl --fail --silent --user ${nginx_api_user}:${nginx_api_password} http://nginx:2892/nginx/reload
+    curl --fail --silent --user ${nginx_api_user}:${nginx_api_password} http://nginx/nginx/reload
 fi
 
 while :; do

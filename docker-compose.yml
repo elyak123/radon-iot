@@ -35,9 +35,10 @@ services:
       - "443:443"
     env_file: .env_http
     volumes:
-      - ./conf-templates:/etc/nginx/templates
+      - ./conf-templates:/etc/nginx/conf/
       - ssl:/etc/letsencrypt
-      - ssl:/var/www/certbot
+      - certbot:/usr/share/nginx/html
+      - ./log/:/var/log/nginx/
     depends_on:
       - django
 
@@ -52,9 +53,11 @@ services:
     env_file: .env_http
     volumes:
       - ssl:/etc/letsencrypt
-      - ssl:/var/www/certbot
+      - certbot:/var/www/certbot
+      - .log/certbot/:/var/log/letsencrypt/
 
 volumes:
   postgis_data: {}
   postgis_backup: {}
   ssl: {}
+  certbot: {}
