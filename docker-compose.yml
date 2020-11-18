@@ -31,14 +31,13 @@ services:
       timeout: 5s
       retries: 3
     ports:
-      - "80:80"
-      - "443:443"
+      - "8081:80"
+      - "4443:443"
     env_file: .env_http
     volumes:
       - ./docker/production/nginx/conf-templates:/etc/nginx/templates
       - ssl:/etc/letsencrypt
       - certbot:/var/www/certbot
-#      - certbot:/usr/share/nginx/html
       - ./log/:/var/log/nginx/
     depends_on:
       - django
