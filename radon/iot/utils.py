@@ -15,6 +15,100 @@ def convertir_lectura(lectura, tipo=1, modo=0):
     rangos = [
         [
             {
+                'lectura': 2935,
+                'valor': 0
+            },
+            {
+                'lectura': 2780,
+                'valor': 5
+            },
+            {
+                'lectura': 2420,
+                'valor': 10
+            },
+            {
+                'lectura': 2115,
+                'valor': 15
+            },
+            {
+                'lectura': 1845,
+                'valor': 20
+            },
+            {
+                'lectura': 1625,
+                'valor': 25
+            },
+            {
+                'lectura': 1440,
+                'valor': 30
+            },
+            {
+                'lectura': 1320,
+                'valor': 35
+            },
+            {
+                'lectura': 1220,
+                'valor': 40
+            },
+            {
+                'lectura': 1120,
+                'valor': 45
+            },
+            {
+                'lectura': 1035,
+                'valor': 50
+            },
+            {
+                'lectura': 940,
+                'valor': 55
+            },
+            {
+                'lectura': 851,
+                'valor': 60
+            },
+            {
+                'lectura': 760,
+                'valor': 65
+            },
+            {
+                'lectura': 635,
+                'valor': 70
+            },
+            {
+                'lectura': 446,
+                'valor': 75
+            },
+            {
+                'lectura': 200,
+                'valor': 80
+            },
+            {
+                'lectura': 0,
+                'valor': 82
+            },
+            {
+                'lectura': 4095,
+                'valor': 82
+            },
+            {
+                'lectura': 3915,
+                'valor': 85
+            },
+            {
+                'lectura': 3610,
+                'valor': 90
+            },
+            {
+                'lectura': 3230,
+                'valor': 95
+            },
+            {
+                'lectura': 3134,
+                'valor': 100
+            },
+        ],
+        [
+            {
                 'lectura': 850,
                 'valor': 0
             },
@@ -79,7 +173,6 @@ def convertir_lectura(lectura, tipo=1, modo=0):
                 'valor': 100
             }
         ],
-        [],
         []
     ]
 
@@ -93,7 +186,8 @@ def convertir_lectura(lectura, tipo=1, modo=0):
                     distancia = abs(tope_2['lectura'] - tope_1['lectura'])
                     distancia_lectura = abs(lectura - tope_1['lectura'])
                     porcentaje = distancia_lectura / distancia
-                    return abs(tope_2['valor'] - tope_1['valor']) * porcentaje + tope_1['valor']
+                    resultado = abs(tope_2['valor'] - tope_1['valor']) * porcentaje + tope_1['valor']
+                    return 0 if resultado is None else resultado
     else:
         for i in range(0, len(topes)-1):
             tope_1 = topes[i]
@@ -103,4 +197,5 @@ def convertir_lectura(lectura, tipo=1, modo=0):
                     distancia = abs(tope_2['valor'] - tope_1['valor'])
                     distancia_lectura = abs(lectura - tope_1['valor'])
                     porcentaje = distancia_lectura / distancia
-                    return - abs(tope_2['lectura'] - tope_1['lectura']) * porcentaje + tope_1['lectura']
+                    resultado = - abs(tope_2['lectura'] - tope_1['lectura']) * porcentaje + tope_1['lectura']
+                    return 0 if resultado is None else resultado
