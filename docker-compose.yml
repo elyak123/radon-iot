@@ -16,8 +16,8 @@ services:
         context: .
         dockerfile: ./docker/production/postgis/Dockerfile
       volumes:
-        - postgis_data:/var/lib/postgresql/data
-        - postgis_backup:/backups
+        - ./docker/production/postgis/data:/var/lib/postgresql/data
+        - ./docker/production/postgis/backups:/backups
       env_file: .env
 
   nginx:
@@ -57,7 +57,5 @@ services:
       - .log/certbot/:/var/log/letsencrypt/
 
 volumes:
-  postgis_data: {}
-  postgis_backup: {}
   ssl: {}
   certbot: {}

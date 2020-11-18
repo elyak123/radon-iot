@@ -13,12 +13,14 @@ pipcompile:
 	@pip-compile requirements/test.in --output-file requirements/test.txt
 	@pip-compile requirements/production.in --output-file requirements/production.txt
 
-static:
-	#@python manage.py collectstatic --noinput --clear
-	@python manage.py collectstatic --noinput
-	@python manage.py compress --force
-	@python manage.py collectstatic --noinput
-	@python manage.py migrate
+shell:
+	@docker-compose run django python manage.py shell
 
-deploy: static
-	@service apache2 restart
+deploy:
+	@docker-compose up -d
+
+backup:
+	@docker-compose exec postgis backup
+
+listbackups:
+	@docker-compose exec postgis list-backups
