@@ -6,4 +6,7 @@ from django.contrib.sites.models import Site
 def create_sites():
     for host in get_host_patterns():
         domain = f'{host.regex}.{settings.PARENT_HOST}'
-        obj, created = Site.objects.get_or_create(domain=domain, name=domain)
+        try:
+            Site.objects.get(domain=domain, name=domain)
+        except Site.DoesNotExist:
+            Site.objects.create(domain=domain, name=domain)
