@@ -7,6 +7,6 @@ def create_sites():
     for host in get_host_patterns():
         domain = f'{host.regex}.{settings.PARENT_HOST}'
         try:
-            Site.objects.get(domain=domain, name=domain)
+            Site.objects.get(domain=domain)
         except Site.DoesNotExist:
             Site.objects.create(domain=domain, name=domain)
