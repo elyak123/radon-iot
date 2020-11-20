@@ -44,7 +44,7 @@ echo "-------------------------"
 # deleting the db can fail. Spit out a comment if this happens but continue since the db
 # is created in the next step
 echo "deleting old database $POSTGRES_USER"
-if dropdb -h postgres -U $POSTGRES_USER $POSTGRES_USER
+if dropdb -h postgis -U $POSTGRES_USER $POSTGRES_USER
 then echo "deleted $POSTGRES_USER database"
 else echo "database $POSTGRES_USER does not exist, continue"
 fi
