@@ -24,6 +24,7 @@ staticfiles/
 *.py[cod]
 *$py.class
 .env
+.env_http
 # C extensions
 *.so
 
@@ -218,3 +219,5 @@ GitHub.sublime-settings
 
 # End of https://www.gitignore.io/api/git,django,python,sublimetext
 production.wsgi.py
+data/
+backups/
