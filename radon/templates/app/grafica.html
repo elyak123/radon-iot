@@ -40,6 +40,7 @@
     var fecha;
     $.get(`../iot/lecturas/?dispositivo=${id_dispositivo}&limit=60&offset=60/`, function (resultados) {
         resultados = resultados['results'];
+        arreglo = [];
         for (var j = resultados.length - 1; j >= 0; j--) {
             var fecha_lectura = new Date(resultados[j]['fecha']);
             var obj = [parseFloat(resultados[j]['porcentaje']), dateToString(fecha_lectura)];
@@ -47,6 +48,7 @@
             if (j == 0) {
                 fecha = fecha_lectura;
                 generar_grafica();
+                return false;
             }
         }
     });

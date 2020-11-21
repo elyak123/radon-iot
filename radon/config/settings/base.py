@@ -60,7 +60,6 @@ INSTALLED_APPS = [
     'radon.operador.apps.OperadorConfig',
     'radon.accounts.apps.AccountsConfig',
     'radon.crm.apps.CrmConfig',
-    'radon.siteprofile.apps.SiteprofileConfig',
     'django_hosts',
     'floppyforms',
     'rest_framework',
@@ -283,6 +282,12 @@ SIGFOX_CREDENTIAL_KEY = env('SIGFOX_CREDENTIAL_KEY', default='SECRET')
 #  Default phone number region
 PHONENUMBER_DB_FORMAT = 'NATIONAL'
 PHONENUMBER_DEFAULT_REGION = 'MX'
+
+# DEFAULT SUPERUSER
+DJANGO_DEFAULT_SUPERUSER_EMAIL = env('DJANGO_DEFAULT_SUPERUSER_EMAIL', default='user@localhost')
+DJANGO_DEFAULT_SUPERUSER_USERNAME = env('DJANGO_DEFAULT_SUPERUSER_USERNAME', default='default')
+DJANGO_DEFAULT_SUPERUSER_PASSWORD = env('DJANGO_DEFAULT_SUPERUSER_PASSWORD', default='CHANGEME!!!')
+
 #  SENTINEL MODELS
 DEFAULT_USERNAME = env('DEFAULT_USERNAME')
 DEFAULT_GASERA = env('DEFAULT_GASERA')

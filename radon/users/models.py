@@ -37,7 +37,7 @@ class Precio(models.Model):
         verbose_name_plural = "Precios"
 
     def __str__(self):
-        return f'${self.precio} {self.gasera.nombre[:16]}... Actual: {self.actual}'
+        return f'${self.precio} {self.gasera.nombre[:16]}'
 
 
 class UserSet(models.QuerySet):
