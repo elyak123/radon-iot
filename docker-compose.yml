@@ -16,8 +16,8 @@ services:
         context: .
         dockerfile: ./docker/production/postgis/Dockerfile
       volumes:
-        - postgis_data:/var/lib/postgresql/data
-        - postgis_backup:/backups
+        - ./docker/production/postgis/data:/var/lib/postgresql/data
+        - ./docker/production/postgis/backups:/backups
       env_file: .env
 
   nginx:
@@ -31,14 +31,13 @@ services:
       timeout: 5s
       retries: 3
     ports:
-      - "80:80"
-      - "443:443"
+      - "8081:80"
+      - "4443:443"
     env_file: .env_http
     volumes:
       - ./docker/production/nginx/conf-templates:/etc/nginx/templates
       - ssl:/etc/letsencrypt
       - certbot:/var/www/certbot
-#      - certbot:/usr/share/nginx/html
       - ./log/:/var/log/nginx/
     depends_on:
       - django
@@ -58,7 +57,5 @@ services:
       - .log/certbot/:/var/log/letsencrypt/
 
 volumes:
-  postgis_data: {}
-  postgis_backup: {}
   ssl: {}
   certbot: {}
