@@ -3,12 +3,12 @@ from django.core.validators import validate_email
 from django.contrib.auth.models import AbstractUser, UserManager
 from phonenumber_field.modelfields import PhoneNumberField
 from radon.users.utils import get_default_gasera
-from radon.iot.models import Municipio
+from radon.georadon.models import Municipio
 
 
 class Gasera(models.Model):
     nombre = models.CharField(max_length=80, unique=True)
-    municipio = models.ManyToMany(Municipio, through='MunicipioGasera')
+    municipio = models.ManyToManyField(Municipio, through='MunicipioGasera')
 
     @property
     def precio_actual(self):
@@ -30,7 +30,7 @@ class MunicipioGasera(models.Model):
 class Precio(models.Model):
     precio = models.DecimalField(max_digits=12, decimal_places=2)
     fecha = models.DateTimeField(auto_now=True)
-    municipio_gasera = models.ForeignKey(MunicipioGasera, on_delete=models.CASCADE)
+    municipio_gasera = models.ForeignKey(MunicipioGasera, on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = "Precio"

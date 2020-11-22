@@ -24,7 +24,7 @@ class GaseraAdmin(admin.ModelAdmin):
 
 
 class PrecioAdmin(admin.ModelAdmin):
-    list_display = ('gasera', 'precio', 'fecha')
+    list_display = ('municipio_gasera', 'precio', 'fecha')
 
     def get_queryset(self, request):
         queryset = super(PrecioAdmin, self).get_queryset(request)

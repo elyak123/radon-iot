@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'radon.operador.apps.OperadorConfig',
     'radon.accounts.apps.AccountsConfig',
     'radon.crm.apps.CrmConfig',
+    'radon.georadon.apps.GeoradonConfig',
     'django_hosts',
     'floppyforms',
     'rest_framework',
