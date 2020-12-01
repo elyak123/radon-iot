@@ -10,6 +10,8 @@ services:
       - 8000
     depends_on:
       - postgis
+    volumes:
+      - ./docker/production/django/data/:/data/
 
   postgis:
       build:
