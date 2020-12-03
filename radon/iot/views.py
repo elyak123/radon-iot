@@ -4,6 +4,7 @@ import datetime
 from random import random
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -89,7 +90,7 @@ def registrolectura(request):
         return HttpResponse('Suscripcion Realizada', status=200)
     message = json.loads(body['Message'])
     angulo = decode_int_little_endian(message['data'])
-    dispositivo = models.Dispositivo.objects.get(wisol__serie=message['device'])
+    dispositivo = get_object_or_404(models.Dispositivo, wisol__serie=message['device'])
     porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, dispositivo.tipo)
     models.Lectura.objects.create(porcentaje=porcentaje, dispositivo=dispositivo, sensor=angulo)
     return HttpResponse('Registro Creado', status=201)
