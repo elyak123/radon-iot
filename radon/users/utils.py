@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.db.utils import ProgrammingError
 from django.contrib.auth import get_user_model
 from xkcdpass import xkcd_password as xp
 from unidecode import unidecode

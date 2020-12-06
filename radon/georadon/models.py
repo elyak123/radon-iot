@@ -14,6 +14,7 @@ class Municipio(models.Model):
     class Meta:
         unique_together = ('clave', 'estado')
 
+
 class Localidad(models.Model):
     geo = models.PolygonField(geography=True)
     nombre = models.CharField(max_length=80)

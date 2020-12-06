@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from radon.users.utils import get_default_user
 from radon.users.models import Sucursal
-from radon.georadon.models import Municipio, Localidad, Estado
+from radon.georadon.models import Municipio, Localidad
 
 User = get_user_model()
 
@@ -55,7 +55,7 @@ class DispositivoSet(models.QuerySet):
 
     def calendarizados(self, jornada):
         return self.anotar_pedidos_calendarizados(jornada).filter(
-            sucursal__gasera=jornada.gasera, # por lo pronto, despues debera ser jornada.sucursal
+            sucursal__gasera=jornada.gasera,  # por lo pronto, despues debera ser jornada.sucursal
             pedidos_calendarizados=True
         )
 
@@ -129,6 +129,3 @@ class Lectura(models.Model):
 
     def __str__(self):
         return f'{self.fecha.isoformat(timespec="minutes")}-{self.dispositivo.wisol.serie}-{self.porcentaje}%'
-
-
-

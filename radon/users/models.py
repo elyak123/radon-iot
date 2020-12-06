@@ -2,7 +2,6 @@ from django.contrib.gis.db import models
 from django.core.validators import validate_email
 from django.contrib.auth.models import AbstractUser, UserManager
 from phonenumber_field.modelfields import PhoneNumberField
-from radon.users.utils import get_default_gasera
 from radon.georadon.models import Municipio, Localidad
 
 
@@ -35,6 +34,7 @@ class Sucursal(models.Model):
             return f'{self.gasera.nombre[:10]} {self.municipio.nombre[:16]}'
         return f'{self.nombre} {self.gasera.nombre[:10]}'
 
+
 class Precio(models.Model):
     precio = models.DecimalField(max_digits=12, decimal_places=2)
     fecha = models.DateTimeField(auto_now=True)
@@ -50,7 +50,7 @@ class Precio(models.Model):
 
 class UserSet(models.QuerySet):
 
-    def leads(self, gasera):
+    def leads(self, sucursal):
         from radon.iot.models import Dispositivo
         u_lectura = Dispositivo.especial.filter(
             usuario=models.OuterRef('pk')
@@ -58,11 +58,12 @@ class UserSet(models.QuerySet):
         disps = Dispositivo.especial.filter(
             usuario=models.OuterRef('pk')
         ).calendarizables().filter(sucursal=sucursal).values('wisol__serie')[:1]
-        return self.filter(gasera=gasera, tipo='CONSUMIDOR').annotate(
+        return self.filter(tipo='CONSUMIDOR').annotate(
             ultima_lectura=models.Subquery(u_lectura, output_field=models.IntegerField())
         ).annotate(
             serie=models.Subquery(disps, output_field=models.IntegerField())
         ).filter(ultima_lectura__isnull=False, serie__isnull=False)
+
 
 class User(AbstractUser):
     TIPO_USUARIO = (('CLIENTE', 'Cliente'), ('CONSUMIDOR', 'Consumidor'), ('STAFF', 'Staff'), ('OPERARIO', 'Operario'))
