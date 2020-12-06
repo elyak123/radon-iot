@@ -11,7 +11,7 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
 from radon.users.models import Gasera, Precio, Sucursal
-from radon.georadon.models import Municipio
+from radon.georadon.models import Municipio, Localidad
 from .utils import create_user_and_dispositivo, create_user_password
 
 User = get_user_model()
@@ -255,6 +255,7 @@ class GaseraSerializer(serializers.ModelSerializer):
 class SucursalSerializer(serializers.ModelSerializer):
     gasera = serializers.SlugRelatedField(slug_field='nombre', queryset=Gasera.objects.all())
     municipio = serializers.SlugRelatedField(slug_field='nombre', queryset=Municipio.objects.all())
+    localidad = serializers.SlugRelatedField(slug_field='clave', queryset=Localidad.objects.all())
 
     class Meta:
         model = Sucursal
