@@ -10,14 +10,6 @@ def get_default_user():
     return User.objects.get_or_create(username=settings.DEFAULT_USERNAME)[0].pk
 
 
-def get_default_gasera():
-    from radon.users.models import Gasera
-    try:
-        return Gasera.objects.get_or_create(nombre=settings.DEFAULT_GASERA)[0].pk
-    except ProgrammingError:
-        return 1
-
-
 def create_user_password(numwords=2):
     wordfile = xp.locate_wordfile('spa-mich')
     word_list = xp.generate_wordlist(wordfile=wordfile, min_length=5, max_length=8)
