@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'radon.iot.apps.IotConfig',
     'radon.app.apps.AppConfig',
     'radon.rutas.apps.RutasConfig',
+    'radon.market.apps.MarketConfig',
     'radon.users.apps.UsersConfig',
     'radon.operador.apps.OperadorConfig',
     'radon.accounts.apps.AccountsConfig',
