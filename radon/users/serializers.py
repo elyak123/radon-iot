@@ -10,7 +10,8 @@ from allauth.account.adapter import get_adapter
 from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
-from radon.users.models import Gasera
+from radon.users.models import Gasera, Precio, Sucursal
+from radon.georadon.models import Municipio
 from .utils import create_user_and_dispositivo, create_user_password
 
 User = get_user_model()
@@ -33,7 +34,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'first_name', 'last_name', 'password',
-            'email', 'telefono', 'dispositivo_set', 'tipo', 'gasera',
+            'email', 'telefono', 'dispositivo_set', 'tipo',
         ]
         depth = 2
 
@@ -240,3 +241,28 @@ class ActivateUsers(WisolValidation):
         self.user.is_active = True
         self.user.save()
         return self.user
+
+
+
+######  DESPUES SE VA A MOVER A SU PROPIA APP
+class GaseraSerializer(serializers,ModelSerializer):
+
+    class Meta:
+        model = Gasera
+        fields = ['nombre']
+
+class SucursalSerializer(serializers.ModelSerializer):
+    gasera = serializers.SlugRelatedField(slug_field='nombre', queryset=Gasera.objects.all())
+    municipio = serializers.SlugRelatedField(slug_field='nombre', queryset=Municipio.objects.all())
+
+    class Meta:
+        model = Sucursal
+        geo_field = 'ubicacion'
+        fields = ['nombre', 'numeroPermiso', 'gasera', 'municipio', 'localidad', 'telefono']
+
+class PrecioSerializer(serializers.ModelSerializer):
+    sucursal = serializers.SlugRelatedField(slug_field='numeroPermiso', queryset=Precio.objects.all())
+
+    class Meta:
+        model = Precio
+        fields = ['precio', 'fecha', 'sucursal']
