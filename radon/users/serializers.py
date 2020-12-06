@@ -243,13 +243,14 @@ class ActivateUsers(WisolValidation):
         return self.user
 
 
+# #####  DESPUES SE VA A MOVER A SU PROPIA APP
 
-######  DESPUES SE VA A MOVER A SU PROPIA APP
-class GaseraSerializer(serializers,ModelSerializer):
+class GaseraSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Gasera
         fields = ['nombre']
+
 
 class SucursalSerializer(serializers.ModelSerializer):
     gasera = serializers.SlugRelatedField(slug_field='nombre', queryset=Gasera.objects.all())
@@ -259,6 +260,7 @@ class SucursalSerializer(serializers.ModelSerializer):
         model = Sucursal
         geo_field = 'ubicacion'
         fields = ['nombre', 'numeroPermiso', 'gasera', 'municipio', 'localidad', 'telefono']
+
 
 class PrecioSerializer(serializers.ModelSerializer):
     sucursal = serializers.SlugRelatedField(slug_field='numeroPermiso', queryset=Precio.objects.all())
