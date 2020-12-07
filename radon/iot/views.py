@@ -2,7 +2,7 @@ import json
 import requests
 import datetime
 from random import random
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets

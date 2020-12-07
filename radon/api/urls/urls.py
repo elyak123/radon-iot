@@ -13,6 +13,11 @@ urlpatterns = [
     ####################
     path('users/', include('radon.api.urls.usersurls')),
 
+    #####################
+    #  URLS PARA MARKET #
+    #####################
+    path('market/', include('radon.api.urls.marketurls')),
+
     ################################
     #  URLS PARA AUTENTICACION API #
     ################################

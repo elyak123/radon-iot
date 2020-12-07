@@ -55,7 +55,10 @@ class DispositivoSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = models.Dispositivo
         geo_field = 'location'
-        fields = ['wisol', 'capacidad', 'usuario', 'ultima_lectura']
+        fields = [
+            'nombre', 'wisol', 'capacidad', 'sucursal', 'municipio',
+            'localidad', 'usuario', 'calendarizado', 'ultima_lectura'
+        ]
         depth = 2
 
 
@@ -64,7 +67,10 @@ class NestedDispositivoSerializer(DispositivoSerializer):
     class Meta:
         model = models.Dispositivo
         geo_field = 'location'
-        fields = ['pk', 'wisol', 'capacidad', 'ultima_lectura']
+        fields = [
+            'pk', 'nombre', 'wisol', 'capacidad', 'sucursal', 'municipio',
+            'localidad', 'usuario', 'calendarizado', 'ultima_lectura'
+        ]
         depth = 2
 
 
