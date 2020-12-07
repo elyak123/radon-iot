@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from radon.georadon.models import Municipio, Localidad
 

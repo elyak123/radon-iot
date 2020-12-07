@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.utils import ProgrammingError
 from django.contrib.auth import get_user_model
 from xkcdpass import xkcd_password as xp
 from unidecode import unidecode
@@ -7,6 +8,14 @@ from unidecode import unidecode
 def get_default_user():
     User = get_user_model()
     return User.objects.get_or_create(username=settings.DEFAULT_USERNAME)[0].pk
+
+
+def get_default_gasera():
+    from radon.users.models import Gasera
+    try:
+        return Gasera.objects.get_or_create(nombre=settings.DEFAULT_GASERA)[0].pk
+    except ProgrammingError:
+        return 1
 
 
 def create_user_password(numwords=2):

@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from django.db import connection
 from dynamic_validator import ModelFieldRequiredMixin
-from radon.users.models import Sucursal, Precio
+from radon.market.models import Sucursal, Precio
 from radon.iot.models import Dispositivo
 
 User = get_user_model()

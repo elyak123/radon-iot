@@ -3,7 +3,7 @@ from django.core.serializers import serialize
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from radon.users.utils import get_default_user
-from radon.users.models import Sucursal
+from radon.market.models import Sucursal
 from radon.georadon.models import Municipio, Localidad
 
 User = get_user_model()
