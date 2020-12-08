@@ -9,7 +9,7 @@ from radon.iot.models import Wisol, Dispositivo
 from radon.iot.tests import factories as iot_factories
 from radon.rutas.tests import factories as rutas_factories
 from radon.rutas.models import Pedido, Jornada
-from radon.siteprofile.utils import create_sites
+from radon.contrib.sites.utils import create_sites
 
 
 class Command(BaseCommand):

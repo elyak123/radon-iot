@@ -45,6 +45,24 @@ class APIRegisterUsersView(userviews.RegisterUsersView):
 def api_activacion_usuarios(request):
     return userviews.activacion_usuarios(request)
 
+
+######################
+#  VIEWS PARA MARKET #
+######################
+
+
+class APIGaseraViewSet(userviews.GaseraViewSet):
+    pass
+
+
+class APISucursalViewSet(userviews.SucursalViewSet):
+    pass
+
+
+class APIPrecioPrecioViewSet(userviews.PrecioViewSet):
+    pass
+
+
 ####################
 #  VIEWS PARA IOT #
 ####################

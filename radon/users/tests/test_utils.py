@@ -14,15 +14,6 @@ def test_get_default_user_other(mocker, settings):
     mock_user_klass.objects.get_or_create.assert_called_once_with(username='foo')
 
 
-def test_get_default_gasera(mocker, settings):
-    settings.DEFAULT_GASERA = 'RADON, S.A.'
-    attrs = {'objects.get_or_create.return_value': (mocker.MagicMock(spec=Gasera, pk=2), True)}
-    gasera_klass = mocker.patch('radon.users.models.Gasera')
-    gasera_klass.configure_mock(**attrs)
-    assert utils.get_default_gasera() == 2
-    gasera_klass.objects.get_or_create.assert_called_once_with(nombre='RADON, S.A.')
-
-
 def test_create_user_and_dispositivo(mocker):
     mocker.patch('radon.users.models.Gasera')
     usr = mocker.MagicMock(spec=User, pk=2)

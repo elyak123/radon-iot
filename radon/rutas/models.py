@@ -4,7 +4,7 @@ from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from django.db import connection
 from dynamic_validator import ModelFieldRequiredMixin
-from radon.users.models import Gasera, Precio
+from radon.market.models import Sucursal, Precio
 from radon.iot.models import Dispositivo
 
 User = get_user_model()
@@ -12,7 +12,7 @@ User = get_user_model()
 
 class Jornada(models.Model):
     fecha = models.DateField(default=datetime.datetime.now)
-    gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
 
     def geometria_actualizada(self):
         return not self.pedido_set.filter(actualizado=False).exists()
@@ -32,7 +32,7 @@ class Vehiculo(models.Model):
     placa = models.CharField(max_length=12)
     n_economico = models.CharField(max_length=12, blank=True)
     operador = models.ForeignKey(User, on_delete=models.CASCADE)
-    gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
     capacidad = models.IntegerField('Capacidad del vehiculo en litros')
 
     class Meta:
