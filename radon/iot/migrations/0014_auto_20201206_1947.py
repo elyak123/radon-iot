@@ -9,6 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('market', '0001_initial'),
         ('iot', '0013_dispositivo_tipo'),
+        ('georadon', '0005_importshapes'),
     ]
 
     operations = [

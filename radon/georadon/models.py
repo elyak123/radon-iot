@@ -13,7 +13,7 @@ class Municipio(models.Model):
 
 
 class Localidad(models.Model):
-    geo = models.PolygonField(geography=True)
+    geo = models.MultiPolygonField(geography=True)
     nombre = models.CharField(max_length=80)
     clave = models.CharField(max_length=13, unique=True)
     municipio = models.ForeignKey(Municipio, on_delete=models.CASCADE)

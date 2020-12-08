@@ -7,6 +7,7 @@ from unidecode import unidecode
 
 def get_default_user():
     User = get_user_model()
+    import pdb; pdb.set_trace()
     return User.objects.get_or_create(username=settings.DEFAULT_USERNAME)[0].pk
 
 

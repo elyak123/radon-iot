@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='dispositivo',
             name='usuario',
-            field=models.ForeignKey(default=radon.users.utils.get_default_user, on_delete=models.SET(radon.users.utils.get_default_user), to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(default=1, on_delete=models.SET(radon.users.utils.get_default_user), to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='dispositivo',
