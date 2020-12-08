@@ -49,7 +49,7 @@ class Command(BaseCommand):
             'municipio': {'nombre': 'Municipio'},
             'geo': 'POLYGON'
         }
-        loc_ds =  DataSource(str(localidades_shape))
-        lyr = loc_ds[0]
         lyr_mapping = LayerMapping(Localidad, localidades_shape, mapping_locals, transform=False)
+        lyr_mapping.save(strict=True, verbose=True)
+
         self.stdout.write(self.style.SUCCESS('Creados los municipios'))
