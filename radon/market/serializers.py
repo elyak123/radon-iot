@@ -11,19 +11,58 @@ class GaseraSerializer(serializers.ModelSerializer):
 
 
 class SucursalSerializer(serializers.ModelSerializer):
-    gasera = serializers.SlugRelatedField(slug_field='nombre', queryset=models.Gasera.objects.all())
-    municipio = serializers.SlugRelatedField(slug_field='nombre', queryset=Municipio.objects.all())
+    gasera = GaseraSerializer()
+    municipio = serializers.SlugRelatedField(slug_field='clave', queryset=Municipio.objects.all())
     localidad = serializers.SlugRelatedField(slug_field='clave', queryset=Localidad.objects.all())
 
     class Meta:
         model = models.Sucursal
         geo_field = 'ubicacion'
-        fields = ['nombre', 'numeroPermiso', 'gasera', 'municipio', 'localidad', 'telefono']
+        fields = ['gasera', 'numeroPermiso', 'municipio', 'localidad']
 
 
 class PrecioSerializer(serializers.ModelSerializer):
-    sucursal = serializers.SlugRelatedField(slug_field='numeroPermiso', queryset=models.Precio.objects.all())
+    sucursal = SucursalSerializer(many=True)
 
     class Meta:
         model = models.Precio
-        fields = ['precio', 'fecha', 'sucursal']
+        fields = ['precio', 'sucursal']
+
+
+"""
+[
+    {
+        "sucursal": {
+            "gasera": {
+                "nombre": "Empresa, S.A. de C.V."
+            },
+            "municipio": "01001",
+            "localidad": "010012439",
+            "numeroPermiso": "LP/0234/2019"
+        },
+        "precio": 12
+    },
+    {
+        "sucursal": {
+            "gasera": {
+                "nombre": "Empresa, S.A. de C.V."
+            },
+            "municipio": "01001",
+            "localidad": "010012439",
+            "numeroPermiso": "LP/0234/2019"
+        },
+        "precio": 12
+    },
+    {
+        "sucursal": {
+            "gasera": {
+                "nombre": "Empresa, S.A. de C.V."
+            },
+            "municipio": "01001",
+            "localidad": "010012439",
+            "numeroPermiso": "LP/0234/2019"
+        },
+        "precio": 12
+    }
+]
+"""
