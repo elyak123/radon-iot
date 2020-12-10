@@ -6,6 +6,7 @@ from dj_rest_auth.views import LoginView
 from radon.users import views as userviews
 from radon.iot import views as iotviews
 from radon.api import serializers, parsers
+from radon.georadon import views as geoviews
 
 ###########################################
 #  VIEWS AUTENTICACION Y AUTORIZACION API #
@@ -61,6 +62,16 @@ class APISucursalViewSet(userviews.SucursalViewSet):
 
 class APIPrecioPrecioViewSet(userviews.PrecioViewSet):
     pass
+
+
+########################
+#  VIEWS PARA GEORADON #
+########################
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def localidades_dispositivos(request):
+    return geoviews.localidades_dispositivos(request)
 
 
 ####################

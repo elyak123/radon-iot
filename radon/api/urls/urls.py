@@ -18,6 +18,11 @@ urlpatterns = [
     #####################
     path('market/', include('radon.api.urls.marketurls')),
 
+    ###########################
+    #  URLS PARA GEORADON API #
+    ###########################
+    path('geo/', include('radon.georadon.urls.georadonurls')),
+
     ################################
     #  URLS PARA AUTENTICACION API #
     ################################
