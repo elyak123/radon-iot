@@ -21,7 +21,7 @@ urlpatterns = [
     ###########################
     #  URLS PARA GEORADON API #
     ###########################
-    path('geo/', include('radon.georadon.urls.georadonurls')),
+    path('geo/', include('radon.api.urls.georadonurls')),
 
     ################################
     #  URLS PARA AUTENTICACION API #
