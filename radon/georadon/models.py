@@ -20,4 +20,4 @@ class Localidad(models.Model):
 
     @property
     def descompuesto(self):
-        return (self.clave[0:2], self.clave[2:5], self.clave[5:10])
+        return (self.clave[0:2], self.clave[0:5], self.clave)

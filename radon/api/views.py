@@ -61,7 +61,7 @@ class APISucursalViewSet(marketviews.SucursalViewSet):
     pass
 
 
-class APIPrecioPrecioViewSet(marketviews.PrecioViewSet):
+class APIPreciosViewSet(marketviews.PreciosViewSet):
     pass
 
 

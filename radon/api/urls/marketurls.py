@@ -7,8 +7,8 @@ from rest_framework import routers
 #######################
 marketrouter = routers.DefaultRouter()
 marketrouter.register(r'gasera', views.APIGaseraViewSet, basename='gasera')
-marketrouter.register(r'sucursal', views.APIGaseraViewSet, basename='sucursal')
-marketrouter.register(r'precio', views.APIGaseraViewSet, basename='precio')
+marketrouter.register(r'sucursal', views.APISucursalViewSet, basename='sucursal')
+marketrouter.register(r'precios', views.APIPreciosViewSet, basename='precio')
 
 urlpatterns = [
 
