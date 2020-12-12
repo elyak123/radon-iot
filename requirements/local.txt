@@ -4,7 +4,7 @@
 #
 #    pip-compile --output-file=requirements/local.txt requirements/local.in
 #
--e git+https://github.com/elyak123/django-pwa.git@v1.0.11#egg=pwa  # via -r requirements/base.txt
+-e git+https://github.com/elyak123/django-pwa.git@v1.0.11#egg=django-pwa  # via -r requirements/base.txt
 apipkg==1.5               # via execnet
 asn1crypto==1.3.0         # via -r requirements/base.txt, oscrypto
 attrs==19.3.0             # via pytest
@@ -40,7 +40,6 @@ factory-boy==2.12.0       # via -r requirements/local.in
 faker==4.1.0              # via factory-boy
 future==0.17.1            # via -r requirements/base.txt, django-dynamic-model-validation
 idna==2.9                 # via -r requirements/base.txt, requests
-importlib-metadata==1.7.0  # via pluggy, pytest
 more-itertools==8.2.0     # via pytest
 oauthlib==3.1.0           # via -r requirements/base.txt, requests-oauthlib
 openrouteservice==2.3.0   # via -r requirements/base.txt
@@ -75,4 +74,3 @@ urllib3==1.25.8           # via -r requirements/base.txt, requests
 validate_aws_sns_message==0.9.0  # via -r requirements/base.txt
 wcwidth==0.1.9            # via pytest
 xkcdpass==1.17.3          # via -r requirements/base.txt
-zipp==3.1.0               # via importlib-metadata
