@@ -24,6 +24,11 @@ class SucursalSerializer(serializers.ModelSerializer):
 class PrecioSerializer(serializers.ModelSerializer):
     sucursal = SucursalSerializer()
 
+    def create(self, validated_data):
+        sucursal_data = validated_data.pop('sucursal')
+        gasera , gasera_creada = models.Gasera.objects_get_or_create(nombre=sucursal_data['gasera']['nombre'])
+        sucursal, sucursal_creada = models.Sucursal.objects.get_or_create(gasera=gasera)
+
     class Meta:
         model = models.Precio
         fields = ['precio', 'sucursal']
