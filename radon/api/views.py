@@ -5,6 +5,7 @@ from rest_framework.decorators import parser_classes
 from dj_rest_auth.views import LoginView
 from radon.users import views as userviews
 from radon.iot import views as iotviews
+from radon.market import views as marketviews
 from radon.api import serializers, parsers
 from radon.georadon import views as geoviews
 
@@ -52,15 +53,15 @@ def api_activacion_usuarios(request):
 ######################
 
 
-class APIGaseraViewSet(userviews.GaseraViewSet):
+class APIGaseraViewSet(marketviews.GaseraViewSet):
     pass
 
 
-class APISucursalViewSet(userviews.SucursalViewSet):
+class APISucursalViewSet(marketviews.SucursalViewSet):
     pass
 
 
-class APIPrecioPrecioViewSet(userviews.PrecioViewSet):
+class APIPreciosViewSet(marketviews.PreciosViewSet):
     pass
 
 

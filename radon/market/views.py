@@ -14,6 +14,16 @@ class SucursalViewSet(viewsets.ModelViewSet):
     lookup_field = 'numeroPermiso'
 
 
-class PrecioViewSet(viewsets.ModelViewSet):
+class PreciosViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PrecioSerializer
     permission_classes = [permissions.IsAdminUser]
+
+    def get_serializer(self, *args, **kwargs):
+        """
+        Return the serializer instance that should be used for validating and
+        deserializing input, and for serializing output.
+        """
+        serializer_class = self.get_serializer_class()
+        kwargs['context'] = self.get_serializer_context()
+        kwargs['many'] = True
+        return serializer_class(*args, **kwargs)

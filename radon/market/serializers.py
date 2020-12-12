@@ -22,7 +22,7 @@ class SucursalSerializer(serializers.ModelSerializer):
 
 
 class PrecioSerializer(serializers.ModelSerializer):
-    sucursal = SucursalSerializer(many=True)
+    sucursal = SucursalSerializer()
 
     class Meta:
         model = models.Precio
