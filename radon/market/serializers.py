@@ -13,7 +13,7 @@ class GaseraSerializer(serializers.ModelSerializer):
 class SucursalSerializer(serializers.ModelSerializer):
     gasera = GaseraSerializer()
     municipio = serializers.SlugRelatedField(slug_field='clave', queryset=Municipio.objects.all())
-    localidad = serializers.SlugRelatedField(slug_field='clave', queryset=Localidad.objects.all())
+    localidad = serializers.SlugRelatedField(slug_field='clave', queryset=Localidad.objects.all(), many=True)
 
     class Meta:
         model = models.Sucursal
@@ -26,13 +26,22 @@ class PrecioSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         sucursal_data = validated_data.pop('sucursal')
-        gasera , gasera_creada = models.Gasera.objects_get_or_create(nombre=sucursal_data['gasera']['nombre'])
-        sucursal, sucursal_creada = models.Sucursal.objects.get_or_create(gasera=gasera)
+        gasera , gasera_creada = models.Gasera.objects.get_or_create(nombre=sucursal_data['gasera']['nombre'])
+        sucursal, sucursal_creada = models.Sucursal.objects.get_or_create(
+            gasera=gasera,
+            municipio=sucursal_data['municipio'],
+            numeroPermiso=sucursal_data['numeroPermiso']
+        )
+        if sucursal_creada:
+            for loc in sucursal_data['localidad']:
+                sucursal.localidad.add(loc)
+        precio = models.Precio.objects.create(precio=validated_data['precio'], sucursal=sucursal)
+        return precio
 
     class Meta:
         model = models.Precio
         fields = ['precio', 'sucursal']
-
+        depth = 3
 
 """
 [
