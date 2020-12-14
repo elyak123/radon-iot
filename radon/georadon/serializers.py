@@ -8,3 +8,19 @@ class LocalidadSerializer(serializers.ModelSerializer):
         model = models.Localidad
         geo_field = 'geo'
         fields = ['clave']
+
+
+"""
+bla = {
+    'clave': 'xxxx',
+    'data': [
+        {
+            'nombre': 'Empresa, SA de CV',
+            'sucursal': {
+                'NumeroPermiso': 'jkaks',
+                'precio': 12
+            }
+        }
+    ]
+}
+"""

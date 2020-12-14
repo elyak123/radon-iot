@@ -15,7 +15,7 @@ class SucursalViewSet(viewsets.ModelViewSet):
 
 
 class PreciosViewSet(viewsets.ModelViewSet):
-    serializer_class = serializers.PrecioSerializer
+    serializer_class = serializers.MarketLocalidadSerializer
     permission_classes = [permissions.IsAdminUser]
 
     def get_serializer(self, *args, **kwargs):
