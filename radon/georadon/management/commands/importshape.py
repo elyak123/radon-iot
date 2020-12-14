@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from georadon.utils import import_shape, get_path_for_shape
+from radon.georadon.utils import import_shape, get_path_for_shape
 
 
 class Command(BaseCommand):
