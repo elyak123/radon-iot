@@ -10,6 +10,7 @@ from allauth.account.adapter import get_adapter
 from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
+from radon.market.models import Gasera
 from .utils import create_user_and_dispositivo, create_user_password
 
 User = get_user_model()
