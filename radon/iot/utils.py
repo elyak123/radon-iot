@@ -181,21 +181,23 @@ def convertir_lectura(lectura, tipo=1, modo=0):
         for i in range(0, len(topes)-1):
             tope_1 = topes[i]
             tope_2 = topes[i+1]
+            resultado = None
             if not tope_1['lectura'] < tope_2['lectura']:
                 if lectura < tope_1['lectura'] and lectura >= tope_2['lectura']:
                     distancia = abs(tope_2['lectura'] - tope_1['lectura'])
                     distancia_lectura = abs(lectura - tope_1['lectura'])
                     porcentaje = distancia_lectura / distancia
                     resultado = abs(tope_2['valor'] - tope_1['valor']) * porcentaje + tope_1['valor']
-                    return 0 if resultado is None else resultado
+            return 0 if resultado is None else resultado
     else:
         for i in range(0, len(topes)-1):
             tope_1 = topes[i]
             tope_2 = topes[i+1]
+            resultado = None
             if not tope_1['valor'] > tope_2['valor']:
                 if lectura > tope_1['valor'] and lectura <= tope_2['valor']:
                     distancia = abs(tope_2['valor'] - tope_1['valor'])
                     distancia_lectura = abs(lectura - tope_1['valor'])
                     porcentaje = distancia_lectura / distancia
                     resultado = - abs(tope_2['lectura'] - tope_1['lectura']) * porcentaje + tope_1['lectura']
-                    return 0 if resultado is None else resultado
+            return 0 if resultado is None else resultado
