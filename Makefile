@@ -13,12 +13,20 @@ pipcompile:
 	@pip-compile requirements/test.in --output-file requirements/test.txt
 	@pip-compile requirements/production.in --output-file requirements/production.txt
 
-static:
-	#@python manage.py collectstatic --noinput --clear
-	@python manage.py collectstatic --noinput
-	@python manage.py compress --force
-	@python manage.py collectstatic --noinput
-	@python manage.py migrate
+shell:
+	@docker-compose run django python manage.py shell
 
-deploy: static
-	@service apache2 restart
+deploy:
+	@docker-compose up -d
+
+backup:
+	@docker-compose exec postgis backup
+
+restore:
+	@docker-compose exec postgis restore
+
+localbackup:
+	@pg_dump -U ${POSTGRES_USER} | gzip -c > docker/production/postgis/backups/backup_$(date +'%Y_%m_%dT%H_%M_%S').sql.gz
+
+listbackups:
+	@docker-compose exec postgis list-backups

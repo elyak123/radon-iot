@@ -3,6 +3,8 @@ from django.core.serializers import serialize
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from radon.users.utils import get_default_user
+from radon.market.models import Sucursal
+from radon.georadon.models import Municipio, Localidad
 
 User = get_user_model()
 
@@ -53,7 +55,7 @@ class DispositivoSet(models.QuerySet):
 
     def calendarizados(self, jornada):
         return self.anotar_pedidos_calendarizados(jornada).filter(
-            usuario__gasera=jornada.gasera,
+            sucursal__gasera=jornada.gasera,  # por lo pronto, despues debera ser jornada.sucursal
             pedidos_calendarizados=True
         )
 
@@ -65,9 +67,9 @@ class Dispositivo(models.Model):
     nombre = models.CharField('Nombre del dispositivo', max_length=45, default='Casa')
     wisol = models.OneToOneField(Wisol, on_delete=models.CASCADE)
     capacidad = models.IntegerField('Capacidad del tanque', null=True)
-    entidad = models.IntegerField('Entidad federativa', null=True)
-    municipio = models.IntegerField('Municipio', null=True)
-    localidad = models.IntegerField('Localidad del dispositivo', null=True)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
+    municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT)
+    localidad = models.ForeignKey(Localidad, null=True, on_delete=models.PROTECT)
     usuario = models.ForeignKey(User, default=get_default_user, on_delete=models.SET(get_default_user))
     location = models.PointField(null=True)
     calendarizado = models.BooleanField('Indica si se esta a la espera de ser surtido.', default=False)

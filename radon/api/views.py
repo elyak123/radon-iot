@@ -5,7 +5,9 @@ from rest_framework.decorators import parser_classes
 from dj_rest_auth.views import LoginView
 from radon.users import views as userviews
 from radon.iot import views as iotviews
+from radon.market import views as marketviews
 from radon.api import serializers, parsers
+from radon.georadon import views as geoviews
 
 ###########################################
 #  VIEWS AUTENTICACION Y AUTORIZACION API #
@@ -44,6 +46,34 @@ class APIRegisterUsersView(userviews.RegisterUsersView):
 @permission_classes([permissions.IsAuthenticated])  # por lo pronto....
 def api_activacion_usuarios(request):
     return userviews.activacion_usuarios(request)
+
+
+######################
+#  VIEWS PARA MARKET #
+######################
+
+
+class APIGaseraViewSet(marketviews.GaseraViewSet):
+    pass
+
+
+class APISucursalViewSet(marketviews.SucursalViewSet):
+    pass
+
+
+class APIPreciosViewSet(marketviews.PreciosViewSet):
+    pass
+
+
+########################
+#  VIEWS PARA GEORADON #
+########################
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def localidades_dispositivos(request):
+    return geoviews.localidades_dispositivos(request)
+
 
 ####################
 #  VIEWS PARA IOT #

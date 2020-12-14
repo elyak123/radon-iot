@@ -26,7 +26,8 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Raises ImproperlyConfigured exception if DJANGO_SECRET_KEY not in os.environ
 SECRET_KEY = env('DJANGO_SECRET_KEY')
-
+DJANGO_DEFAULT_SUPERUSER_EMAIL = env('DJANGO_DEFAULT_SUPERUSER_EMAIL')
+DJANGO_DEFAULT_SUPERUSER_USERNAME = env('DJANGO_DEFAULT_SUPERUSER_USERNAME')
 
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
@@ -71,7 +72,7 @@ CSRF_COOKIE_SECURE = env.bool('CSRF_COOKIE_SECURE', default=True)
 CSRF_COOKIE_HTTPONLY = env.bool('CSRF_COOKIE_HTTPONLY', default=True)
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-INSTALLED_APPS += ['mod_wsgi.server', ]
+#INSTALLED_APPS += ['mod_wsgi.server', ]
 
 
 # STORAGE CONFIGURATION
@@ -146,7 +147,7 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 # Use the Heroku-style specification
 # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-DATABASES['default'] = env.db('DATABASE_URL')
+DATABASES['default'] = env.db('DATABASE_URL', engine='django.contrib.gis.db.backends.postgis')
 DATABASES['default']['CONN_MAX_AGE'] = env.int('CONN_MAX_AGE', default=60)
 
 # # CACHING
