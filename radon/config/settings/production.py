@@ -26,7 +26,8 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 # Raises ImproperlyConfigured exception if DJANGO_SECRET_KEY not in os.environ
 SECRET_KEY = env('DJANGO_SECRET_KEY')
-
+DJANGO_DEFAULT_SUPERUSER_EMAIL = env('DJANGO_DEFAULT_SUPERUSER_EMAIL')
+DJANGO_DEFAULT_SUPERUSER_USERNAME = env('DJANGO_DEFAULT_SUPERUSER_USERNAME')
 
 # This ensures that Django will be able to detect a secure connection
 # properly on Heroku.
