@@ -7,7 +7,20 @@ from unidecode import unidecode
 
 def get_default_user():
     User = get_user_model()
-    return User.objects.get_or_create(username=settings.DEFAULT_USERNAME)[0].pk
+    try:
+        return User.objects.get(
+            username=settings.DEFAULT_USERNAME,
+        ).pk
+    except User.DoesNotExist:
+        usr = User(
+            username=settings.DEFAULT_USERNAME,
+            email=settings.DEFAULT_EMAIL,
+            tipo='CONSUMIDOR',
+        )
+        usr.set_unusable_password()
+        usr.full_clean()
+        usr.save()
+        return usr.pk
 
 
 def get_default_gasera():
