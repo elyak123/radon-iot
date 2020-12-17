@@ -72,26 +72,32 @@ def wisol_initial_validation(request):
 
 
 def registrolectura(request):
+    # Checar si el sns viene de amazon.
     message_type = request.headers.get('x-amz-sns-message-type')
     aws_arn = request.headers.get('x-amz-sns-topic-arn')
     sns_types = ['SubscriptionConfirmation', 'Notification', 'UnsubscribeConfirmation']
     data = request.data
     if message_type not in sns_types or aws_arn != settings.SNS_SIGFOX_ARN:
         return HttpResponseBadRequest('<h1>400 Bad Request</h1>', content_type='text/html')
+    #  Checar la validez del sns.
     try:
         body = json.loads(data)
         validate_aws_sns_message.validate(body)
     except validate_aws_sns_message.ValidationError as e:
-        # pass
         raise e
-        #return HttpResponseForbidden('<h1>403 Forbidden</h1>', content_type='text/html')
+    # Veriricar si es un mensaje de suscripción
     if message_type == 'SubscriptionConfirmation':
         requests.get(body['SubscribeURL'])
         return HttpResponse('Suscripcion Realizada', status=200)
+    # Realizar el registro de la lectura y el boletinado.
     message = json.loads(body['Message'])
     angulo = decode_int_little_endian(message['data'])
     dispositivo = get_object_or_404(models.Dispositivo, wisol__serie=message['device'])
-    porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, dispositivo.tipo)
+    if angulo > 4095:
+        dispositivo.status = "ROJO"
+        porcentaje = dispositivo.get_ultima_lectura()['lectura']
+    else:
+        porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, dispositivo.tipo)
     models.Lectura.objects.create(porcentaje=porcentaje, dispositivo=dispositivo, sensor=angulo)
     return HttpResponse('Registro Creado', status=201)
 

@@ -64,6 +64,12 @@ class DispositivoSet(models.QuerySet):
 
 
 class Dispositivo(models.Model):
+    STATUS_CHOICES = (
+        ("VERDE", "Verde"),
+        ("ROJO", "Rojo"),
+        ("AMARILLO", "Amarillo")
+    )
+
     nombre = models.CharField('Nombre del dispositivo', max_length=45, default='Casa')
     wisol = models.OneToOneField(Wisol, on_delete=models.CASCADE)
     capacidad = models.IntegerField('Capacidad del tanque', null=True)
@@ -74,6 +80,7 @@ class Dispositivo(models.Model):
     location = models.PointField(null=True)
     calendarizado = models.BooleanField('Indica si se esta a la espera de ser surtido.', default=False)
     tipo = models.IntegerField(default=1)
+    status = models.CharField('Status del dispositivo', max_length=25, default='VERDE', choices=STATUS_CHOICES)
 
     objects = models.Manager()
     especial = DispositivoSet.as_manager()
