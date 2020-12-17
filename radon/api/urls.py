@@ -1,4 +1,4 @@
-from django.urls import path, include, re_path
+"""from django.urls import path, include, re_path
 from django.conf import settings
 from radon.users.views import UsersLoginView, RefreshUsersView
 from rest_framework import routers
@@ -51,3 +51,4 @@ if settings.DEBUG:
     urlpatterns += [
         path('iot/mock_lectura/', views.api_mock_lectura, name='mock_lectura'),
     ]
+"""

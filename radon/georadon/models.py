@@ -21,3 +21,6 @@ class Localidad(models.Model):
     @property
     def descompuesto(self):
         return (self.clave[0:2], self.clave[0:5], self.clave)
+
+    def __str__(self):
+        return self.nombre

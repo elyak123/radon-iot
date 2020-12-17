@@ -118,7 +118,9 @@ class Instalacion(models.Model):
 
 
 class Lectura(models.Model):
-    fecha = models.DateTimeField(auto_now=True)
+    actualizado = models.DateTimeField(auto_now=True)
+    creado = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField()
     sensor = models.IntegerField()  # 0 - 4095
     porcentaje = models.DecimalField(max_digits=5, decimal_places=2)  # 0 - 100.00%
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
