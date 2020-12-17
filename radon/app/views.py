@@ -1,6 +1,8 @@
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import ContextMixin
+from radon.georadon.models import Localidad
+from radon.market.models import Sucursal
 
 
 class BaseTemplateSelector(ContextMixin):
@@ -41,6 +43,8 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
         context = super(PedidoView, self).get_context_data(**kwargs)
         dispositivo = self.request.user.dispositivo_set.first()
         context['dispositivo'] = dispositivo
+        localidad = Localidad.objects.filter(geo__intersect=dispositivo.location.wkt) if not dispositivo.localidad else dispositivo.localidad  # noqa: E501
+        context['sucursales'] = Sucursal.objects.filter(localidad=localidad)
         return context
 
 

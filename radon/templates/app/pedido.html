@@ -1,9 +1,10 @@
 {% extends template %}
 
 {% block content %}
+{% load humanize %}
 <div class="row">
     <div class="col-md-3"></div>
-    <div class="col-md-6 card p-3 d-none" id="opciones-gas">
+    <div class="col-md-6 card p-3" id="opciones-gas">
         <h4 class="mt-4">Genera tu pedido de gas</h4>
         <p class="my-2"><b>Gaseras locales:</b></p>
         <div class="row">
@@ -11,46 +12,22 @@
             <div class="col-10">
                 <div id="carouselExampleControls" class="carousel slide my-2">
                     <div class="carousel-inner">
-                        <div class="carousel-item active" data-oferta="0">
+                        {% for sucursal in sucursales %}
+                        <div class="carousel-item {% if forloop.first %} active {% endif %}" data-oferta="{{ forloop.counter0 }}">
                             <div class="card p-2 text-center">
-                                <img class="card-img-top my-2"
+                                <!-- <img class="card-img-top my-2"
                                     style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
-                                    src="https://facturasnoel.com/assets/facturacion//images/noel.png">
+                                    src="https://facturasnoel.com/assets/facturacion//images/noel.png"> -->
                                 <div class="card-body">
-                                    <h5 class="card-title my-2">Gas Noel</h5>
-                                    <p class="my-2"><b>$20.12 por litro</b></p>
-                                    <a href="#" id="oferta-0" class="btn bg-secundario selector"
-                                        data-precio="20.12">Seleccionar</a>
+                                    <h5 class="card-title my-2">{{ sucursal.gasera.nombre }}</h5>
+                                    <p class="my-2"><b>${{ sucursal.precio_set.last.precio | intcomma }} por litro</b></p>
+                                    <a href="#" id="oferta-{{ forloop.counter0 }}" class="btn bg-secundario selector"
+                                        data-precio="{{ sucursal.precio_set.last.precio }}">Seleccionar</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="carousel-item" data-oferta="1">
-                            <div class="card p-2 text-center">
-                                <img class="card-img-top my-2"
-                                    style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
-                                    src="https://gasimperialdgo.com/img/3513/650.png">
-                                <div class="card-body">
-                                    <h5 class="card-title my-2">Gas Imperial</h5>
-                                    <p class="my-2"><b>$21.71 por litro</b></p>
-                                    <a href="#" id="oferta-1" class="btn bg-secundario selector"
-                                        data-precio="21.71">Seleccionar</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="carousel-item" data-oferta="2">
-                            <div class="card p-2 text-center">
-                                <img class="card-img-top my-2"
-                                    style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
-                                    src="https://tarifasdeluz.mx/sites/default/files/images/gas-nieto.jpg">
-                                <div class="card-body">
-                                    <h5 class="card-title my-2">Gas Nieto <span
-                                            class="badge badge-pill badge-success">Mejor Oferta</span></h5>
-                                    <p class="my-2"><b>$18.12 por litro</b></p>
-                                    <a href="#" id="oferta-2" class="btn bg-secundario selector"
-                                        data-precio="18.12">Seleccionar</a>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
+                        <!-- <span class="badge badge-pill badge-success">Mejor Oferta</span> -->
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                         <span style="filter: invert(1);" class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -128,10 +105,6 @@
             </div>
         </div>
         <div id="terminar-pedido" class="btn bg-primario my-2">Terminar Pedido</div>
-    </div>
-    <div class="col-md-6 card p-3" id="captcha-opciones">
-        <h1>En desarrollo. ¡Vuelve pronto!</h1>
-        <!-- <div class="g-recaptcha" data-sitekey="6LdQN94ZAAAAAAT1PHJ6r2SkDE5Y4uHFdSoFOzxH" data-callback="obtenerGaseras"></div> -->
     </div>
     <div class="col-md-3"></div>
 </div>

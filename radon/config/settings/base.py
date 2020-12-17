@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'radon.crm.apps.CrmConfig',
     'radon.georadon.apps.GeoradonConfig',
     'django_hosts',
+    'django.contrib.humanize',
     'floppyforms',
     'rest_framework',
     'rest_framework.authtoken',
