@@ -29,7 +29,7 @@ class MarketLocalidadSerializer(serializers.Serializer):
 
     def mapping_wrapper(self, numero_permiso, attr):
         return (lambda x, permiso=numero_permiso:
-                self.lambda_return_value(attr) if x['sucursal']['numeroPermiso'] == permiso else None)
+                self.lambda_return_value(x, attr) if x['sucursal']['numeroPermiso'] == permiso else None)
 
     def dynamic_mapping(self, data, func):
         return list(filter(lambda x: x is not None, list(map(func, data))))[0]
@@ -74,7 +74,7 @@ class MarketLocalidadSerializer(serializers.Serializer):
             precio = self.procesar_sucursal(validated_data['data'], per, True, localidad)
             precios.append(precio)
         for no_creada in suc_por_crear:
-            precio = self.procesar_sucursal(validated_data['data'], per, False, localidad)
+            precio = self.procesar_sucursal(validated_data['data'], no_creada, False, localidad)
             precios.append(precio)
         models.Precio.objects.bulk_create(precios)
         return localidad
