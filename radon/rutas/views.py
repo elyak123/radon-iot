@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from radon.rutas.models import Position
+from rest_framework import viewsets, permissions
+from radon.rutas import serializers
+from radon.rutas.models import Position, Pedido
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -24,3 +26,9 @@ def last_pos(request):
 
 def mapa(request):
     return render(request, 'rutas/gps_display.html')
+
+
+class PedidoViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.PedidoSerialiser
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Pedido.objects.all()

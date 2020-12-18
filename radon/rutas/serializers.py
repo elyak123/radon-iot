@@ -1,14 +1,17 @@
 from rest_framework import serializers
+from radon.market.models import Gasera
 from radon.rutas import models
 
 
 class PedidoSerialiser(serializers.ModelSerializer):
-    gasera = serializers.SlugRelatedField(slug_field='precio__sucursal__gasera__nombre')
+    gasera = serializers.CharField()
 
     class Meta:
         model = models.Pedido
         fields = ['cantidad', 'dispositivo', 'precio', 'gasera']
 
     def validate(self, attrs):
-        pass
-        #gasera = 
+        gasera = Gasera.objects.get(nombre=attrs['gasera'])
+        if gasera == attrs['precio'].sucursal.gasera:
+            raise serializers.ValidationError('La gasera no coincide con el precio.')
+        return attrs

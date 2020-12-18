@@ -6,6 +6,7 @@ from dj_rest_auth.views import LoginView
 from radon.users import views as userviews
 from radon.iot import views as iotviews
 from radon.market import views as marketviews
+from radon.rutas import views as rutasviews
 from radon.api import serializers, parsers
 from radon.georadon import views as geoviews
 
@@ -46,6 +47,10 @@ class APIRegisterUsersView(userviews.RegisterUsersView):
 @permission_classes([permissions.IsAuthenticated])  # por lo pronto....
 def api_activacion_usuarios(request):
     return userviews.activacion_usuarios(request)
+
+
+class APIPedidoViewSet(rutasviews.PedidoViewSet):
+    pass
 
 
 ######################

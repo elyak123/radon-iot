@@ -6,16 +6,10 @@ class SucursalSerializer(serializers.Serializer):
     numeroPermiso = serializers.CharField()
     precio = serializers.DecimalField(max_digits=12, decimal_places=2)
 
-    # class Meta:
-    #     fields = ['numeroPermiso', 'precio']
-
 
 class GaseraSerializer(serializers.Serializer):
     nombre = serializers.CharField()
     sucursal = SucursalSerializer()
-
-    # class Meta:
-    #     fields = ['nombre', 'sucursal']
 
 
 class MarketLocalidadSerializer(serializers.Serializer):
@@ -69,64 +63,3 @@ class MarketLocalidadSerializer(serializers.Serializer):
 
     def to_representation(self, instance):
         return {'sucess': True}  # por lo pronto.....
-
-
-class PrecioSerializer(serializers.ModelSerializer):
-    sucursal = SucursalSerializer()
-
-    def create(self, validated_data):
-        sucursal_data = validated_data.pop('sucursal')
-        gasera, gasera_creada = models.Gasera.objects.get_or_create(nombre=sucursal_data['gasera']['nombre'])
-        sucursal, sucursal_creada = models.Sucursal.objects.get_or_create(
-            gasera=gasera,
-            municipio=sucursal_data['municipio'],
-            numeroPermiso=sucursal_data['numeroPermiso']
-        )
-        if sucursal_creada:
-            for loc in sucursal_data['localidad']:
-                sucursal.localidad.add(loc)
-        precio = models.Precio.objects.create(precio=validated_data['precio'], sucursal=sucursal)
-        return precio
-
-    class Meta:
-        model = models.Precio
-        fields = ['precio', 'sucursal']
-        depth = 3
-
-"""
-[
-    {
-        "sucursal": {
-            "gasera": {
-                "nombre": "Empresa, S.A. de C.V."
-            },
-            "municipio": "01001",
-            "localidad": ["010012439"],
-            "numeroPermiso": "LP/0234/2019"
-        },
-        "precio": 12
-    },
-    {
-        "sucursal": {
-            "gasera": {
-                "nombre": "Empresa, S.A. de C.V."
-            },
-            "municipio": "01001",
-            "localidad": "010012439",
-            "numeroPermiso": "LP/0234/2019"
-        },
-        "precio": 12
-    },
-    {
-        "sucursal": {
-            "gasera": {
-                "nombre": "Empresa, S.A. de C.V."
-            },
-            "municipio": "01001",
-            "localidad": "010012439",
-            "numeroPermiso": "LP/0234/2019"
-        },
-        "precio": 12
-    }
-]
-"""
