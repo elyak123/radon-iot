@@ -16,47 +16,65 @@ class MarketLocalidadSerializer(serializers.Serializer):
     clave = serializers.CharField()
     data = GaseraSerializer(many=True)
 
-    def create(self, validated_data):
-        clave = validated_data.pop('clave')
-        localidad = models.Localidad.objects.get(clave=clave)
+    def importe_sucursal(self, data, permiso):
+        return self.dynamic_mapping(data, self.mapping_wrapper(permiso, 'precio'))
+
+    def nombre_gasera(self, data, permiso):
+        return self.dynamic_mapping(data, self.mapping_wrapper(permiso, 'nombre'))
+
+    def lambda_return_value(self, x, attr):
+        if attr == 'nombre':
+            return x['nombre']
+        return x['sucursal']['precio']
+
+    def mapping_wrapper(self, numero_permiso, attr):
+        return (lambda x, permiso=numero_permiso:
+                self.lambda_return_value(attr) if x['sucursal']['numeroPermiso'] == permiso else None)
+
+    def dynamic_mapping(self, data, func):
+        return list(filter(lambda x: x is not None, list(map(func, data))))[0]
+
+    def clasificar_sucursales(self, clave, data):
         qs = models.Sucursal.objects.filter(
             localidad__clave=clave
         ).select_related('gasera').values_list('numeroPermiso', 'gasera__nombre')
-        sucursales = set([gas['sucursal']['numeroPermiso'] for gas in validated_data['data']])
+        sucursales = set([gas['sucursal']['numeroPermiso'] for gas in data])
         numeros_permiso = set([x[0] for x in qs])
-        precios = []
         suc_existentes = sucursales.intersection(numeros_permiso)
         suc_por_crear = sucursales.difference(numeros_permiso)
+        return suc_existentes, suc_por_crear
+
+    def get_sucursal(self, data, permiso, existente, localidad):
+        try:
+            suc = models.Sucursal.objects.get(numeroPermiso=permiso)
+        except models.Sucursal.DoesNotExist:
+            nombre_gasera = self.nombre_gasera(data, permiso)
+            gasera, gasera_creada = models.Gasera.objects.get_or_create(nombre=nombre_gasera)
+            suc = models.Sucursal.objects.create(
+                numeroPermiso=permiso,
+                gasera=gasera,
+                municipio=localidad.municipio
+            )
+        if not existente:
+            suc.localidad.add(localidad)
+        return suc
+
+    def procesar_sucursal(self, data, permiso, existente, localidad):
+        importe = self.importe_sucursal(data, permiso)
+        suc = self.get_sucursal(data, permiso, existente, localidad)
+        precio = models.Precio(sucursal=suc, precio=importe)
+        return precio
+
+    def create(self, validated_data):
+        clave = validated_data.pop('clave')
+        localidad = models.Localidad.objects.get(clave=clave)
+        precios = []
+        suc_existentes, suc_por_crear = self.clasificar_sucursales(clave, validated_data['data'])
         for per in suc_existentes:
-            suc = models.Sucursal.objects.get(numeroPermiso=per)
-            importe = list(map(
-                    lambda x, per=per: x['sucursal']['precio'] if x['sucursal']['numeroPermiso'] == per else None,
-                    validated_data['data']
-                ))[0]
-            importe = list(filter(
-                    lambda x: x is not None,
-                    list(map(
-                        lambda x, per=per: x['sucursal']['precio'] if x['sucursal']['numeroPermiso'] == per else None,
-                        validated_data['data']
-                    ))))[0]
-            precio = models.Precio(sucursal=suc, precio=importe)
+            precio = self.procesar_sucursal(validated_data['data'], per, True, localidad)
             precios.append(precio)
         for no_creada in suc_por_crear:
-            nombre_gasera = list(
-                filter(
-                    lambda x: x is not None, list(map(
-                        lambda x, no_creada=no_creada: x['nombre'] if x['sucursal']['numeroPermiso'] == no_creada else None,
-                        validated_data['data']))))[0]
-            gasera, gasera_creada = models.Gasera.objects.get_or_create(nombre=nombre_gasera)
-            nueva_sucursal = models.Sucursal.objects.create(
-                numeroPermiso=no_creada, gasera=gasera, municipio=localidad.municipio)
-            nueva_sucursal.localidad.add(localidad)
-            importe = list(filter(
-                lambda x: x is not None,
-                list(map(
-                    lambda x, no_creada=no_creada: x['sucursal']['precio'] if x['sucursal']['numeroPermiso'] == no_creada else None,
-                    validated_data['data']))))[0]
-            precio = models.Precio(sucursal=nueva_sucursal, precio=importe)
+            precio = self.procesar_sucursal(validated_data['data'], per, False, localidad)
             precios.append(precio)
         models.Precio.objects.bulk_create(precios)
         return localidad
