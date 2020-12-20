@@ -15,7 +15,7 @@ class Leadsadmin(admin.ModelAdmin):
         return obj.wisol.serie
 
     def gasera(self, obj):
-        return obj.usuario.gasera
+        return obj.usuario.gasera or None
 
     def medida_actual(self, obj):
         lectura = obj.get_ultima_lectura()

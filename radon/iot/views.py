@@ -5,6 +5,7 @@ from random import random
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.utils.timezone import make_aware
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -98,7 +99,12 @@ def registrolectura(request):
         porcentaje = dispositivo.get_ultima_lectura()['lectura']
     else:
         porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, dispositivo.tipo)
-    models.Lectura.objects.create(porcentaje=porcentaje, dispositivo=dispositivo, sensor=angulo)
+    models.Lectura.objects.create(
+        fecha=make_aware(datetime.datetime.now()),
+        porcentaje=porcentaje,
+        dispositivo=dispositivo,
+        sensor=angulo
+    )
     return HttpResponse('Registro Creado', status=201)
 
 
@@ -122,7 +128,7 @@ def mock_lecturas(request):
     for i in range(0, registros):
         if inicial < 0:
             inicial = 80 + round(random()*10, 2)
-        lectura = models.Lectura.objects.create(porcentaje=inicial, sensor=utils.convertir_lectura(
+        models.Lectura.objects.create(porcentaje=inicial, sensor=utils.convertir_lectura(
             inicial, 1, 1), dispositivo=disp, fecha=hoy)
         inicial = float(inicial) - round(random()*3, 2)
         hoy = hoy + delta
@@ -132,7 +138,7 @@ def mock_lecturas(request):
 def registro_wisol(request):
     url = 'https://api.sigfox.com/v2/{}'
     creds = (settings.SIGFOX_CREDENTIAL_ID, settings.SIGFOX_CREDENTIAL_KEY)
-    r = requests.post(
+    requests.post(
         url.format('devices/'),
         auth=creds,
         json={
