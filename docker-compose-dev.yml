@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./docker/production/django/Dockerfile
     env_file: .env
-    command: /app/gunicorn.sh
+    command: /app/start.sh
     depends_on:
       - postgis
     ports:
