@@ -53,13 +53,15 @@ COPY ./docker/production/django/gunicorn.sh /app/gunicorn.sh
 COPY ./docker/production/django/entrypoint.sh /app/entrypoint.sh
 
 RUN sed -i 's/\r//' /app/gunicorn.sh && \
-    sed -i 's/\r//' /app/entrypoint.sh && \
-    chown -R appuser:appuser /app/ && chmod -R 0700 /app/ && \
-    chmod +x /app/entrypoint.sh
-ENV PATH="/opt/venv/bin:$PATH"
-USER appuser
+    sed -i 's/\r//' /app/entrypoint.sh
 
-COPY . /app/radon
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY --chown=appuser:appuser . /app/radon
+
+RUN chmod -R 0700 /app/
+
+USER appuser
 
 WORKDIR /app/radon
 
