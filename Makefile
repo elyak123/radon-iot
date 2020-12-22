@@ -12,6 +12,17 @@ pipcompile:
 	@pip-compile requirements/local.in --output-file requirements/local.txt
 	@pip-compile requirements/test.in --output-file requirements/test.txt
 	@pip-compile requirements/production.in --output-file requirements/production.txt
+dev:
+	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.production/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
+	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.test/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
+	@sed -i.bak s/DJANGO_DEBUG=False/DJANGO_DEBUG=True/g .env
+	@docker-compose -f docker-compose-dev.yml up
+
+buildev:
+	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.production/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
+	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.test/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
+	@sed -i.bak s/DJANGO_DEBUG=False/DJANGO_DEBUG=True/g .env
+	@docker-compose -f docker-compose-dev.yml up --build
 
 shell:
 	@docker-compose run django python manage.py shell

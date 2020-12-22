@@ -30,7 +30,7 @@ FROM python:3.8.6-alpine3.12
 ENV PYTHONUNBUFFERED 1
 
 RUN apk add --no-cache --virtual .build-deps \
-    build-base bash gcc musl-dev libpq geos gdal proj \
+    build-base bash gcc musl-dev libpq geos-dev gdal-dev proj-dev \
       && find /usr/local \
             \( -type d -a -name test -o -name tests \) \
             -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
@@ -42,14 +42,11 @@ RUN apk add --no-cache --virtual .build-deps \
                      | xargs -r apk info --installed \
                      | sort -u \
       )" \
-      && apk add --virtual .rundeps $runDeps \
-      && apk del .build-deps
+      && apk add --virtual .rundeps $runDeps
 
 RUN addgroup -S appuser && adduser -S appuser -G appuser
 
 COPY --from=builder /opt/venv /opt/venv
-
-COPY --from=builder /app /app
 
 COPY ./docker/production/django/gunicorn.sh /app/gunicorn.sh
 
@@ -59,7 +56,7 @@ RUN sed -i 's/\r//' /app/gunicorn.sh && \
     sed -i 's/\r//' /app/entrypoint.sh && \
     chown -R appuser:appuser /app/ && chmod -R 0700 /app/ && \
     chmod +x /app/entrypoint.sh
-
+ENV PATH="/opt/venv/bin:$PATH"
 USER appuser
 
 COPY . /app/radon

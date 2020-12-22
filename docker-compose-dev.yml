@@ -3,7 +3,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: ./docker/production/django/Dockerfile
+      dockerfile: ./docker/local/django/Dockerfile
     env_file: .env
     command: /app/start.sh
     depends_on:

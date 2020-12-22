@@ -121,7 +121,7 @@ WSGI_APPLICATION = 'radon.config.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='sqlite:////{}'.format(ROOT_DIR('db.sqlite3'))),
+    'default': env.db('DATABASE_URL', engine='django.contrib.gis.db.backends.postgis'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
