@@ -57,9 +57,9 @@ RUN sed -i 's/\r//' /app/gunicorn.sh && \
 
 ENV PATH="/opt/venv/bin:$PATH"
 
-COPY --chown=appuser:appuser . /app/radon
+COPY . /app/radon
 
-RUN chmod -R 0700 /app/
+RUN chown -R appuser:appuser /app/ && chmod -R 0700 /app/
 
 USER appuser
 
