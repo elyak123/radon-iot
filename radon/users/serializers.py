@@ -137,13 +137,13 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
         user_data = {
             'username': self.validated_data.get('username', ''),
             'email': self.validated_data.get('email', ''),
-            'sucursal': self.validated_data.get('gasera', None),
             'tipo': self.validated_data.get('tipo'),
             'pwdtemporal': self.validated_data.get('pwdtemporal'),
         }
         disp_data = {
             'wisol': self.wisol,
             'location': self.validated_data.get('location', ''),
+            'sucursal': self.validated_data.get('gasera', None),
             'capacidad': self.validated_data.get('capacidad', None)
         }
         return user_data, disp_data
