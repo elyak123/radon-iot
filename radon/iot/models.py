@@ -69,7 +69,7 @@ class Dispositivo(models.Model):
         ("ROJO", "Rojo"),
         ("AMARILLO", "Amarillo")
     )
-# Localidad.objects.filter(geo__intersects=mariel.location.wkt)
+    # Localidad.objects.filter(geo__intersects=mariel.location.wkt)
     nombre = models.CharField('Nombre del dispositivo', max_length=45, default='Casa')
     wisol = models.OneToOneField(Wisol, on_delete=models.CASCADE)
     capacidad = models.IntegerField('Capacidad del tanque', null=True)
