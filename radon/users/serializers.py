@@ -10,7 +10,7 @@ from allauth.account.adapter import get_adapter
 from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
-from radon.market.models import Gasera
+from radon.market.models import Sucursal
 from .utils import create_user_and_dispositivo, create_user_password
 
 User = get_user_model()
@@ -98,7 +98,7 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
     capacidad: (int) Capacidad del tanque del futuro dispositivo
 
     CAMPOS OCULTOS (NO UTILIZABLES PARA EL CLIENTE)
-    gasera: (<Gasera: Model>) Sera la gasera del cliente que da de alta el consumidor
+    sucursal: (<Sucursal: Model>) Sera la sucursal del cliente que da de alta el consumidor
     tipo: (string) En este caso siempre será `CONSUMIDOR`
     pwdtemporal: (bool) En este caso siempre será True
 
@@ -120,7 +120,7 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
     * Asigna el dispositivo al usuario recién creado
     """
 
-    gasera = serializers.HiddenField(default='DUMMY')
+    sucursal = serializers.HiddenField(default='DUMMY')
     tipo = serializers.HiddenField(default='CONSUMIDOR')
     pwdtemporal = serializers.HiddenField(default=True)
     telefono = PhoneNumberField(required=False)
@@ -128,16 +128,16 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
     capacidad = serializers.IntegerField(required=False)
 
     def validate_gasera(self, gasera):
-        if hasattr(self.context['request'].user, 'gasera'):
-            return self.context['request'].user.gasera
+        if hasattr(self.context['request'].user, 'sucursal'):
+            return self.context['request'].user.sucursal
         else:
-            return Gasera.objects.get(nombre=settings.DEFAULT_GASERA)
+            return None
 
     def get_cleaned_data(self):
         user_data = {
             'username': self.validated_data.get('username', ''),
             'email': self.validated_data.get('email', ''),
-            'gasera': self.validated_data.get('gasera', None),
+            'sucursal': self.validated_data.get('gasera', None),
             'tipo': self.validated_data.get('tipo'),
             'pwdtemporal': self.validated_data.get('pwdtemporal'),
         }
