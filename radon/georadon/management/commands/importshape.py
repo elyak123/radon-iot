@@ -10,7 +10,5 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # Asumimos que el archivo deberia de estar en /data/muni_2018gw.shp
-        municipios_shape = get_path_for_shape(kwargs['municipios'])
-        localidades_shape = get_path_for_shape(kwargs['localidades'])
-        import_shape(municipios_shape, localidades_shape)
+        import_shape(kwargs['municipios'], kwargs['localidades'])
         self.stdout.write(self.style.SUCCESS('Creados los municipios'))

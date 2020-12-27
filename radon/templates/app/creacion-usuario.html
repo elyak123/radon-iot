@@ -298,7 +298,7 @@
         document.getElementById("lat").value = lat;
         document.getElementById("lon").value = lon;
 
-        payload.location = "POINT(" + lat + " " + lon + ")";
+        payload.location = "POINT(" + lon + " " + lat + ")";
 
         $(".mensaje-espera").addClass("d-none");
     }

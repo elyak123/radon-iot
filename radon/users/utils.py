@@ -1,8 +1,10 @@
 from django.conf import settings
 from django.db.utils import ProgrammingError
 from django.contrib.auth import get_user_model
+from rest_framework.serializers import ValidationError
 from xkcdpass import xkcd_password as xp
 from unidecode import unidecode
+from radon.georadon.models import Localidad
 
 
 def get_default_user():
@@ -36,6 +38,16 @@ def create_user_password(numwords=2):
     word_list = xp.generate_wordlist(wordfile=wordfile, min_length=5, max_length=8)
     pwd = unidecode(xp.generate_xkcdpassword(word_list, numwords=numwords, delimiter='_'))
     return pwd
+
+
+def get_localidad_from_wkt(point):
+    try:
+        loc = Localidad.objects.filter(geo__intersects=point.wkt).first()
+        if loc is None:
+            raise ValidationError('La Localidad no se encuentra en la base de datos.')
+    except ValueError:
+        raise ValidationError('La localidad o municipio se encuentra vacía')
+    return loc
 
 
 def create_user_and_dispositivo(user_data, disp_data):

@@ -11,7 +11,7 @@ from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
 from radon.market.models import Sucursal
-from .utils import create_user_and_dispositivo, create_user_password
+from .utils import create_user_and_dispositivo, create_user_password, get_localidad_from_wkt
 
 User = get_user_model()
 
@@ -146,6 +146,9 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
             'sucursal': self.validated_data.get('gasera', None),
             'capacidad': self.validated_data.get('capacidad', None)
         }
+        loc = get_localidad_from_wkt(self.validated_data.get('location'))
+        disp_data['localidad'] = loc
+        disp_data['municipio'] = loc.municipio
         return user_data, disp_data
 
     def save(self, request):
