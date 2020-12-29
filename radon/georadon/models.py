@@ -4,12 +4,18 @@ from django.contrib.gis.db import models
 class Estado(models.Model):
     nombre = models.CharField(max_length=45, unique=True)
 
+    def __str__(self):
+        return self.nombre
+
 
 class Municipio(models.Model):
     clave = models.CharField(max_length=5, unique=True)
     nombre = models.CharField(max_length=90, unique=True)
     estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
     geo = models.MultiPolygonField(geography=True)
+
+    def __str__(self):
+        return self.nombre
 
 
 class Localidad(models.Model):
