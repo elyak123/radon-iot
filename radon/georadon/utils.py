@@ -51,3 +51,7 @@ def import_localidades(localidades):
     }
     lyr_mapping = LayerMapping(Localidad, localidades_shape, mapping_locals, transform=False)
     lyr_mapping.save(strict=True, verbose=True)
+
+
+def create_estado(estado):
+    return Estado.objects.create(nombre=estado)
