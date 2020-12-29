@@ -30,7 +30,7 @@ FROM python:3.8.6-alpine3.12
 ENV PYTHONUNBUFFERED 1
 
 RUN apk add --quiet --no-cache --virtual .build-deps \
-    build-base bash libpq geos-dev gdal-dev proj \
+    build-base bash libpq geos-dev gdal-dev proj libressl-dev \
       && find /usr/local \
             \( -type d -a -name test -o -name tests \) \
             -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
