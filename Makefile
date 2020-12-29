@@ -16,7 +16,8 @@ dev:
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.production/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.test/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_DEBUG=False/DJANGO_DEBUG=True/g .env
-	@docker-compose -f docker-compose-dev.yml up
+	@docker-compose -f docker-compose-dev.yml up -d postgis
+	@docker-compose -f docker-compose-dev.yml run --service-ports django
 
 buildev:
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.production/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
