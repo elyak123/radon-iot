@@ -73,7 +73,7 @@ class Dispositivo(models.Model):
     nombre = models.CharField('Nombre del dispositivo', max_length=45, default='Casa')
     wisol = models.OneToOneField(Wisol, on_delete=models.CASCADE)
     capacidad = models.IntegerField('Capacidad del tanque', null=True)
-    sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True)
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.SET_NULL, null=True, blank=True)
     municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT)
     localidad = models.ForeignKey(Localidad, null=True, on_delete=models.PROTECT)
     usuario = models.ForeignKey(User, default=get_default_user, on_delete=models.SET(get_default_user))

@@ -42,7 +42,7 @@ def create_user_password(numwords=2):
 
 def get_localidad_from_wkt(point):
     try:
-        loc = Localidad.objects.filter(geo__intersects=point.wkt).first()
+        loc = Localidad.objects.filter(geo__intersects=point).first()
         if loc is None:
             raise ValidationError('La Localidad no se encuentra en la base de datos.')
     except ValueError:

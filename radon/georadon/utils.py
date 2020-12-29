@@ -19,7 +19,17 @@ def get_path_for_shape(shapefile):
             errno.ENOENT, os.strerror(errno.ENOENT), shapefile)
 
 
-def import_shape(municipios, localidades):
+def import_shapes(municipios, localidades):
+    municipios_shape = get_path_for_shape(municipios)
+    ds = DataSource(str(municipios_shape))
+    layer = ds[0]
+    estados = OrderedDict({feat.get('CVE_ENT'): feat.get('NOM_ENT') for feat in layer})
+    Estado.objects.bulk_create([Estado(nombre=x[1]) for x in estados.items()])
+    import_municipios(municipios)
+    import_localidades(localidades)
+
+
+def import_municipios(municipios):
     municipios_shape = get_path_for_shape(municipios)
     mapping = {
         'estado': {'nombre': 'NOM_ENT'},
@@ -27,14 +37,11 @@ def import_shape(municipios, localidades):
         'clave': 'CVEGEO',
         'geo': 'MULTIPOLYGON'
     }
-    ds = DataSource(str(municipios_shape))
-    # Asumimos que solo es un layer
-    layer = ds[0]
-    estados = OrderedDict({feat.get('CVE_ENT'): feat.get('NOM_ENT') for feat in layer})
-    Estado.objects.bulk_create([Estado(nombre=x[1]) for x in estados.items()])
     lm = LayerMapping(Municipio, municipios_shape, mapping, transform=False)
     lm.save(strict=True, verbose=True)
 
+
+def import_localidades(localidades):
     localidades_shape = get_path_for_shape(localidades)
     mapping_locals = {
         'nombre': 'NOMBRE',
