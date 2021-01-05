@@ -47,6 +47,10 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
         context['sucursales'] = Sucursal.objects.filter(localidad=localidad)
         return context
 
+    def post(self, request, *args, **kwargs):
+        import pdb; pdb.set_trace()
+        pass
+
 
 class GraphView(generic.TemplateView, BaseTemplateSelector):
     template_name = "app/grafica.html"
