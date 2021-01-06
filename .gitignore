@@ -221,3 +221,6 @@ GitHub.sublime-settings
 production.wsgi.py
 data/
 backups/
+# Visual Studio code
+.vs/
+.vscode/
