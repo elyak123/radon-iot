@@ -48,7 +48,6 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        import pdb; pdb.set_trace()
         pass
 
 
