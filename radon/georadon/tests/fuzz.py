@@ -42,14 +42,9 @@ class FuzzyPolygon(factory.fuzzy.BaseFuzzyAttribute):
         return Polygon([prefix] + coords + [suffix])
 
 
-class FuzzyMultiPolygon(factory.fuzzy.BaseFuzzyAttribute):
+class FuzzyMultiPolygon(FuzzyPolygon):
     """Yields random multipolygon"""
-    def __init__(self, length=None, **kwargs):
-        if length is None:
-            length = random.randgen.randrange(1, 20, 1)
-        self.length = length
-        super().__init__(**kwargs)
 
     def fuzz(self):
-        polygons = [FuzzyPolygon().fuzz() for __ in range(self.length)]
+        polygons = [super(FuzzyMultiPolygon, self).fuzz() for __ in range(self.length)]
         return MultiPolygon(*polygons)

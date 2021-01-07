@@ -25,3 +25,6 @@ class MunicipioFactory(factory.django.DjangoModelFactory):
 
 class LocalidadFactory(factory.django.DjangoModelFactory):
     geo = factory.LazyAttribute(lambda o: FuzzyMultiPolygon(tipo='localidad', length=1, centroid=o.municipio.centroid))
+    nombre = factory.LazyAttribute(lambda o: fake.address().split('\n')[1].split(',')[0])
+    clave = factory.LazyAttribute(lambda o: f'{fake.numerify(text="#####")}')
+    municipio = factory.SubFactory(MunicipioFactory)
