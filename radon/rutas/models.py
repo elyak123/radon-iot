@@ -150,14 +150,23 @@ class PedidoSet(models.QuerySet):
         return qs
 
 
+class Mensaje(models.Model):
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    texto = models.CharField(max_length=150)
+    publicacion = models.DateTimeField()
+
+
 class Pedido(ModelFieldRequiredMixin, models.Model):
+    ESTADO = (('INICIADO', 'Iniciado'), ('EN PROCESO', 'En Proceso'), ('FINALIZADO', 'Finalizado'))
+
     fecha_creacion = models.DateTimeField(auto_now=True)
     cantidad = models.DecimalField(max_digits=12, decimal_places=2)
     dispositivo = models.ForeignKey(Dispositivo, on_delete=models.CASCADE)
-    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE, null=True)
-    orden = models.IntegerField('Orden del dispositivo dentro de una ruta.', null=True)
+    jornada = models.ForeignKey(Jornada, on_delete=models.CASCADE, blank=True, null=True)
+    orden = models.IntegerField('Orden del dispositivo dentro de una ruta.', blank=True, null=True)
     precio = models.ForeignKey(Precio, on_delete=models.CASCADE)
     actualizado = models.BooleanField(default=False)
+    estado = models.CharField(max_length=15, choices=ESTADO, default='INICIADO')
 
     objects = models.Manager()
     especial = PedidoSet.as_manager()

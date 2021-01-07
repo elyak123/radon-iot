@@ -56,13 +56,13 @@
     <div id="fondo" class="w-100 h-100 d-none" style="margin-top: -24px;"></div>
     <div id="content" class="content p-4 mt-4">
         {% if messages %}
-        <div class="alert alert-success" role="alert">
-            <ul>
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+          <div class="">
+              {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}" role="alert">
+                  <p>{{ message }}</p>
+              </div>
+              {% endfor %}
+            </div>
         {% endif %}
         {% block content %}
         {% endblock %}

@@ -3,6 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import ContextMixin
 from radon.georadon.models import Localidad
 from radon.market.models import Sucursal
+from radon.iot.models import Dispositivo
+from radon.rutas.models import Pedido
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.core.exceptions import ValidationError
 
 
 class BaseTemplateSelector(ContextMixin):
@@ -48,7 +53,20 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        pass
+        datos = self.request.POST
+        pedido = Pedido(
+            cantidad=datos["cantidad"],
+            dispositivo=Dispositivo.objects.get(id=datos["dispositivo"]),
+            precio=Sucursal.objects.get(id=datos["sucursal"]).precio_set.last()
+        )
+        try:
+            pedido.full_clean()
+        except ValidationError:
+            messages.warning(request, "Ha ocurrido un error con la solicitud, vuelve a intentarlo.")
+            return redirect('pedido')
+        pedido.save()
+        messages.success(request, "El pedido ha sido realizado.")
+        return redirect('inicio')
 
 
 class GraphView(generic.TemplateView, BaseTemplateSelector):
