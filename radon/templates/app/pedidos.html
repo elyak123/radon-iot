@@ -1,0 +1,39 @@
+{% extends template %}
+{% load mul %}
+{% load humanize %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 card p-4">
+        <h3>Mis pedidos</h3><br>
+        {% for dispositivo in dispositivos %}
+            <h4>{{ dispositivo.nombre }} ({{ dispositivo.wisol.serie }})</h4>
+            {% for pedido in dispositivo.pedido_set.all %}
+                <div class="card p-2 my-2">
+                    <a href="{% url 'detalle-pedido' pedido.id %}"><h4>Pedido {{ pedido.id }} - {{ pedido.estado }}</h4></a>
+                    <div class="row">
+                        <div class="col-6">
+                            <b>Cantidad: </b>{{ pedido.cantidad }}L<br>
+                        </div>
+                        <div class="col-6">
+                            <b>Total: </b>${{ pedido.precio.precio|mul:pedido.cantidad|intcomma }}<br>
+                        </div>
+                    </div>                    
+                    <b>Despachado por: {{ pedido.precio.sucursal }}</b><br>
+                    {% if pedido.mensaje_set.exists %}
+                        <b>Ultimo mensaje: </b>{{ pedido.mensaje_set.last.texto }}<br>
+                        <b>Ultima actualización: </b>{{ pedido.mensaje_set.last.publicacion }}<br>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="col-md-1"></div>
+</div>
+{% block scripts %}
+<script>
+
+</script>
+{% endblock scripts %}
+{% endblock content %}
