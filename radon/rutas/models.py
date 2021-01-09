@@ -150,12 +150,6 @@ class PedidoSet(models.QuerySet):
         return qs
 
 
-class Mensaje(models.Model):
-    autor = models.ForeignKey(User, on_delete=models.CASCADE)
-    texto = models.CharField(max_length=150)
-    publicacion = models.DateTimeField()
-
-
 class Pedido(ModelFieldRequiredMixin, models.Model):
     ESTADO = (('INICIADO', 'Iniciado'), ('EN PROCESO', 'En Proceso'), ('FINALIZADO', 'Finalizado'))
 
@@ -186,6 +180,16 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
 
     def pedido_en_dinero(self):
         return round(self.cantidad * self.precio.precio, 2)
+
+
+class Mensaje(models.Model):
+    autor = models.ForeignKey(User, on_delete=models.CASCADE)
+    texto = models.CharField(max_length=150)
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    publicacion = models.DateTimeField()
+
+    class Meta:
+        ordering = ("-publicacion", )
 
 
 class Position(models.Model):

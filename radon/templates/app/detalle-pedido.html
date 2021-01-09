@@ -19,8 +19,10 @@
 
         <table class="table my-4">
         	{% for mensaje in pedido.mensaje_set.all %}
+            <tr>
         		<th class="text-right">{{ mensaje.publicacion|date:"l" }} {{ mensaje.publicacion|date:"d/m/Y" }}, {{ mensaje.publicacion|date:"H:i" }}</th>
         		<td class="text-left">{{ mensaje.texto }}</td>
+            </tr>
         	{% endfor %}
         	<tr>
         		<th class="text-right">{{ pedido.fecha_creacion|date:"l" }} {{ pedido.fecha_creacion|date:"d/m/Y" }}, {{ pedido.fecha_creacion|date:"H:i" }}</th>

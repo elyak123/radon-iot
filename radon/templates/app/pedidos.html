@@ -22,8 +22,8 @@
                     </div>                    
                     <b>Despachado por: {{ pedido.precio.sucursal }}</b><br>
                     {% if pedido.mensaje_set.exists %}
-                        <b>Ultimo mensaje: </b>{{ pedido.mensaje_set.last.texto }}<br>
-                        <b>Ultima actualización: </b>{{ pedido.mensaje_set.last.publicacion }}<br>
+                        <b>Ultimo mensaje: </b>{{ pedido.mensaje_set.first.texto }}<br>
+                        <b>Ultima actualización: </b>{{ pedido.mensaje_set.first.publicacion }}<br>
                     {% endif %}
                 </div>
             {% endfor %}
