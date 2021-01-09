@@ -6,8 +6,27 @@
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-10 card p-4">
-        <h3>Pedido</h3><br>
+        <h3>Pedido - {{ object.fecha_creacion }}</h3><br>
+        <div class="card bg-light p-2 my-2">
+        	<p><b>Detalles del pedido</b></p>
+        	<p class="m-0"><b>{{ object.estado }}</b></p>
+        	<p class="m-0"><b>Gasera: </b> {{ object.precio.sucursal.gasera }}</p>
+        	<p class="m-0"><b>Cantidad:</b> {{ object.cantidad }}</p>
+        	<p class="m-0"><b>Precio:</b>$ {{ object.precio.precio }}</p>
+        	<hr class="my-1">
+        	<p class="m-0"><b>Total: </b>$ {{ object.precio.precio|mul:object.cantidad }}</p>
+        </div>
 
+        <table class="table my-4">
+        	{% for mensaje in pedido.mensaje_set.all %}
+        		<th class="text-right">{{ mensaje.publicacion|date:"l" }} {{ mensaje.publicacion|date:"d/m/Y" }}, {{ mensaje.publicacion|date:"H:i" }}</th>
+        		<td class="text-left">{{ mensaje.texto }}</td>
+        	{% endfor %}
+        	<tr>
+        		<th class="text-right">{{ pedido.fecha_creacion|date:"l" }} {{ pedido.fecha_creacion|date:"d/m/Y" }}, {{ pedido.fecha_creacion|date:"H:i" }}</th>
+        		<td class="text-left">Pedido creado.</td>
+        	</tr>
+        </table>
     </div>
     <div class="col-md-1"></div>
 </div>
