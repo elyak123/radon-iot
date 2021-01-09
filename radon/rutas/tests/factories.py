@@ -1,7 +1,8 @@
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
-from radon.users.tests.factories import UserFactory, GaseraFactory, PrecioFactory
+from radon.users.tests.factories import UserFactory
+from radon.market.tests.factories import GaseraFactory, PrecioFactory
 from radon.iot.tests.factories import DispositivoFactory
 from radon.rutas import models
 

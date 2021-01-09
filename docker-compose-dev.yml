@@ -12,6 +12,7 @@ services:
       - "8000:8000"
     volumes:
       - ./docker/production/django/data/:/data/
+      - ./:/app/radon/
 
   postgis:
       build:

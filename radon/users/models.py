@@ -2,6 +2,7 @@ from django.contrib.gis.db import models
 from django.core.validators import validate_email
 from django.contrib.auth.models import AbstractUser, UserManager
 from phonenumber_field.modelfields import PhoneNumberField
+from radon.market.models import Sucursal
 
 
 class UserSet(models.QuerySet):
@@ -28,7 +29,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, validators=[validate_email])
     tipo = models.CharField(max_length=14, choices=TIPO_USUARIO, default='CLIENTE')
     pwdtemporal = models.BooleanField(default=False)
-
+    sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
     objects = UserManager()
     especial = UserSet.as_manager()
 

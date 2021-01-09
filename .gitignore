@@ -224,3 +224,5 @@ backups/
 # Visual Studio code
 .vs/
 .vscode/
+# Repos editables
+src/
