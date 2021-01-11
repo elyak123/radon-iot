@@ -17,7 +17,7 @@ class MunicipioFactory(factory.django.DjangoModelFactory):
     clave = factory.LazyAttribute(lambda o: f'{fake.numerify(text="#####")}')
     nombre = factory.LazyAttribute(lambda o: f'{fake.city()}')
     estado = factory.SubFactory(EstadoFactory)
-    geo = FuzzyMultiPolygon(tipo='municipio', length=2)
+    geo = FuzzyMultiPolygon(tipo='municipio', length=15)
 
     class Meta:
         model = models.Municipio

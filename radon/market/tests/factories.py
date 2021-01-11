@@ -1,5 +1,6 @@
 import factory
 from faker import Faker
+from radon.georadon.tests.factories import MunicipioFactory
 from radon.market import models
 fake = Faker(['es_MX'])
 faker = Faker(['es_MX', 'en_US', 'it_IT', 'fr_FR'])
@@ -16,6 +17,11 @@ class GaseraFactory(factory.django.DjangoModelFactory):
 class SucursalFactory(factory.django.DjangoModelFactory):
     numeroPermiso = factory.LazyAttribute(lambda o: f'LP/{fake.numerify(text="#####")}/DIST/PLA/{fake.year()}')
     gasera = factory.SubFactory(GaseraFactory)
+    municipio = factory.SubFactory(MunicipioFactory)
+
+    class Meta:
+        model = models.Sucursal
+        django_get_or_create = ('numeroPermiso',)
 
 
 class PrecioFactory(factory.django.DjangoModelFactory):
