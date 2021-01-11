@@ -3,6 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.base import ContextMixin
 from radon.georadon.models import Localidad
 from radon.market.models import Sucursal
+from radon.iot.models import Dispositivo
+from radon.rutas.models import Pedido
+from django.contrib import messages
+from django.shortcuts import redirect
+from django.core.exceptions import ValidationError
 
 
 class BaseTemplateSelector(ContextMixin):
@@ -36,6 +41,21 @@ class RegisterView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/creacion-usuario.html"
 
 
+class PedidosView(BaseTemplateSelector, generic.TemplateView):
+    template_name = "app/pedidos.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(PedidosView, self).get_context_data(**kwargs)
+        dispositivos = self.request.user.dispositivo_set.all()
+        context['dispositivos'] = dispositivos
+        return context
+
+
+class PedidoDetailView(BaseTemplateSelector, generic.DetailView):
+    template_name = "app/detalle-pedido.html"
+    model = Pedido
+
+
 class PedidoView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/pedido.html"
 
@@ -46,6 +66,22 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
         localidad = Localidad.objects.filter(geo__intersect=dispositivo.location.wkt) if not dispositivo.localidad else dispositivo.localidad  # noqa: E501
         context['sucursales'] = Sucursal.objects.filter(localidad=localidad)
         return context
+
+    def post(self, request, *args, **kwargs):
+        datos = self.request.POST
+        pedido = Pedido(
+            cantidad=datos["cantidad"],
+            dispositivo=Dispositivo.objects.get(id=datos["dispositivo"]),
+            precio=Sucursal.objects.get(id=datos["sucursal"]).precio_set.last()
+        )
+        try:
+            pedido.full_clean()
+        except ValidationError:
+            messages.warning(request, "Ha ocurrido un error con la solicitud, vuelve a intentarlo.")
+            return redirect('pedido')
+        pedido.save()
+        messages.success(request, "El pedido ha sido realizado.")
+        return redirect('inicio')
 
 
 class GraphView(generic.TemplateView, BaseTemplateSelector):

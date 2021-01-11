@@ -110,7 +110,7 @@
             if (res_mas > 0) {
                 fecha_mas = dateToString(fecha);
             }
-            fecha = new Date(fecha.setHours(fecha.getHours() + 12));
+            fecha = new Date(fecha.setHours(fecha.getHours() + 24));
         }
 
         var grafica = new Chart(context, {

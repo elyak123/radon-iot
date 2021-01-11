@@ -39,6 +39,9 @@
                 <a href="{% url 'pedido' %}">Pedir Gas</a>
             </li>
             <li>
+                <a href="{% url 'pedidos' %}">Mis pedidos</a>
+            </li>
+            <li>
                 <a href="{% url 'users:user_detail' request.user.username %}">Mi Usuario</a>
             </li>
             <!--
@@ -56,13 +59,13 @@
     <div id="fondo" class="w-100 h-100 d-none" style="margin-top: -24px;"></div>
     <div id="content" class="content p-4 mt-4">
         {% if messages %}
-        <div class="alert alert-success" role="alert">
-            <ul>
-                {% for message in messages %}
-                <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        </div>
+          <div class="">
+              {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}" role="alert">
+                  <p>{{ message }}</p>
+              </div>
+              {% endfor %}
+            </div>
         {% endif %}
         {% block content %}
         {% endblock %}
