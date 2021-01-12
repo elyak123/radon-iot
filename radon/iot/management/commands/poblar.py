@@ -10,6 +10,7 @@ from radon.iot.tests import factories as iot_factories
 from radon.rutas.tests import factories as rutas_factories
 from radon.market.tests import factories as market_factories
 from radon.rutas.models import Pedido, Jornada
+from radon.market.models import Sucursal
 from radon.contrib.sites.utils import create_sites
 
 
@@ -20,33 +21,38 @@ class Command(BaseCommand):
             call_command('flush', '--noinput')
             create_sites()
             cantidad_gaseras = 1
-            vehiculos_por_gasera = 6
+            sucursales_por_gasera = 3
+            vechiculos_por_sucursal = 6
             pedidos_por_ruta = 5
+            vehiculos_por_gasera = vechiculos_por_sucursal * sucursales_por_gasera
             consumidores_por_gasera = vehiculos_por_gasera * pedidos_por_ruta
             jornadas_por_gasera = consumidores_por_gasera
             cantidad_wisol = cantidad_gaseras * consumidores_por_gasera
             tz = pytz.timezone(settings.TIME_ZONE)
             gaseras = market_factories.GaseraFactory.create_batch(cantidad_gaseras)
             iot_factories.WisolFactory.create_batch(cantidad_wisol)
-            for index, gasera in enumerate(gaseras):
-                precio = market_factories.PrecioFactory(gasera=gasera)
+            for gasera in gaseras:
+                market_factories.SucursalFactory.create_batch(sucursales_por_gasera, gasera=gasera)
+            sucursales = Sucursal.objects.all()
+            for index, sucursal in enumerate(sucursales):
+                precio = market_factories.PrecioFactory(sucursal=sucursal)
                 usrs = user_factories.UserFactory.create_batch(
                     consumidores_por_gasera, tipo='CONSUMIDOR'
                 )
-                usuario_cliente = user_factories.UserFactory(gasera=gasera, tipo='CLIENTE')
+                usuario_cliente = user_factories.UserFactory(sucursal=sucursal, tipo='CLIENTE')
                 ws = Wisol.objects.filter(dispositivo__isnull=True)
                 for usr, wisol in zip(usrs, ws):
                     iot_factories.DispositivoFactory(wisol=wisol, usuario=usr)
-                vehiculos = rutas_factories.VehiculoFactory.create_batch(vehiculos_por_gasera, gasera=gasera)
+                vehiculos = rutas_factories.VehiculoFactory.create_batch(vehiculos_por_gasera, sucursal=sucursal)
                 today = datetime.datetime.now()
                 for day in range(jornadas_por_gasera + 1):
                     fecha = today + datetime.timedelta(days=+day)
-                    jornada = rutas_factories.JornadaFactory(gasera=gasera, fecha=fecha)
+                    jornada = rutas_factories.JornadaFactory(sucursal=sucursal, fecha=fecha)
                     for vehiculo in vehiculos:
                         ruta = rutas_factories.RutaFactory(jornada=jornada)
                         ruta.vehiculo.add(vehiculo)
-                jornadas = Jornada.objects.filter(gasera=gasera)
-                dispositivos = Dispositivo.objects.filter(usuario__gasera=gasera)
+                jornadas = Jornada.objects.filter(sucursal=sucursal)
+                dispositivos = Dispositivo.objects.filter(usuario__sucursal=sucursal)
                 for idx, jor in enumerate(jornadas):
                     for dis in dispositivos:
                         rutas_factories.PedidoFactory(
@@ -58,7 +64,8 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(
                     f'Usuario consumidor: {usrs[0].username}\n'
                     f'Usuario cliente: {usuario_cliente.username}\n'
-                    f'Gasera: {gasera.nombre}\n'
+                    f'Gasera: {sucursal.gasera.nombre}\n'
+                    f'Sucursal: {sucursal.municipio.nombre}\n'
                     '------------------------------------\n')
                 )
             pedidos_global = Pedido.objects.all().values('pk')

@@ -2,7 +2,7 @@ import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
 from radon.users.tests.factories import UserFactory
-from radon.market.tests.factories import GaseraFactory, PrecioFactory
+from radon.market.tests.factories import PrecioFactory, SucursalFactory
 from radon.iot.tests.factories import DispositivoFactory
 from radon.rutas import models
 
@@ -12,7 +12,7 @@ fake = Faker(['es_MX'])
 
 class JornadaFactory(factory.django.DjangoModelFactory):
     fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
-    gasera = factory.SubFactory(GaseraFactory)
+    sucursal = factory.SubFactory(SucursalFactory)
 
     class Meta:
         model = models.Jornada
@@ -22,7 +22,7 @@ class VehiculoFactory(factory.django.DjangoModelFactory):
     placa = factory.LazyAttribute(lambda o: fake.license_plate())
     n_economico = factory.LazyAttribute(lambda o: fake.bothify(text='?? ##'))
     operador = factory.SubFactory(UserFactory, tipo='OPERARIO')
-    gasera = factory.SubFactory(GaseraFactory)
+    sucursal = factory.SubFactory(SucursalFactory)
     capacidad = factory.LazyAttribute(lambda o: fake.random_element(elements=[5000, 8500, 12500]))
 
     class Meta:

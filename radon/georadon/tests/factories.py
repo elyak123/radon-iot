@@ -11,6 +11,7 @@ class EstadoFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = models.Estado
+        django_get_or_create = ('nombre',)
 
 
 class MunicipioFactory(factory.django.DjangoModelFactory):
@@ -21,6 +22,7 @@ class MunicipioFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = models.Municipio
+        django_get_or_create = ('nombre',)
 
 
 class LocalidadFactory(factory.django.DjangoModelFactory):
@@ -28,3 +30,7 @@ class LocalidadFactory(factory.django.DjangoModelFactory):
     nombre = factory.LazyAttribute(lambda o: fake.address().split('\n')[1].split(',')[0])
     clave = factory.LazyAttribute(lambda o: f'{fake.numerify(text="#####")}')
     municipio = factory.SubFactory(MunicipioFactory)
+
+    class Meta:
+        model = models.Localidad
+        django_get_or_create = ('clave',)
