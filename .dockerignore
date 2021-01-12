@@ -12,3 +12,8 @@ pytest.ini
 setup.cfg
 .env
 .env_http
+src/
+.log/
+.vs/
+.vscode/
+log/

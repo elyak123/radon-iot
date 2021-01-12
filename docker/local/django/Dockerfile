@@ -59,8 +59,6 @@ RUN sed -i 's/\r//' /app/start.sh && \
 ENV PATH="/opt/venv/bin:$PATH"
 USER appuser
 
-COPY . /app/radon
-
 WORKDIR /app/radon
 
 ENTRYPOINT ["/app/entrypoint.sh"]

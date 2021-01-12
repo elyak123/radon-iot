@@ -3,6 +3,7 @@ from faker import Faker
 from django.contrib.auth import get_user_model
 from radon.iot import models
 from radon.users.tests.factories import UserFactory
+from radon.georadon.tests.factories import MunicipioFactory
 
 User = get_user_model()
 fake = Faker(['es_MX'])
@@ -37,9 +38,11 @@ class DispositivoFactory(factory.django.DjangoModelFactory):
     usuario = factory.SubFactory(UserFactory)
     location = factory.LazyAttribute(
         lambda o: 'POINT({} {})'.format(
-            fake.coordinate(center=-102.293363, radius=0.07), fake.coordinate(center=21.882534, radius=0.05)
+            fake.coordinate(center=o.municipio.geo.centroid.x, radius=0.07),
+            fake.coordinate(center=o.municipio.geo.centroid.y, radius=0.05)
             )
         )
+    municipio = factory.SubFactory(MunicipioFactory)
 
     class Meta:
         model = models.Dispositivo
