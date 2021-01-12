@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -10,7 +9,6 @@ from allauth.account.adapter import get_adapter
 from phonenumber_field.serializerfields import PhoneNumberField
 from radon.iot.serializers import NestedDispositivoSerializer, WisolValidation
 from radon.iot.models import Wisol
-from radon.market.models import Sucursal
 from .utils import create_user_and_dispositivo, create_user_password, get_localidad_from_wkt
 
 User = get_user_model()
