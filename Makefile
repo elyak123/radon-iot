@@ -12,21 +12,26 @@ pipcompile:
 	@pip-compile requirements/local.in --output-file requirements/local.txt
 	@pip-compile requirements/test.in --output-file requirements/test.txt
 	@pip-compile requirements/production.in --output-file requirements/production.txt
-dev:
+dockerdevenv:
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.production/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.test/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_DEBUG=False/DJANGO_DEBUG=True/g .env
+dev: dockerdevenv
 	@docker-compose -f docker-compose-dev.yml up -d postgis
 	@docker-compose -f docker-compose-dev.yml run --service-ports django
 
-buildev:
+buildev: dockerdevenv
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.production/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.test/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_DEBUG=False/DJANGO_DEBUG=True/g .env
 	@docker-compose -f docker-compose-dev.yml up --build
+poblar: dockerdevenv
+	@docker-compose -f docker-compose-dev.yml run django python manage.py poblar
 
-shell:
-	@docker-compose run django python manage.py shell
+cleandjango:
+	@docker rm $(shell docker ps -aqf name=radon_django) && docker rmi $(shell docker images -q radon_django)
+shell: dockerdevenv
+	@docker-compose -f docker-compose-dev.yml run django python manage.py shell
 
 deploy:
 	@docker-compose up -d
