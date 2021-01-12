@@ -56,7 +56,7 @@ class UserDetailView(DetailView, BaseTemplateSelector):
     def get_object(self, queryset=None):
         self.object = User.objects.get(
             username=self.kwargs['username'],
-            gasera=self.request.user.gasera
+            # gasera=self.request.user.gasera quizá regrese.
         )
         return self.object
 
@@ -68,7 +68,7 @@ class UserDeleteView(DeleteView, BaseTemplateSelector):
     def get_object(self, queryset=None):
         self.object = User.objects.get(
             username=self.kwargs['username'],
-            gasera=self.request.user.gasera
+            # gasera=self.request.user.gasera
         )
         return self.object
 
@@ -89,7 +89,7 @@ class UserUpdateView(UpdateView, BaseTemplateSelector):
     def get_object(self, queryset=None):
         self.object = User.objects.get(
             username=self.kwargs['username'],
-            gasera=self.request.user.gasera
+            # gasera=self.request.user.gasera
         )
         return self.object
 

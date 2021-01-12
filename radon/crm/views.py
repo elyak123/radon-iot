@@ -81,7 +81,7 @@ class DispositivoDetailView(generic.DetailView, BaseTemplateSelector):
     def get_object(self, queryset=None):
         self.object = self.model.objects.select_related('usuario').select_related('wisol').get(
             wisol__serie=self.kwargs['serie'],
-            usuario__gasera=self.request.user.gasera
+            # usuario__gasera=self.request.user.gasera
         )
         return self.object
 

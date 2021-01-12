@@ -20,8 +20,10 @@
                     </p>
                     <a href="{% url 'users:user_update' object.username %}" class="btn btn-primary btn-block">Editar
                         Usuario</a>
+                    {% if object.tipo == 'CLIENTE' %}
                     <a href="{% url 'users:user_delete' object.username %}" class="btn btn-danger btn-block">Eliminar
                         Usuario</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -37,10 +39,9 @@
             <small><a
                     href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
         </div>
-        <a href="#"
-            class="badge badge-pill badge-primary">Detalles</a>
-        <a href="#"
-            class="badge badge-pill badge-primary float-right">Crear Pedido</a>
+        <a class="badge badge-pill badge-primary" href="{% url 'dispositivo_detail' dispositivo.wisol.serie %}">Detalles</a>
+        <a class="badge badge-pill badge-primary float-right" href=
+            {% if user.tipo == "CONSUMIDOR" %} {% url 'pedido' %} {% else %}"#"{% endif %}>Crear Pedido</a>
         <a href="#" class="badge badge-{{ dispositivo.get_ultima_lectura.lectura | badge }}">Actual:
             {{ dispositivo.get_ultima_lectura.lectura }}%</a>
         <div class="w-100 map-container" style="transition: 0.3s;" data-expanded="false">
