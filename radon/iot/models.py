@@ -81,6 +81,10 @@ class Dispositivo(models.Model):
     calendarizado = models.BooleanField('Indica si se esta a la espera de ser surtido.', default=False)
     tipo = models.IntegerField(default=1)
     status = models.CharField('Status del dispositivo', max_length=25, default='VERDE', choices=STATUS_CHOICES)
+    calle = models.CharField(max_length=150, null=True, blank=True)
+    numero = models.CharField(max_length=20, null=True, blank=True)
+    cp = models.CharField(max_length=10, null=True, blank=True)
+    colonia = models.CharField(max_length=75, null=True, blank=True)
 
     objects = models.Manager()
     especial = DispositivoSet.as_manager()
