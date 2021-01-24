@@ -53,6 +53,7 @@ LOGIN_URL = 'account_login'
 INSTALLED_APPS = [
     # prueba de PWA.
     'pwa',
+    'radon.www.apps.WwwConfig',
     'radon.iot.apps.IotConfig',
     'radon.app.apps.AppConfig',
     'radon.rutas.apps.RutasConfig',

@@ -1,0 +1,127 @@
+
+{% extends "www/base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <h1>Preguntas Frecuentes</h1>
+        <div class="accordion my-5" id="accordionExample">
+            <div class="card">
+                <div class="card-header pregunta" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn" type="button" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                            ¿Qué es el Radargas?
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                    data-parent="#accordionExample">
+                    <div class="card-body respuesta">
+                        Radargas es un dispositivo que sirve para consultar periódicamente el nivel de gas de tu tanque estacionario, funciona sin necesidad de wifi o bluetooth, tiene su propia conexión a internet, por lo que lo único que necesita son baterías para su correcto funcionamiento.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pregunta" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            ¿Con qué frecuencia Radargas envia mediciones?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
+                    data-parent="#accordionExample">
+                    <div class="card-body respuesta">
+                        El dispositivo hace una lectura una vez al día, pero Radargas cuenta con un sistema inteligente que le permite enviar una lectura minutos después de que tu gas ha sido surtido.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pregunta" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            ¿Cuánto dura el dispositivo?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
+                    data-parent="#accordionExample">
+                    <div class="card-body respuesta">
+                        De acuerdo a nuestras estimaciones, la batería incluída con el dispositivo tiene una duración de al menos dos años, sin embargo, el cambio de las baterías es muy sencillo, para funcionar necesita dos baterías AA.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pregunta" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            ¿Puedo confiar en las gasera que elijo para mi pedido?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour"
+                    data-parent="#accordionExample">
+                    <div class="card-body respuesta">
+                        Cuando tu generas un pedido nosotros trabajamos con la gasera de tu elección, en caso de que existan problemas con tu pedido te lo haremos saber.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pregunta" id="headingFive">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            ¿Puedo confiar en la medida actual del dispositivo?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFive" class="collapse" aria-labelledby="headingFive"
+                    data-parent="#accordionExample">
+                    <div class="card-body respuesta">
+                        Claro que sí, el dispositivo está programado para ofrecer la medida más fiel posible de tu tanque estacionario, claro que existen muchos tipos de carátulas por lo que debes contactarnos en caso de que tu carátula no esté soportada por el dispositivo.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pregunta" id="headingSix">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                            ¿Radargas funciona donde vivo?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseSix" class="collapse" aria-labelledby="headingSix"
+                    data-parent="#accordionExample">
+                    <div class="card-body respuesta">
+                        Radargas tiene una amplia cobertura en el país, sin embargo, necesitas saber que la frecuencia de radio que utiliza tiene cierta cobertura, verifica si donde vives existe cobertura mediante <a target="_blank" href="https://www.sigfox.com/en/coverage">Este link</a>.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pregunta" id="headingSeven">
+                    <h5 class="mb-0">
+                        <button class="btn collapsed" type="button" data-toggle="collapse"
+                            data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+                            ¿Puedo confiar en la estimación de cuando mi gas va a terminar?
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseSeven" class="collapse" aria-labelledby="headingSeven"
+                    data-parent="#accordionExample">
+                    <div class="card-body respuesta">
+                        Nuestro algoritmo te permite conocer tu promedio diario de consumo de gas, por lo que un día que consumas demasiado gas afectará drásticamente dicha estimación. Entre tu gas esté más próximo a terminar esta estimación será más precisa.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-2"></div>
+</div>
+{% endblock content %}

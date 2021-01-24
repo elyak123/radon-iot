@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="row" id="dispositivo-holder" data-dispositivo="{{ dispositivo.wisol.serie }}">
-    <div class="col-md-3"></div>
-    <div class="col-md-6 card p-1">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 card p-1">
         <h4 class="mt-4">Gráfica de tus consumos</h4>
         <div class="consumo-wrapper">
 
@@ -11,7 +11,7 @@
         <h4 class="mt-3" id="fecha_estimada"></h4>
         <a class="btn bg-primario my-2" href="{% url 'pedido' %}">Agendar recarga de gas</a>
     </div>
-    <div class="col-md-3"></div>
+    <div class="col-md-1"></div>
 </div>
 {% block scriptsnocompress %}
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>

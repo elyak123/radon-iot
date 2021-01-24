@@ -9,5 +9,5 @@ host_patterns = patterns(
     host(r'api', 'radon.api.urls.urls', name='api'),
     host(r'crm', 'radon.crm.urls', name='crm'),
     host(r'rutas', 'radon.rutas.urls', name='rutas'),
-    # host(r'www', 'radon.www.urls', name='www'),
+    host(r'www', 'radon.www.urls', name='www'),
 )
