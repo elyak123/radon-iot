@@ -25,11 +25,13 @@ buildev: dockerdevenv
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.test/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_DEBUG=False/DJANGO_DEBUG=True/g .env
 	@docker-compose -f docker-compose-dev.yml up --build
-poblar: dockerdevenv
+
+poblar:
 	@docker-compose -f docker-compose-dev.yml run django python manage.py poblar
 
 cleandjango:
 	@docker rm $(shell docker ps -aqf name=radon_django) && docker rmi $(shell docker images -q radon_django)
+
 shell: dockerdevenv
 	@docker-compose -f docker-compose-dev.yml run django python manage.py shell
 
