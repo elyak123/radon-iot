@@ -25,7 +25,7 @@ class JornadaView(AuthenticationTestMixin, generic.DetailView, BaseTemplateSelec
 
     def get_object(self, queryset=None):
         now = datetime.now()
-        self.object = self.model.objects.get(fecha=now, gasera=self.request.user.gasera)
+        self.object = self.model.objects.get(fecha=now, sucursal=self.request.user.sucursal)
         return self.object
 
     def get_context_data(self, **kwargs):
@@ -41,7 +41,7 @@ def get_geojsons(request, fecha):
     obj = {}
     jornada = Jornada.objects.get(
         fecha=fecha,
-        gasera=request.user.gasera
+        sucursal=request.user.sucursal
     )
     obj['dispositivos'] = json.loads(
         Dispositivo.especial.calendarizados_geojson(
@@ -61,7 +61,7 @@ class DispositivoListView(AuthenticationTestMixin, generic.ListView, BaseTemplat
 
     def get_queryset(self):
         query = self.model.especial.filter(
-            usuario__gasera=self.request.user.gasera
+            sucursal=self.request.user.sucursal
         ).select_related('wisol').select_related('usuario').anotar_lecturas().order_by('ultima_lectura')
         return query
 
@@ -70,7 +70,7 @@ class DispositivoCriticoListView(DispositivoListView, BaseTemplateSelector):
     template_name = "crm/leads.html"
 
     def get_queryset(self):
-        query = User.especial.leads(self.request.user.gasera)
+        query = User.especial.leads(self.request.user.sucursal)
         return query
 
 
@@ -103,7 +103,7 @@ class DispositivoUpdateView(generic.UpdateView, BaseTemplateSelector):
     def get_object(self, queryset=None):
         self.object = self.model.objects.get(
             wisol__serie=self.kwargs['serie'],
-            usuario__gasera=self.request.user.gasera
+            usuario__sucursal=self.request.user.sucursal
         )
         return self.object
 
@@ -118,7 +118,7 @@ class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView, BaseTem
     def get_object(self, queryset=None):
         self.object = self.model.objects.get(
             wisol__serie=self.kwargs['serie'],
-            usuario__gasera=self.request.user.gasera
+            usuario__sucursal=self.request.user.sucursal
         )
         return self.object
 
@@ -137,7 +137,7 @@ class PedidoView(generic.TemplateView, BaseTemplateSelector):
         else:
             context["semana"] = kwargs["week"]
         context["pedidos"] = Pedido.especial.pedidos_por_dia_por_gasera(
-            gasera=self.request.user.gasera,
+            sucursal=self.request.user.sucursal,
             semana=context["semana"]
         )
         return context
