@@ -3,6 +3,7 @@ from factory.fuzzy import FuzzyChoice
 from faker import Faker
 from django.contrib.auth import get_user_model
 from unidecode import unidecode
+from radon.market.tests.factories import SucursalFactory
 
 User = get_user_model()
 fake = Faker(['es_MX'])
@@ -18,6 +19,24 @@ class UserFactory(factory.django.DjangoModelFactory):
     email = factory.LazyAttribute(lambda o: '{}@{}'.format(o.username, fake.domain_name()))
     password = factory.PostGenerationMethodCall('set_password', 'password')
     tipo = FuzzyChoice(['CLIENTE', 'CONSUMIDOR', 'STAFF', 'OPERARIO'])
+
+    class Meta:
+        model = User
+        django_get_or_create = ('username',)
+
+
+class UserConsumidorSucursalFactory(UserFactory):
+    sucursal = factory.SubFactory(SucursalFactory)
+    tipo = 'CONSUMIDOR'
+
+    class Meta:
+        model = User
+        django_get_or_create = ('username',)
+
+
+class UserClientFactory(UserFactory):
+    sucursal = factory.SubFactory(SucursalFactory)
+    tipo = 'CLIENTE'
 
     class Meta:
         model = User

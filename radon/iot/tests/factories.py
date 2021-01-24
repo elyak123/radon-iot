@@ -3,7 +3,8 @@ from faker import Faker
 from django.contrib.auth import get_user_model
 from radon.iot import models
 from radon.users.tests.factories import UserFactory
-from radon.georadon.tests.factories import MunicipioFactory
+from radon.georadon.tests.factories import MunicipioFactory, LocalidadFactory
+from radon.market.tests.factories import SucursalFactory
 
 User = get_user_model()
 fake = Faker(['es_MX'])
@@ -43,6 +44,8 @@ class DispositivoFactory(factory.django.DjangoModelFactory):
             )
         )
     municipio = factory.SubFactory(MunicipioFactory)
+    localidad = factory.LazyAttribute(lambda o: LocalidadFactory(municipio=o.municipio))
+    sucursal = factory.SubFactory(SucursalFactory)
 
     class Meta:
         model = models.Dispositivo
@@ -60,6 +63,7 @@ class InstalacionFactory(factory.django.DjangoModelFactory):
 
 class LecturaFactory(factory.django.DjangoModelFactory):
     fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
+    # porcentaje = 
     nivel = factory.LazyAttribute(lambda o: fake.random_int(min=15, max=87))
     dispositivo = factory.SubFactory(DispositivoFactory)
 
