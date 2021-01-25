@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" 
       type="image/png" 
-      href="https://static.radargas.com/radargas-logo-2.png">
+      href="https://static.radargas.com/radargas-logo-0.png">
     <title>Radargas</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Barlow&family=Bree+Serif&family=Inconsolata&display=swap');
@@ -46,9 +46,36 @@
             background-color: #83beec !important;
         }
 
+        .btn-2 {
+            background-color: #F7894A !important;
+        }
+
+        .btn-3 {
+            background-color: #0046FF !important;
+            color: white !important;
+        }
+
+        .btn-4 {
+            background-color: #64B161 !important;
+        }
+
         .btn-1:hover {
             background-color: #64b6f5;
         }
+
+        .btn-2:hover {
+            background-color: #f59f6e !important;
+        }
+
+        .btn-3:hover {
+            background-color: #0034bf !important;
+            color: white !important;
+        }
+
+        .btn-4:hover {
+            background-color: #75cf72 !important;
+        }
+
 
         .btn-negro {
             color: white !important;
@@ -78,8 +105,20 @@
             animation: fade_down 2s ease-in-out infinite;
         }
 
-        .caracteristicas {
-            list-style-image: url('https://static.radargas.com/palomita.png');
+        .caracteristicas-1 {
+            list-style-image: url('https://static.radargas.com/palomita-1.png');
+        }
+
+        .caracteristicas-2 {
+            list-style-image: url('https://static.radargas.com/palomita-2.png');
+        }
+
+        .caracteristicas-3 {
+            list-style-image: url('https://static.radargas.com/palomita-3.png');
+        }
+
+        .caracteristicas-4 {
+            list-style-image: url('https://static.radargas.com/palomita-4.png');
         }
 
         .precio {
@@ -95,6 +134,25 @@
 
         .titulo-precio-1 {
             background-color: #83beec;
+            border-radius: 5px;
+            letter-spacing: 2px;
+        }
+
+        .titulo-precio-2 {
+            background-color: #F7894A;
+            border-radius: 5px;
+            letter-spacing: 2px;
+        }
+
+        .titulo-precio-3 {
+            background-color: #0046FF;
+            color: white !important;
+            border-radius: 5px;
+            letter-spacing: 2px;
+        }
+
+        .titulo-precio-4 {
+            background-color: #64B161;
             border-radius: 5px;
             letter-spacing: 2px;
         }
@@ -158,7 +216,7 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-white">
         <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'inicio' %}">
-                <img src="https://static.radargas.com/radargas-logo.png" class="logotipo" alt="">
+                <img src="https://static.radargas.com/radargas-logo-{{ aleatorio }}.png" class="logotipo" alt="">
                 Radargas
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
