@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     f'Usuario consumidor: {consumidores[0].username}\n'
                     f'Usuario cliente: {usuario_cliente.username}\n'
                     f'Gasera: {sucursal.gasera.nombre}\n'
-                    f'Sucursal: {sucursal.municipio.nombre}\n'
+                    f'Sucursal: Permiso {sucursal.numeroPermiso}\n'
                     '------------------------------------\n')
                 )
             pedidos_global = Pedido.objects.all().values('pk')
