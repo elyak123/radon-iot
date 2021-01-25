@@ -1,3 +1,6 @@
+import pytz
+import datetime
+from django.conf import settings
 from django.contrib.gis.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from radon.georadon.models import Municipio, Localidad
@@ -19,8 +22,6 @@ class Sucursal(models.Model):
     numeroPermiso = models.CharField(max_length=22, unique=True)
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
     ubicacion = models.PointField(null=True)
-    municipio = models.ForeignKey(Municipio, on_delete=models.PROTECT)
-    localidad = models.ManyToManyField(Localidad)
     telefono = PhoneNumberField(blank=True)
 
     @property
@@ -29,18 +30,38 @@ class Sucursal(models.Model):
 
     def __str__(self):
         if not self.nombre:
-            return f'{self.gasera.nombre[:10]} {self.municipio.nombre[:16]}'
+            return f'{self.gasera.nombre[:10]} {self.numeroPermiso}'
         return f'{self.nombre} {self.gasera.nombre[:10]}'
+
+    @property
+    def municipios(self):
+        tz = pytz.timezone(settings.TIME_ZONE)
+        utc_time = datetime.datetime.utcnow()
+        days_ago = tz.fromutc(utc_time) - datetime.timedelta(days=60)
+        precios = self.precio_set.filter(
+            fecha__gt=days_ago, localidad__geo__intersects=models.OuterRef('geo')
+        ).values('pk')
+        return Municipio.objects.annotate(oferta=models.Exists(precios)).filter(oferta=True)
+
+    @property
+    def localidades(self):
+        tz = pytz.timezone(settings.TIME_ZONE)
+        utc_time = datetime.datetime.utcnow()
+        days_ago = tz.fromutc(utc_time) - datetime.timedelta(days=60)
+        precios = self.precio_set.filter(
+            fecha__gt=days_ago, localidad=models.OuterRef('pk')).values('precio')
+        return Localidad.objects.annotate(importes=models.Exists(precios)).filter(importes=True)
 
 
 class Precio(models.Model):
     precio = models.DecimalField(max_digits=12, decimal_places=2)
     fecha = models.DateTimeField(auto_now=True)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE)
+    localidad = models.ForeignKey(Localidad, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Precio"
         verbose_name_plural = "Precios"
 
     def __str__(self):
-        return f'${self.precio} {self.sucursal.gasera.nombre[:16]}'
+        return f'${self.precio} {self.localidad.nombre[:16]}'
