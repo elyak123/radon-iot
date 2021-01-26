@@ -1,11 +1,11 @@
 import json
 import requests
 import datetime
+import pytz
 from random import random
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from django.utils.timezone import make_aware
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -99,8 +99,9 @@ def registrolectura(request):
         porcentaje = dispositivo.get_ultima_lectura()['lectura']
     else:
         porcentaje = utils.convertir_lectura((int(angulo)*4095)/360, dispositivo.tipo)
+    tz = pytz.timezone(settings.TIME_ZONE)
     models.Lectura.objects.create(
-        fecha=make_aware(datetime.datetime.now()),
+        fecha=tz.fromutc(datetime.datetime.utcnow()),
         porcentaje=porcentaje,
         dispositivo=dispositivo,
         sensor=angulo
