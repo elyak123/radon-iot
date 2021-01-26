@@ -17,6 +17,18 @@ class Gasera(models.Model):
         return self.nombre
 
 
+class SucursalSet(models.QuerySet):
+    def from_localidad(self, loc):
+        tz = pytz.timezone(settings.TIME_ZONE)
+        now = tz.fromutc(datetime.datetime.utcnow())
+        fecha = now - datetime.timedelta(days=30)
+        return Precio.objects.filter(localidad=loc, fecha__gr=fecha).values(
+            'sucursal__gasera__nombre',
+            'sucursal__numeroPermiso',
+            'sucursal__telefono'
+        )
+
+
 class Sucursal(models.Model):
     nombre = models.CharField(blank=True, max_length=80)
     numeroPermiso = models.CharField(max_length=22, unique=True)
