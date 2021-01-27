@@ -64,7 +64,7 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
         dispositivo = self.request.user.dispositivo_set.first()
         context['dispositivo'] = dispositivo
         localidad = Localidad.objects.filter(geo__intersect=dispositivo.location.wkt) if not dispositivo.localidad else dispositivo.localidad  # noqa: E501
-        context['sucursales'] = Sucursal.objects.filter(localidad=localidad)
+        context['sucursales'] = Sucursal.especial.from_localidad(localidad)
         return context
 
     def post(self, request, *args, **kwargs):

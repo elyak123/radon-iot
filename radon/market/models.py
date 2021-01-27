@@ -23,7 +23,7 @@ class SucursalSet(models.QuerySet):
         now = tz.fromutc(datetime.datetime.utcnow())
         fecha = now - datetime.timedelta(days=30)
         return Precio.objects.filter(localidad=loc, fecha__gt=fecha).values(
-            nombre=models.F('sucursal__gasera__nombre'),
+            gasera=models.F('sucursal__gasera__nombre'),
             numeroPermiso=models.F('sucursal__numeroPermiso'),
             telefono=models.F('sucursal__telefono')).distinct()
 

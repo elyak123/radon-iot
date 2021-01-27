@@ -23,7 +23,7 @@
                                         style="max-width: 300px; max-height: 130px; margin: auto;" alt="First slide"
                                         src="https://facturasnoel.com/assets/facturacion//images/noel.png"> -->
                                     <div class="card-body">
-                                        <h5 class="card-title my-2">{{ sucursal.gasera.nombre }}</h5>
+                                        <h5 class="card-title my-2">{{ sucursal.gasera }}</h5>
                                         <p class="my-2"><b>${{ sucursal.precio_set.last.precio | intcomma }} por litro</b></p>
                                         <a href="#" id="oferta-{{ forloop.counter0 }}" class="btn bg-secundario selector"
                                             data-precio="{{ sucursal.precio_set.last.precio }}" data-id="{{ sucursal.id }}">Seleccionar</a>
