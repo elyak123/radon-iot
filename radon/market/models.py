@@ -22,11 +22,10 @@ class SucursalSet(models.QuerySet):
         tz = pytz.timezone(settings.TIME_ZONE)
         now = tz.fromutc(datetime.datetime.utcnow())
         fecha = now - datetime.timedelta(days=30)
-        return Precio.objects.filter(localidad=loc, fecha__gr=fecha).values(
-            'sucursal__gasera__nombre',
-            'sucursal__numeroPermiso',
-            'sucursal__telefono'
-        )
+        return Precio.objects.filter(localidad=loc, fecha__gt=fecha).values(
+            nombre=models.F('sucursal__gasera__nombre'),
+            numeroPermiso=models.F('sucursal__numeroPermiso'),
+            telefono=models.F('sucursal__telefono')).distinct()
 
 
 class Sucursal(models.Model):
@@ -35,6 +34,9 @@ class Sucursal(models.Model):
     gasera = models.ForeignKey(Gasera, on_delete=models.CASCADE)
     ubicacion = models.PointField(null=True)
     telefono = PhoneNumberField(blank=True)
+
+    objects = models.Manager()
+    especial = SucursalSet.as_manager()
 
     @property
     def precio_actual(self):
