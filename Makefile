@@ -41,8 +41,12 @@ deploy:
 backup:
 	@docker-compose exec postgis backup
 
+restoredev:
+	@docker-compose -f docker-compose-dev.yml up -d postgis
+	@docker-compose -f docker-compose-dev.yml exec postgis restore $(BACKUPFILE)
+
 restore:
-	@docker-compose exec postgis restore
+	@docker-compose exec postgis restore $(BACKUPFILE)
 
 localbackup:
 	@pg_dump -U ${POSTGRES_USER} | gzip -c > docker/production/postgis/backups/backup_$(date +'%Y_%m_%dT%H_%M_%S').sql.gz

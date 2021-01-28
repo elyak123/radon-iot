@@ -27,10 +27,10 @@ if [[ $# -eq 0 ]] ; then
 fi
 
 # set the backupfile variable
-BACKUPFILE=/backups/$1
+BACKUPPATH=/backups/$BACKUPFILE
 
 # check that the file exists
-if ! [ -f $BACKUPFILE ]; then
+if ! [ -f $BACKUPPATH ]; then
     echo "backup file not found"
     echo 'to get a list of available backups, run:'
     echo '    docker-compose -f production.yml run postgis list-backups'
@@ -55,4 +55,4 @@ createdb -h postgis -U $POSTGRES_USER $POSTGRES_USER -O $POSTGRES_USER
 
 # restore the database
 echo "restoring database $POSTGRES_USER"
-gunzip -c $BACKUPFILE | psql -h postgis -U $POSTGRES_USER
+gunzip -c $BACKUPPATH | psql -h postgis -U $POSTGRES_USER

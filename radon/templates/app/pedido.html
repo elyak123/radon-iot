@@ -2,13 +2,16 @@
 
 {% block content %}
 {% load humanize %}
+{% load lastprecio %}
+
 <form method="POST">
     {% csrf_token %}
     <input class="d-none" type="number" value="{{ dispositivo.id }}" name="dispositivo">
     <div class="row">
         <div class="col-md-3"></div>
         <div class="col-md-6 card p-3" id="opciones-gas">
-            {% if not dispositivo.pedido_set.exists or dispositivo.pedido_set.last.estado == "FINALIZADO" %}
+            {% if sucursales|length > 0 %}
+            {% if dispositivo.pedido_set.last.estado == "FINALIZADO" %}
             <h4 class="mt-4">Genera tu pedido de gas</h4>
             <p class="my-2"><b>Gaseras locales:</b></p>
             <div class="row">
@@ -24,9 +27,9 @@
                                         src="https://facturasnoel.com/assets/facturacion//images/noel.png"> -->
                                     <div class="card-body">
                                         <h5 class="card-title my-2">{{ sucursal.gasera }}</h5>
-                                        <p class="my-2"><b>${{ sucursal.precio_set.last.precio | intcomma }} por litro</b></p>
+                                        <p class="my-2"><b>${{ sucursal.numeroPermiso|lastprecio | intcomma }} por litro</b></p>
                                         <a href="#" id="oferta-{{ forloop.counter0 }}" class="btn bg-secundario selector"
-                                            data-precio="{{ sucursal.precio_set.last.precio }}" data-id="{{ sucursal.id }}">Seleccionar</a>
+                                            data-precio="{{ sucursal.numeroPermiso|lastprecio }}" data-id="{{ sucursal.sucursal_pk }}">Seleccionar</a>
                                     </div>
                                 </div>
                             </div>
@@ -119,12 +122,17 @@
                 </div>
             </div>
             <button id="terminar-pedido" type="submit" class="btn bg-primario my-2">Terminar Pedido</button>
+            {% else %}
+            <h1><b>¡Vaya!</b></h1>
+            <br>
+            <p>Parece que estás intentando hacer un nuevo pedido pero tienes otro en camino, espera a que éste sea despachado para realizar otro.</p>
+            {% endif %}
+            {% else %}
+            <h1><b>¡Vaya!</b></h1>
+            <br>
+            <p>Parece que aún Radargas no ha investigado las gaseras locales. En poco tiempo los tendrás disponibles.</p>
+            {% endif %}
         </div>
-        {% else %}
-        <h1><b>¡Vaya!</b></h1>
-        <br>
-        <p>Parece que estás intentando hacer un nuevo pedido pero tienes otro en camino, espera a que éste sea despachado para realizar otro.</p>
-        {% endif %}
         <div class="col-md-3"></div>
     </div>
 </form>
