@@ -23,11 +23,18 @@ class UserSet(models.QuerySet):
 
 
 class User(AbstractUser):
-    TIPO_USUARIO = (('CLIENTE', 'Cliente'), ('CONSUMIDOR', 'Consumidor'), ('STAFF', 'Staff'), ('OPERARIO', 'Operario'))
+
+    class Types(models.TextChoices):
+        CLIENTE = 'CLIENTE', 'Cliente'
+        CONSUMIDOR = 'CONSUMIDOR', 'Consumidor'
+        STAFF = 'STAFF', 'Staff'
+        OPERARIO = 'OPERARIO', 'Operario'
+
+    base_type = Types.CONSUMIDOR
 
     telefono = PhoneNumberField(blank=True)
     email = models.EmailField(unique=True, validators=[validate_email])
-    tipo = models.CharField(max_length=14, choices=TIPO_USUARIO, default='CLIENTE')
+    tipo = models.CharField(max_length=14, choices=Types.choices, default=Types.CONSUMIDOR)
     pwdtemporal = models.BooleanField(default=False)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
     objects = UserManager()
@@ -39,3 +46,109 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.tipo = self.base_type
+        return super().save(*args, **kwargs)
+
+
+class RadonBaseUserManager(UserManager):
+    is_staff = False
+    is_superuser = False
+
+    def create_user(self, username, email=None, password=None, **extra_fields):
+        extra_fields['is_staff'] = self.is_staff
+        extra_fields['is_superuser'] = self.is_superuser
+        return self._create_user(username, email, password, **extra_fields)
+
+    def create_superuser(self, username, email, password, **extra_fields):
+        if not self.is_superuser:
+            raise ValueError('Este tipo de usuario no puede ser Super User')
+        return super().RadonBaseUserManager.create_superuser(username, email, password, **extra_fields)
+
+
+class ConsumidorManager(RadonBaseUserManager):
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset(*args, **kwargs)
+        return results.filter(tipo=self.User.Types.CONSUMIDOR)
+
+
+class Consumidor(User):
+    base_type = User.Types.CONSUMIDOR
+    objects = ConsumidorManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Consumidor"
+        verbose_name_plural = "Consumidores"
+
+
+class ClienteManager(UserManager):
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset(*args, **kwargs)
+        return results.filter(tipo=self.User.Types.CLIENTE)
+
+
+class Cliente(User):
+    base_type = User.Types.CLIENTE
+    objects = ClienteManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Cliente"
+        verbose_name_plural = "Clientes"
+
+
+class OperadorManager(RadonBaseUserManager):
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset(*args, **kwargs)
+        return results.filter(tipo=self.User.Types.OPERARIO)
+
+
+class Operador(User):
+    base_type = User.Types.OPERARIO
+    objects = OperadorManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Operador"
+        verbose_name_plural = "Operadores"
+
+
+class StaffManager(RadonBaseUserManager):
+    is_staff = True
+    is_superuser = False
+
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset(*args, **kwargs)
+        return results.filter(tipo=self.User.Types.STAFF)
+
+
+class Staff(User):
+    base_type = User.Types.STAFF
+    objects = StaffManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Staff"
+        verbose_name_plural = "Staff"
+
+
+class SuperUserManager(RadonBaseUserManager):
+    is_staff = True
+    is_superuser = True
+
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset(*args, **kwargs)
+        return results.filter(tipo=self.User.Types.STAFF, is_superuser=True)
+
+
+class SuperUser(User):
+    base_type = User.Types.STAFF
+    objects = SuperUserManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Super Usuario"
+        verbose_name_plural = "Super Usuarios"
