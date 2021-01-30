@@ -23,18 +23,11 @@ class UserSet(models.QuerySet):
 
 
 class User(AbstractUser):
-
-    class Types(models.TextChoices):
-        CLIENTE = 'CLIENTE', 'Cliente'
-        CONSUMIDOR = 'CONSUMIDOR', 'Consumidor'
-        STAFF = 'STAFF', 'Staff'
-        OPERARIO = 'OPERARIO', 'Operario'
-
-    base_type = Types.CONSUMIDOR
+    Types = (('CLIENTE', 'Cliente'), ('CONSUMIDOR', 'Consumidor'), ('STAFF', 'Staff'), ('OPERARIO', 'Operario'))
 
     telefono = PhoneNumberField(blank=True)
     email = models.EmailField(unique=True, validators=[validate_email])
-    tipo = models.CharField(max_length=14, choices=Types.choices, default=Types.CONSUMIDOR)
+    tipo = models.CharField(max_length=14, choices=Types, default='CONSUMIDOR')
     pwdtemporal = models.BooleanField(default=False)
     sucursal = models.ForeignKey(Sucursal, on_delete=models.CASCADE, null=True, blank=True)
     objects = UserManager()
@@ -71,11 +64,11 @@ class RadonBaseUserManager(UserManager):
 class ConsumidorManager(RadonBaseUserManager):
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset(*args, **kwargs)
-        return results.filter(tipo=self.User.Types.CONSUMIDOR)
+        return results.filter(tipo='CONSUMIDOR')
 
 
 class Consumidor(User):
-    base_type = User.Types.CONSUMIDOR
+    base_type = 'CONSUMIDOR'
     objects = ConsumidorManager()
 
     class Meta:
@@ -87,11 +80,11 @@ class Consumidor(User):
 class ClienteManager(UserManager):
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset(*args, **kwargs)
-        return results.filter(tipo=self.User.Types.CLIENTE)
+        return results.filter(tipo='CLIENTE')
 
 
 class Cliente(User):
-    base_type = User.Types.CLIENTE
+    base_type = 'CLIENTE'
     objects = ClienteManager()
 
     class Meta:
@@ -103,11 +96,11 @@ class Cliente(User):
 class OperadorManager(RadonBaseUserManager):
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset(*args, **kwargs)
-        return results.filter(tipo=self.User.Types.OPERARIO)
+        return results.filter(tipo='OPERARIO')
 
 
 class Operador(User):
-    base_type = User.Types.OPERARIO
+    base_type = 'OPERARIO'
     objects = OperadorManager()
 
     class Meta:
@@ -122,11 +115,11 @@ class StaffManager(RadonBaseUserManager):
 
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset(*args, **kwargs)
-        return results.filter(tipo=self.User.Types.STAFF)
+        return results.filter(tipo='STAFF')
 
 
 class Staff(User):
-    base_type = User.Types.STAFF
+    base_type = 'STAFF'
     objects = StaffManager()
 
     class Meta:
@@ -141,11 +134,11 @@ class SuperUserManager(RadonBaseUserManager):
 
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset(*args, **kwargs)
-        return results.filter(tipo=self.User.Types.STAFF, is_superuser=True)
+        return results.filter(tipo='STAFF', is_superuser=True)
 
 
 class SuperUser(User):
-    base_type = User.Types.STAFF
+    base_type = 'STAFF'
     objects = SuperUserManager()
 
     class Meta:
