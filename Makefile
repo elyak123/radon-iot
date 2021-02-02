@@ -12,10 +12,12 @@ pipcompile:
 	@pip-compile requirements/local.in --output-file requirements/local.txt
 	@pip-compile requirements/test.in --output-file requirements/test.txt
 	@pip-compile requirements/production.in --output-file requirements/production.txt
+
 dockerdevenv:
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.production/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_SETTINGS_MODULE=radon.config.settings.test/DJANGO_SETTINGS_MODULE=radon.config.settings.local/g .env
 	@sed -i.bak s/DJANGO_DEBUG=False/DJANGO_DEBUG=True/g .env
+
 dev: dockerdevenv
 	@docker-compose -f docker-compose-dev.yml up -d postgis
 	@docker-compose -f docker-compose-dev.yml run --service-ports django
@@ -46,7 +48,7 @@ restoredev:
 	@docker-compose -f docker-compose-dev.yml exec postgis restore $(BACKUPFILE)
 
 restore:
-	@docker-compose exec postgis restore $(BACKUPFILE)
+	@docker-compose exec postgis restore $(BACKUPFILE) > /dev/null
 
 localbackup:
 	@pg_dump -U ${POSTGRES_USER} | gzip -c > docker/production/postgis/backups/backup_$(date +'%Y_%m_%dT%H_%M_%S').sql.gz
