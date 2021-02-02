@@ -9,11 +9,11 @@ urlpatterns = [
     path(r'login/', views._LoginView.as_view(), name='account_login'),
     path(r'logout/', views._LogoutView.as_view(), name='account_logout'),
 
-    path(r'password/change/(?:(<username>[\w.@+-]+)/)?', views._PasswordChangeView.as_view(),
+    path(r'password/change/', views._PasswordChangeView.as_view(),
          name='account_change_password'),
     path(r'password/set/', views._PasswordSetView.as_view(), name='account_set_password'),
 
-    path(r'inactive/', views._AccountInactiveView.as_view(), name='account_inactive'),
+    # path(r'inactive/', views._AccountInactiveView.as_view(), name='account_inactive'),
 
     # E-mail
     path(r'email/', views._EmailView.as_view(), name='account_email'),

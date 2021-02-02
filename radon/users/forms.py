@@ -31,7 +31,7 @@ class UserUpdateForm(UserChangeForm):
         # Llamamos el super del padre porque el padre cambia arbitrariamente la url
         # de cambio de contraseña
         super(UserChangeForm, self).__init__(*args, **kwargs)
-        pass_change = reverse('account_change_password', kwargs={'username': user.username})
+        pass_change = reverse('account_change_password')
         self.fields['password'].help_text = self.fields['password'].help_text.format(pass_change)
         self.user = user
 
