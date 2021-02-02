@@ -1,8 +1,13 @@
+import sys
 from .base import *  # noqa
 
 # DEBUG
 # ------------------------------------------------------------------------------
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
+try:
+    HOST_PORT = sys.argv[-1].split(':')[1]
+except IndexError:  # En caso de que se corran otros commandos.
+    HOST_PORT = ''
 
 MOCK_URL_CONF = env('DJANGO_MOCK_URL_CONF', default='radon.app.urls')
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
