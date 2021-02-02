@@ -71,6 +71,10 @@ class Consumidor(User):
     base_type = 'CONSUMIDOR'
     objects = ConsumidorManager()
 
+    @property
+    def hola(self):
+        print('hola desde consumidor')
+
     class Meta:
         proxy = True
         verbose_name = "Consumidor"
