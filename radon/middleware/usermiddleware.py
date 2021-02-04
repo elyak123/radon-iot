@@ -5,7 +5,7 @@ from radon.users.models import Consumidor, Operador, Cliente, Staff, SuperUser
 class UserTypeMappingMiddleware(MiddlewareMixin):
     user_mapping = {
         'CONSUMIDOR': Consumidor,
-        'OPERADODR': Operador,
+        'OPERARIO': Operador,
         'CLIENTE': Cliente
     }
 

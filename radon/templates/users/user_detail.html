@@ -18,10 +18,10 @@
                     <p class="card-text">{{ object.email }}</p>
                     <p class="card-text"><a href="{{object.telefono.as_rfc3966}}">{{ object.telefono.as_national }}</a>
                     </p>
-                    <a href="{% url 'users:user_update' object.username %}" class="btn btn-primary btn-block">Editar
+                    <a href="{% url 'users:user_update' %}" class="btn btn-primary btn-block">Editar
                         Usuario</a>
                     {% if object.tipo == 'CLIENTE' %}
-                    <a href="{% url 'users:user_delete' object.username %}" class="btn btn-danger btn-block">Eliminar
+                    <a href="{% url 'users:user_delete' %}" class="btn btn-danger btn-block">Eliminar
                         Usuario</a>
                     {% endif %}
                 </div>
@@ -37,7 +37,7 @@
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1">Dispositivo: {{ dispositivo.wisol.serie }}</h5>
             <small><a
-                    href="{% url 'users:user_detail' dispositivo.usuario.username %}">{{ dispositivo.usuario.username }}</a></small>
+                    href="{% url 'users:user_detail' %}">{{ dispositivo.usuario.username }}</a></small>
         </div>
         <a class="badge badge-pill badge-primary" href="{% url 'dispositivo_detail' dispositivo.wisol.serie %}">Detalles</a>
         <a class="badge badge-pill badge-primary float-right" href=

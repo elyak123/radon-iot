@@ -30,5 +30,4 @@ def mapa(request):
 
 class PedidoViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PedidoSerialiser
-    permission_classes = [permissions.IsAuthenticated]
     queryset = Pedido.objects.all()

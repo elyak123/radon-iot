@@ -11,7 +11,7 @@ except IndexError:  # En caso de que se corran otros commandos.
 
 MOCK_URL_CONF = env('DJANGO_MOCK_URL_CONF', default='radon.app.urls')
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
-SITE_ID = env.int('DJANGO_SITE_ID')
+SITE_ID = env.int('DJANGO_SITE_ID', '')
 CORS_ORIGIN_ALLOW_ALL = True
 
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append('rest_framework.renderers.BrowsableAPIRenderer')

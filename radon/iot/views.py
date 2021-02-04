@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework import permissions
 from rest_framework import status
 import validate_aws_sns_message
 from radon.iot import serializers, models, utils
@@ -19,7 +18,6 @@ from .captura import decode_int_little_endian
 class DeviceTypeViewSet(viewsets.ModelViewSet):
     queryset = models.DeviceType.objects.all()
     serializer_class = serializers.DeviceTypeSerializer
-    permission_classes = [permissions.IsAdminUser]
 
 
 class DeviceViewSet(viewsets.ModelViewSet):
@@ -28,14 +26,12 @@ class DeviceViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Dispositivo.objects.all()
     serializer_class = serializers.DispositivoSerializer
-    permission_classes = [permissions.AllowAny]
     lookup_field = 'wisol__serie'
 
 
 class InstalacionViewSet(viewsets.ModelViewSet):
 
     serializer_class = serializers.InstalacionSerializer
-    permission_classes = [permissions.IsAuthenticated]  # por lo pronto
 
     def get_queryset(self):
         return models.Instalacion.objects.filter(operario=self.request.user).order_by('-fecha')
@@ -47,23 +43,22 @@ class WisolViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Wisol.objects.all()
     serializer_class = serializers.WisolSerializer
-    permission_classes = [permissions.AllowAny]
     lookup_field = 'serie'
 
 
 class LecturaViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.LecturaSerializer
     pagination_class = LimitOffsetPagination
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         try:
             return models.Lectura.objects.filter(
-                dispositivo__wisol__serie=self.request.GET['dispositivo']
+                dispositivo__wisol__serie=self.request.GET['dispositivo'],
+                dispositivo__usuario=self.request.user
             ).order_by('-fecha')
         except KeyError:
             return models.Lectura.objects.filter(
-                dispositivo__usuario__gasera=self.request.user.gasera).order_by('-fecha')
+                dispositivo__usuario__sucursal=self.request.user.sucursal).order_by('-fecha')
 
 
 def wisol_initial_validation(request):

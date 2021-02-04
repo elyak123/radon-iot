@@ -1,14 +1,13 @@
 from django.conf import settings
 from django.db.utils import ProgrammingError
-from django.contrib.auth import get_user_model
 from rest_framework.serializers import ValidationError
 from xkcdpass import xkcd_password as xp
 from unidecode import unidecode
 from radon.georadon.models import Localidad
+from radon.users.models import Consumidor as User
 
 
 def get_default_user():
-    User = get_user_model()
     try:
         return User.objects.get(
             username=settings.DEFAULT_USERNAME,
@@ -52,7 +51,6 @@ def get_localidad_from_wkt(point):
 
 def create_user_and_dispositivo(user_data, disp_data):
     from radon.iot.models import Dispositivo
-    User = get_user_model()
     user = User.objects.create_user(**user_data)
     user.save()
     disp_data['usuario'] = user

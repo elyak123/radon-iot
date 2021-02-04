@@ -6,20 +6,7 @@ from radon.market.models import Sucursal
 
 
 class UserSet(models.QuerySet):
-
-    def leads(self, sucursal):
-        from radon.iot.models import Dispositivo
-        u_lectura = Dispositivo.especial.filter(
-            usuario=models.OuterRef('pk')
-        ).calendarizables().filter(sucursal=sucursal).values('ultima_lectura')[:1]
-        disps = Dispositivo.especial.filter(
-            usuario=models.OuterRef('pk')
-        ).calendarizables().filter(sucursal=sucursal).values('wisol__serie')[:1]
-        return self.filter(tipo='CONSUMIDOR').annotate(
-            ultima_lectura=models.Subquery(u_lectura, output_field=models.IntegerField())
-        ).annotate(
-            serie=models.Subquery(disps, output_field=models.IntegerField())
-        ).filter(ultima_lectura__isnull=False, serie__isnull=False)
+    pass
 
 
 class User(AbstractUser):
@@ -82,6 +69,23 @@ class Consumidor(User):
 
 
 class ClienteManager(UserManager):
+    def leads(self, sucursal):
+        """
+        Consumidores con dispositivos cuya ultima lectura sea menor a 20%
+        """
+        from radon.iot.models import Dispositivo
+        u_lectura = Dispositivo.especial.filter(
+            usuario=models.OuterRef('pk')
+        ).calendarizables().filter(sucursal=sucursal).values('ultima_lectura')[:1]
+        disps = Dispositivo.especial.filter(
+            usuario=models.OuterRef('pk')
+        ).calendarizables().filter(sucursal=sucursal).values('wisol__serie')[:1]
+        return self.filter(tipo='CONSUMIDOR').annotate(
+            ultima_lectura=models.Subquery(u_lectura, output_field=models.IntegerField())
+        ).annotate(
+            serie=models.Subquery(disps, output_field=models.IntegerField())
+        ).filter(ultima_lectura__isnull=False, serie__isnull=False)
+
     def get_queryset(self, *args, **kwargs):
         results = super().get_queryset(*args, **kwargs)
         return results.filter(tipo='CLIENTE')

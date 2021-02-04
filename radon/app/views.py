@@ -1,31 +1,23 @@
 from django.views import generic
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.base import ContextMixin
+from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.shortcuts import redirect
+from django_hosts.resolvers import reverse
 from radon.georadon.models import Localidad
 from radon.market.models import Sucursal
 from radon.iot.models import Dispositivo
 from radon.rutas.models import Pedido
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.core.exceptions import ValidationError
+from radon.users.auth import ConsumidorAutenticationMixin
 
 
-class BaseTemplateSelector(ContextMixin):
+class BaseTemplateSelector(ConsumidorAutenticationMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        template = 'base.html'
-        if hasattr(self.request.user, 'tipo'):
-            if self.request.user.tipo == 'OPERARIO':
-                template = 'operador/base.html'
-            elif self.request.user.tipo == 'CONSUMIDOR':
-                template = 'app/base.html'
-            elif self.request.user.tipo == 'CLIENTE':
-                template = 'base.html'
-        context["template"] = template
+        context["template"] = 'app/base.html'
         return context
 
 
-class DashboardView(LoginRequiredMixin, BaseTemplateSelector, generic.TemplateView):
+class DashboardView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/inicio.html"
 
     def get_context_data(self, **kwargs):
@@ -78,13 +70,13 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
             pedido.full_clean()
         except ValidationError:
             messages.warning(request, "Ha ocurrido un error con la solicitud, vuelve a intentarlo.")
-            return redirect('pedido')
+            return redirect(reverse('pedido', host=self.request.host.regex))
         pedido.save()
         messages.success(request, "El pedido ha sido realizado.")
-        return redirect('inicio')
+        return redirect(reverse('inicio', host=self.request.host.regex))
 
 
-class GraphView(generic.TemplateView, BaseTemplateSelector):
+class GraphView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/grafica.html"
 
     def get_context_data(self, **kwargs):

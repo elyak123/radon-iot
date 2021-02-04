@@ -8,7 +8,7 @@ import radon.users.utils
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0008_auto_20201206_1947'),
+        ('users', '0009_user_sucursal'),
         ('iot', '0014_auto_20201206_1947'),
     ]
 

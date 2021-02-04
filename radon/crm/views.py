@@ -1,25 +1,27 @@
+import json
+from datetime import datetime
 from django_hosts.resolvers import reverse
 from django.views import generic
 from django.http import JsonResponse
-from radon.users.auth import AuthenticationTestMixin
-from radon.users.models import User
+from radon.users.auth import ClienteAutenticationMixin
+from radon.users.models import Cliente
 from radon.iot.models import Dispositivo
 from radon.rutas.models import Pedido, Jornada
 from radon.iot.forms import DispositivoForm
-from datetime import datetime
-import json
-
 from radon.rutas.forms import PedidoCreationForm
-from radon.app.views import BaseTemplateSelector
-
-# Create your views here.
 
 
-class DashboardView(AuthenticationTestMixin, generic.TemplateView, BaseTemplateSelector):
-    pass
+class CrmTemplateSelector(ClienteAutenticationMixin):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["template"] = 'crm/base.html'
+        return context
 
 
-class JornadaView(AuthenticationTestMixin, generic.DetailView, BaseTemplateSelector):
+class JornadaView(CrmTemplateSelector, generic.DetailView):
+    """
+    De momento sin url, su implementacion esta pendiente.
+    """
     template_name = "crm/index.html"
     model = Jornada
 
@@ -54,7 +56,7 @@ def get_geojsons(request, fecha):
     return JsonResponse(obj)
 
 
-class DispositivoListView(AuthenticationTestMixin, generic.ListView, BaseTemplateSelector):
+class DispositivoListView(CrmTemplateSelector, generic.ListView):
     paginate_by = 10
     model = Dispositivo
     template_name = "crm/dispositivo_list.html"
@@ -66,15 +68,15 @@ class DispositivoListView(AuthenticationTestMixin, generic.ListView, BaseTemplat
         return query
 
 
-class DispositivoCriticoListView(DispositivoListView, BaseTemplateSelector):
+class DispositivoCriticoListView(DispositivoListView):
     template_name = "crm/leads.html"
 
     def get_queryset(self):
-        query = User.especial.leads(self.request.user.sucursal)
+        query = Cliente.objects.leads(self.request.user.sucursal)
         return query
 
 
-class DispositivoDetailView(generic.DetailView, BaseTemplateSelector):
+class DispositivoDetailView(CrmTemplateSelector, generic.DetailView):
     model = Dispositivo
     template_name = "crm/dispositivo_detail.html"
 
@@ -95,7 +97,7 @@ class DispositivoDetailView(generic.DetailView, BaseTemplateSelector):
         return reverse('crm:dispositivo_detail', kwargs={'pk': self.object.pk})
 
 
-class DispositivoUpdateView(generic.UpdateView, BaseTemplateSelector):
+class DispositivoUpdateView(CrmTemplateSelector, generic.UpdateView):
     form_class = DispositivoForm
     model = Dispositivo
     template_name = "crm/dispositivo_update.html"
@@ -111,7 +113,7 @@ class DispositivoUpdateView(generic.UpdateView, BaseTemplateSelector):
         return reverse('dispositivo_detail', kwargs={'serie': self.object.wisol.serie}, host='crm')
 
 
-class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView, BaseTemplateSelector):
+class DispositivoDeleteView(CrmTemplateSelector, generic.DeleteView):
     model = Dispositivo
     template_name = "crm/dispositivo_delete.html"
 
@@ -126,7 +128,7 @@ class DispositivoDeleteView(AuthenticationTestMixin, generic.DeleteView, BaseTem
         return reverse('crm:dispositivo_list', kwargs={'pk': self.object.pk})
 
 
-class PedidoView(generic.TemplateView, BaseTemplateSelector):
+class PedidoView(CrmTemplateSelector, generic.TemplateView):
     template_name = "crm/pedidos.html"
 
     def get_context_data(self, **kwargs):
@@ -143,7 +145,7 @@ class PedidoView(generic.TemplateView, BaseTemplateSelector):
         return context
 
 
-class PedidoCreateView(generic.CreateView, BaseTemplateSelector):
+class PedidoCreateView(CrmTemplateSelector, generic.CreateView):
     model = Pedido
     form_class = PedidoCreationForm
     template_name = "crm/pedido_creation.html"
