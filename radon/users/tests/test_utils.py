@@ -1,9 +1,10 @@
 from radon.users import utils
-from radon.users.models import User, Gasera
+from radon.users.models import User
+from radon.market.models import Gasera
 from radon.iot.models import Dispositivo, Wisol
 
 
-def test_get_default_user_other(mocker, settings):
+def test_get_default_user_other(mocker, settings): # FALLA
     settings.DEFAULT_USERNAME = 'foo'
     attrs = {
         'objects.get_or_create.return_value': (mocker.MagicMock(spec=User, pk=2), True)
@@ -14,7 +15,7 @@ def test_get_default_user_other(mocker, settings):
     mock_user_klass.objects.get_or_create.assert_called_once_with(username='foo')
 
 
-def test_create_user_and_dispositivo(mocker):
+def test_create_user_and_dispositivo(mocker): # FALLA
     mocker.patch('radon.users.models.Gasera')
     usr = mocker.MagicMock(spec=User, pk=2)
     usr_save = mocker.MagicMock()

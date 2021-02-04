@@ -2,7 +2,8 @@ import pytest
 from dj_rest_auth.utils import jwt_encode
 from radon.iot.models import Dispositivo, Wisol, DeviceType
 from radon.users import serializers
-from radon.users.models import User, Gasera
+from radon.users.models import User
+from radon.market.models import Gasera
 
 
 def test_userserializer_calls_correct_method(mocker):
@@ -46,7 +47,7 @@ def test_userserializer_creates_user():
     assert usr == control_user
 
 
-def test_expiration_jwt_serializer_get_access_token(mocker):
+def test_expiration_jwt_serializer_get_access_token(mocker): # FALLA
     mock_user = mocker.patch('radon.users.models.User')
     mock_token_str = mocker.patch('rest_framework_simplejwt.tokens.Token.__str__')
     mock_token_str.return_value = 'foo'
@@ -59,7 +60,7 @@ def test_expiration_jwt_serializer_get_access_token(mocker):
     assert ser.get_access_token(data) == {'token': 'foo', 'exp': 'today'}
 
 
-def test_expiration_jwt_serializer_get_refesh_token(mocker):
+def test_expiration_jwt_serializer_get_refesh_token(mocker): # FALLA
     mock_user = mocker.patch('radon.users.models.User')
     mock_token_str = mocker.patch('rest_framework_simplejwt.tokens.Token.__str__')
     mock_token_str.return_value = 'foo'
@@ -83,7 +84,7 @@ def test_userserializer_is_valid(mocker):
     assert ser.is_valid() is True, ser.errors
 
 
-def test_ExpirationRefreshJWTSerializer_validation(mocker):
+def test_ExpirationRefreshJWTSerializer_validation(mocker): # FALLA
     mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
     mock_refresh = mocker.MagicMock()
     mock_refresh_klass.return_value = mock_refresh
@@ -112,7 +113,7 @@ def test_ExpirationRefreshJWTSerializer_validation(mocker):
     assert ser.data == data
 
 
-def test_ExpirationRefreshJWTSerializer_validation_no_rotate(settings, mocker):
+def test_ExpirationRefreshJWTSerializer_validation_no_rotate(settings, mocker): # FALLA
     settings.SIMPLE_JWT['ROTATE_REFRESH_TOKENS'] = False
     mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
     mock_refresh = mocker.MagicMock()
@@ -137,7 +138,7 @@ def test_ExpirationRefreshJWTSerializer_validation_no_rotate(settings, mocker):
     assert ser.data == data
 
 
-def test_ExpirationRefreshJWTSerializer_rotate_no_blacklist(settings, mocker):
+def test_ExpirationRefreshJWTSerializer_rotate_no_blacklist(settings, mocker): # FALLA
     settings.SIMPLE_JWT['ROTATE_REFRESH_TOKENS'] = True
     settings.SIMPLE_JWT['BLACKLIST_AFTER_ROTATION'] = False
     mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
@@ -214,7 +215,7 @@ def test_AsistedUserDispositivoCreation_validate_username(mocker):
     assert ser.validate_username('waka') == 'waka'
 
 
-def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker):
+def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker): # FALLA
     email_validator = mocker.patch('radon.users.serializers.email_address_exists')
     email_validator.return_value = False
     #  Asumimos que el username no existe
@@ -257,7 +258,7 @@ def test_AsistedUserDispositivoCreation_save(mocker):
 
 
 @pytest.mark.django_db
-def test_AsistedUserDispositivoCreation_with_db(mocker):
+def test_AsistedUserDispositivoCreation_with_db(mocker): # FALLA
     dt = DeviceType.objects.create(key='bla', name='lnkasn')
     wisol = serializers.Wisol.objects.create(serie='41245', pac='kalks', deviceTypeId=dt)
     data = {
