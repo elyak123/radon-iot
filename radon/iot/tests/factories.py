@@ -2,7 +2,7 @@ import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
 from radon.iot import models
-from radon.users.tests.factories import UserFactory
+from radon.users.tests.factories import UserFactory, ConsumidorFactory
 from radon.georadon.tests.factories import MunicipioFactory, LocalidadFactory
 from radon.market.tests.factories import SucursalFactory
 
@@ -36,7 +36,7 @@ class DispositivoFactory(factory.django.DjangoModelFactory):
     capacidad = factory.LazyAttribute(lambda o: fake.random_element(
         elements=[120, 300, 500, 1000, 1600, 2200, 2800, 3400, 5000]
     ))
-    usuario = factory.SubFactory(UserFactory)
+    usuario = factory.SubFactory(ConsumidorFactory)
     location = factory.LazyAttribute(
         lambda o: 'POINT({} {})'.format(
             fake.coordinate(center=o.municipio.geo.centroid.x, radius=0.07),
