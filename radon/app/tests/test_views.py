@@ -4,6 +4,8 @@ from django_hosts.resolvers import reverse
 from django.conf import settings
 from radon.iot.tests import factories as iof
 from radon.users.tests import factories as uf
+from radon.georadon.tests import factories as geof
+from radon.market.tests import factories as mktf
 
 HOST = 'app'
 FQN = f'{HOST}.{settings.PARENT_HOST}'
@@ -146,3 +148,55 @@ def test_app_grafica_ok(tp):
     test_url = reverse('grafica', host=HOST)
     response = tp.client.get(test_url, SERVER_NAME=FQN)
     assert response.status_code == 200
+
+# Probando contextos........
+@pytest.mark.django_db
+def test_dashboard_context(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+
+    test_url = reverse('inicio', host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+    assert disp == response.context["dispositivo"]
+    assert response.context["ultima_lectura"] is None
+
+
+@pytest.mark.django_db
+def test_pedido_context(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+    localidad_2 = geof.LocalidadFactory()
+    precio = mktf.PrecioFactory(localidad=disp.localidad)
+    mktf.PrecioFactory(localidad=localidad_2)
+
+    test_arr = [
+        {
+         'sucursal_pk': precio.sucursal.pk,
+         'gasera': precio.sucursal.gasera.nombre,
+         'numeroPermiso': precio.sucursal.numeroPermiso,
+         'telefono': precio.sucursal.telefono
+        }
+    ]
+
+    test_url = reverse('pedido', host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+
+    assert [obj for obj in response.context["sucursales"]] == test_arr
+    assert response.context["dispositivo"] == disp
+
+
+@pytest.mark.django_db
+def test_pedido_post(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+    precio = mktf.PrecioFactory(localidad=disp.localidad)
+
+    data = {
+         'cantidad': 1000,
+         'dispositivo': disp.pk,
+         'sucursal': precio.sucursal.pk
+        }
+
+    test_url = reverse('pedido', host=HOST)
+    response = tp.client.post(test_url, data=data, SERVER_NAME=FQN)
+    assert True
