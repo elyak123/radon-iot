@@ -10,14 +10,18 @@ from radon.rutas.models import Pedido
 from radon.users.auth import ConsumidorAutenticationMixin
 
 
-class BaseTemplateSelector(ConsumidorAutenticationMixin):
+class BaseTemplateSelector(object):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["template"] = 'app/base.html'
         return context
 
 
-class DashboardView(BaseTemplateSelector, generic.TemplateView):
+class AppAuthBaseClass(ConsumidorAutenticationMixin, BaseTemplateSelector):
+    pass
+
+
+class DashboardView(AppAuthBaseClass, generic.TemplateView):
     template_name = "app/inicio.html"
 
     def get_context_data(self, **kwargs):
@@ -33,7 +37,7 @@ class RegisterView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/creacion-usuario.html"
 
 
-class PedidosView(BaseTemplateSelector, generic.TemplateView):
+class PedidosView(AppAuthBaseClass, generic.TemplateView):
     template_name = "app/pedidos.html"
 
     def get_context_data(self, **kwargs):
@@ -43,12 +47,12 @@ class PedidosView(BaseTemplateSelector, generic.TemplateView):
         return context
 
 
-class PedidoDetailView(BaseTemplateSelector, generic.DetailView):
+class PedidoDetailView(AppAuthBaseClass, generic.DetailView):
     template_name = "app/detalle-pedido.html"
     model = Pedido
 
 
-class PedidoView(BaseTemplateSelector, generic.TemplateView):
+class PedidoView(AppAuthBaseClass, generic.TemplateView):
     template_name = "app/pedido.html"
 
     def get_context_data(self, **kwargs):
@@ -76,7 +80,7 @@ class PedidoView(BaseTemplateSelector, generic.TemplateView):
         return redirect(reverse('inicio', host=self.request.host.regex))
 
 
-class GraphView(BaseTemplateSelector, generic.TemplateView):
+class GraphView(AppAuthBaseClass, generic.TemplateView):
     template_name = "app/grafica.html"
 
     def get_context_data(self, **kwargs):
