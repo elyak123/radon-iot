@@ -1,7 +1,7 @@
 from django.views import generic
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django_hosts.resolvers import reverse
 from radon.georadon.models import Localidad
 from radon.market.models import Sucursal
@@ -87,4 +87,23 @@ class GraphView(AppAuthBaseClass, generic.TemplateView):
         context = super(GraphView, self).get_context_data(**kwargs)
         dispositivo = self.request.user.dispositivo_set.first()
         context['dispositivo'] = dispositivo
+        return context
+
+
+class DispositivoDetailView(AppAuthBaseClass, generic.DetailView):
+    model = Dispositivo
+    template_name = "crm/dispositivo_detail.html"
+
+    def get_object(self, queryset=None):
+        self.object = get_object_or_404(
+            self.model,
+            wisol__serie=self.kwargs['serie'],
+            usuario=self.request.user
+        )
+        return self.object
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["lecturas"] = self.object.lecturas_ordenadas()[:10]
+        context["pedidos"] = self.object.pedidos_ordenados()[:10]
         return context

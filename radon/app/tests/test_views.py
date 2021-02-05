@@ -23,7 +23,7 @@ def do_user_dispositivo():
 @pytest.mark.django_db
 def test_app_inicio_no_logged_redirect_login(tp):
     test_url = reverse('inicio', host=HOST)
-    response = tp.client.get(test_url)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
     assert response.status_code == 302
 
 
@@ -84,7 +84,7 @@ def test_app_inicio_logged_ok(tp):
     tp.client.login(username=generic_username, password=generic_password)
 
     test_url = reverse('inicio', host=HOST)
-    response = tp.client.get(test_url)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
     assert response.status_code == 200
 
 
@@ -99,13 +99,23 @@ def test_app_pedido_logged_ok(tp):
 
 
 @pytest.mark.django_db
-def test_app_dispositivo_detail_not_my_dispositivo_unauthorized(tp):
+def test_app_dispositivo_detail_not_my_dispositivo_404(tp):
     disp = do_user_dispositivo()
     tp.client.login(username=generic_username, password=generic_password)
 
-    test_url = reverse('dispositivo_detail', kwargs={'serie': '45234'}, host=HOST)
+    test_url = reverse('dispositivo_detail', kwargs={'serie': '123456'}, host=HOST)
     response = tp.client.get(test_url, SERVER_NAME=FQN)
-    assert response.status_code == 403
+    assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_app_dispositivo_detail_my_dispositivo_ok(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+
+    test_url = reverse('dispositivo_detail', kwargs={'serie': disp.wisol.serie}, host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db

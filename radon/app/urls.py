@@ -1,8 +1,7 @@
 from django.urls import path, re_path, include
 from radon.app.views import (DashboardView, GraphView, RegisterView,
-                             PedidoView, PedidosView, PedidoDetailView)
+                             PedidoView, PedidosView, PedidoDetailView, DispositivoDetailView)
 from radon.operador.views import ChecarEmailView
-from radon.crm.views import DispositivoDetailView
 
 
 urlpatterns = [
