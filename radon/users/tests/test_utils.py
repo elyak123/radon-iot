@@ -10,7 +10,7 @@ def test_get_default_user_other(mocker, settings): # FALLA
         'objects.get_or_create.return_value': (mocker.MagicMock(spec=User, pk=2), True)
     }
     mock_user_klass = mocker.MagicMock(**attrs)
-    mocker.patch('radon.users.utils.get_user_model', return_value=mock_user_klass)
+    mocker.patch('radon.users.utils.Consumidor', return_value=mock_user_klass)
     assert utils.get_default_user() == 2
     mock_user_klass.objects.get_or_create.assert_called_once_with(username='foo')
 
