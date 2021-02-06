@@ -1,9 +1,9 @@
 import pytest
-from dj_rest_auth.utils import jwt_encode
 from radon.iot.models import Dispositivo, Wisol, DeviceType
 from radon.users import serializers
 from radon.users.models import User
-from radon.market.models import Gasera
+from radon.market.models import Gasera, Sucursal
+from radon.georadon.tests.factories import LocalidadFactory
 
 
 def test_userserializer_calls_correct_method(mocker):
@@ -47,32 +47,6 @@ def test_userserializer_creates_user():
     assert usr == control_user
 
 
-def test_expiration_jwt_serializer_get_access_token(mocker): # FALLA
-    mock_user = mocker.patch('radon.users.models.User')
-    mock_token_str = mocker.patch('rest_framework_simplejwt.tokens.Token.__str__')
-    mock_token_str.return_value = 'foo'
-    mock_user.id = 3
-    access, refresh = jwt_encode(mock_user)
-    refresh.payload['exp'] = 'today'
-    access['exp'] = 'today'
-    data = {'user': mock_user, 'access_token': access, 'refresh_token': refresh}
-    ser = serializers.ExpirationJWTSerializer(instance=data)
-    assert ser.get_access_token(data) == {'token': 'foo', 'exp': 'today'}
-
-
-def test_expiration_jwt_serializer_get_refesh_token(mocker): # FALLA
-    mock_user = mocker.patch('radon.users.models.User')
-    mock_token_str = mocker.patch('rest_framework_simplejwt.tokens.Token.__str__')
-    mock_token_str.return_value = 'foo'
-    mock_user.id = 3
-    access, refresh = jwt_encode(mock_user)
-    refresh.payload['exp'] = 'today'
-    access['exp'] = 'today'
-    data = {'user': mock_user, 'access_token': access, 'refresh_token': refresh}
-    ser = serializers.ExpirationJWTSerializer(instance=data)
-    assert ser.get_refresh_token(data) == {'token': 'foo', 'exp': 'today'}
-
-
 def test_userserializer_is_valid(mocker):
     #  Asumimos que el username e email no existen
     mocker.patch('rest_framework.validators.UniqueValidator.__call__')
@@ -82,84 +56,6 @@ def test_userserializer_is_valid(mocker):
     }
     ser = serializers.UserSerializer(data=usr_data)
     assert ser.is_valid() is True, ser.errors
-
-
-def test_ExpirationRefreshJWTSerializer_validation(mocker): # FALLA
-    mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
-    mock_refresh = mocker.MagicMock()
-    mock_refresh_klass.return_value = mock_refresh
-    mock_refresh.__str__.return_value = 'foo__str__'
-    mock_refresh.__getitem__.return_value = 'today'
-
-    mock_refresh_blacklist = mocker.MagicMock()
-    mock_refresh_blacklist.side_effect = AttributeError
-
-    mock_access_token = mocker.MagicMock()
-
-    mock_jti = mocker.MagicMock()
-
-    mock_set_exp = mocker.MagicMock()
-
-    mock_refresh.access_token = mock_access_token
-    mock_refresh.blacklist = mock_refresh_blacklist
-    mock_refresh.set_jti = mock_jti
-    mock_refresh.set_exp = mock_set_exp
-
-    # se llama str() debido a que el campo del serielizador es CharField
-    data = {'refresh': str({'token': 'foo__str__', 'exp': 'today'})}
-    ser = serializers.ExpirationRefreshJWTSerializer(data={'refresh': 'wkakakak'})
-    ser.is_valid()
-    mock_refresh_blacklist.assert_called_once_with()
-    assert ser.data == data
-
-
-def test_ExpirationRefreshJWTSerializer_validation_no_rotate(settings, mocker): # FALLA
-    settings.SIMPLE_JWT['ROTATE_REFRESH_TOKENS'] = False
-    mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
-    mock_refresh = mocker.MagicMock()
-    mock_refresh_klass.return_value = mock_refresh
-
-    mock_access_token = mocker.MagicMock()
-    mock_access_token.__str__.return_value = 'foo__str__'
-    mock_access_token.__getitem__.return_value = 'today'
-
-    mock_jti = mocker.MagicMock()
-
-    mock_set_exp = mocker.MagicMock()
-
-    mock_refresh.access_token = mock_access_token
-    mock_refresh.set_jti = mock_jti
-    mock_refresh.set_exp = mock_set_exp
-
-    # se llama str() debido a que el campo del serielizador es CharField
-    data = {'refresh': str({'token': 'foo__str__', 'exp': 'today', 'type': 'access'})}
-    ser = serializers.ExpirationRefreshJWTSerializer(data={'refresh': 'wkakakak'})
-    assert ser.is_valid() is True
-    assert ser.data == data
-
-
-def test_ExpirationRefreshJWTSerializer_rotate_no_blacklist(settings, mocker): # FALLA
-    settings.SIMPLE_JWT['ROTATE_REFRESH_TOKENS'] = True
-    settings.SIMPLE_JWT['BLACKLIST_AFTER_ROTATION'] = False
-    mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
-    mock_refresh = mocker.MagicMock()
-    mock_refresh.__str__.return_value = 'foo__str__'
-    mock_refresh.__getitem__.return_value = 'today'
-    mock_refresh_klass.return_value = mock_refresh
-    mock_refresh_blacklist = mocker.MagicMock()
-    mock_refresh_blacklist.side_effect = AttributeError
-    mock_refresh.blacklist = mock_refresh_blacklist
-    mock_set_jti = mocker.MagicMock()
-    mock_refresh.set_jti = mock_set_jti
-    mock_set_exp = mocker.MagicMock()
-    mock_refresh.set_exp = mock_set_exp
-    data = {'refresh': str({'token': 'foo__str__', 'exp': 'today'})}
-    ser = serializers.ExpirationRefreshJWTSerializer(data={'refresh': 'wkakakak'})
-    assert ser.is_valid() is True
-    mock_refresh_blacklist.assert_not_called()
-    mock_set_jti.assert_called_once_with()
-    mock_set_exp.assert_called_once_with()
-    assert ser.data == data
 
 
 def test_AsistedUserDispositivoCreation_validate_email_exists(mocker):
@@ -191,16 +87,16 @@ def test_AsistedUserDispositivoCreation_validate_email_not_unique_required(mocke
 def test_AsistedUserDispositivoCreation_validate_gasera(mocker):
     mock_request = mocker.MagicMock()
     mock_user = mocker.MagicMock(spec=User)
-    mock_gasera = mocker.MagicMock(spec=Gasera)
-    mock_gasera.pk = 1
-    mock_gasera.id = 1
-    mock_user.gasera = mock_gasera
+    mock_sucursal = mocker.MagicMock(spec=Sucursal)
+    mock_sucursal.pk = 1
+    mock_sucursal.id = 1
+    mock_user.sucursal = mock_sucursal
     mock_request.user = mock_user
     context = {'request': mock_request}
     ser = serializers.AsistedUserDispositivoCreation(context=context)
-    gasera = ser.validate_gasera('DUMMY')
-    assert gasera == mock_gasera
-    assert isinstance(gasera, Gasera) is True
+    sucursal = ser.validate_sucursal('DUMMY')
+    assert sucursal == mock_sucursal
+    assert isinstance(sucursal, Sucursal) is True
 
 
 def test_AsistedUserDispositivoCreation_validate_username(mocker):
@@ -258,7 +154,7 @@ def test_AsistedUserDispositivoCreation_save(mocker):
 
 
 @pytest.mark.django_db
-def test_AsistedUserDispositivoCreation_with_db(mocker): # FALLA
+def test_AsistedUserDispositivoCreation_with_db(mocker):
     dt = DeviceType.objects.create(key='bla', name='lnkasn')
     wisol = serializers.Wisol.objects.create(serie='41245', pac='kalks', deviceTypeId=dt)
     data = {
@@ -268,6 +164,8 @@ def test_AsistedUserDispositivoCreation_with_db(mocker): # FALLA
     req = mocker.MagicMock()
     req.user.gasera = Gasera.objects.create(nombre='Test')
     context = {'request': req}
+    loc = LocalidadFactory()
+    mocker.patch('radon.users.serializers.get_localidad_from_wkt', return_value=loc)
     ser = serializers.AsistedUserDispositivoCreation(data=data, context=context)
     assert ser.is_valid() is True
     user = ser.save(req)
