@@ -4,6 +4,7 @@ from radon.users import serializers
 from radon.users.models import User
 from radon.market.models import Gasera, Sucursal
 from radon.georadon.tests.factories import LocalidadFactory
+from radon.georadon.models import Localidad, Municipio
 
 
 def test_userserializer_calls_correct_method(mocker):
@@ -111,11 +112,16 @@ def test_AsistedUserDispositivoCreation_validate_username(mocker):
     assert ser.validate_username('waka') == 'waka'
 
 
-def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker): # FALLA
+def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker):
     email_validator = mocker.patch('radon.users.serializers.email_address_exists')
     email_validator.return_value = False
     #  Asumimos que el username no existe
     get_adapter = mocker.patch('radon.users.serializers.get_adapter')
+    mock_loc = mocker.MagicMock(spec=Localidad)
+    moc_municipio = mocker.MagicMock(spec=Municipio)
+    mock_sucursal = mocker.MagicMock(spec=Sucursal)
+    mocker.patch('radon.users.serializers.get_localidad_from_wkt', return_value=mock_loc)
+    mock_loc.municipio = moc_municipio
     adapter = mocker.MagicMock()
     get_adapter.return_value = adapter
     clean_username = mocker.MagicMock()
@@ -123,16 +129,19 @@ def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker): # FALLA
     adapter.clean_username = clean_username
     ser = serializers.AsistedUserDispositivoCreation()
     ser.wisol = '41235'
-    mock_gasera = mocker.MagicMock()
     ser._validated_data = {
         'username': 'bla', 'email': 'yo@yo.com', 'tipo': 'CONSUMIDOR', 'pwdtemporal': True,
-        'gasera': mock_gasera, 'location': 'POINT(133.1234 -122.344)', 'capacidad': 123
+        'sucursal': mock_sucursal, 'location': 'POINT(133.1234 -122.344)', 'capacidad': 123
     }
     control_user = {
         'username': 'bla', 'email': 'yo@yo.com', 'tipo': 'CONSUMIDOR', 'pwdtemporal': True,
-        'gasera': mock_gasera,
     }
-    contorl_disp = {'location': 'POINT(133.1234 -122.344)', 'capacidad': 123, 'wisol': '41235'}
+    contorl_disp = {
+        'location': 'POINT(133.1234 -122.344)',
+        'capacidad': 123, 'wisol': '41235',
+        'sucursal': mock_sucursal,
+        'localidad': mock_loc, 'municipio': moc_municipio
+    }
     assert ser.get_cleaned_data() == (control_user, contorl_disp)
 
 

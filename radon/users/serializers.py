@@ -125,7 +125,7 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
     location = GeometryField(precision=14)
     capacidad = serializers.IntegerField(required=False)
 
-    def validate_sucursal(self, gasera):
+    def validate_sucursal(self, sucursal):
         if hasattr(self.context['request'].user, 'sucursal'):
             return self.context['request'].user.sucursal
         else:
@@ -141,7 +141,7 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
         disp_data = {
             'wisol': self.wisol,
             'location': self.validated_data.get('location', ''),
-            'sucursal': self.validated_data.get('gasera', None),
+            'sucursal': self.validated_data.get('sucursal', None),
             'capacidad': self.validated_data.get('capacidad', None)
         }
         loc = get_localidad_from_wkt(self.validated_data.get('location'))
