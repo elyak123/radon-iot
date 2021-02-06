@@ -92,7 +92,7 @@ class GraphView(AppAuthBaseClass, generic.TemplateView):
 
 class DispositivoDetailView(AppAuthBaseClass, generic.DetailView):
     model = Dispositivo
-    template_name = "crm/dispositivo_detail.html"
+    template_name = "app/dispositivo_detail.html"
 
     def get_object(self, queryset=None):
         self.object = get_object_or_404(

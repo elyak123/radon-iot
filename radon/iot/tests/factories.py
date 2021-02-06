@@ -63,8 +63,8 @@ class InstalacionFactory(factory.django.DjangoModelFactory):
 
 class LecturaFactory(factory.django.DjangoModelFactory):
     fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
-    # porcentaje = 
-    nivel = factory.LazyAttribute(lambda o: fake.random_int(min=15, max=87))
+    porcentaje = factory.LazyAttribute(lambda o: fake.random_int(min=15, max=87))
+    sensor = factory.LazyAttribute(lambda o: fake.random_int(min=0, max=4095))
     dispositivo = factory.SubFactory(DispositivoFactory)
 
     class Meta:

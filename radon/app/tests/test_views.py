@@ -6,6 +6,10 @@ from radon.iot.tests import factories as iof
 from radon.users.tests import factories as uf
 from radon.georadon.tests import factories as geof
 from radon.market.tests import factories as mktf
+from radon.rutas.tests import factories as rutf
+from radon.iot.tests import factories as iotf
+from radon.rutas.models import Pedido
+from radon.iot.models import Lectura
 
 HOST = 'app'
 FQN = f'{HOST}.{settings.PARENT_HOST}'
@@ -162,6 +166,36 @@ def test_dashboard_context(tp):
 
 
 @pytest.mark.django_db
+def test_graph_context(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+
+    test_url = reverse('grafica', host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+    assert disp == response.context["dispositivo"]
+
+
+@pytest.mark.django_db
+def test_dispositivo_detail_context(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+    rutf.PedidoFactory(dispositivo=disp)
+    rutf.PedidoFactory(dispositivo=disp)
+    pedido = rutf.PedidoFactory()
+    iotf.LecturaFactory(dispositivo=disp)
+    iotf.LecturaFactory(dispositivo=disp)
+    iotf.LecturaFactory(dispositivo=pedido.dispositivo)
+    pedidos = disp.pedido_set.all().select_related('precio').select_related('jornada').order_by('-jornada__fecha')
+    lecturas = disp.lectura_set.order_by('-fecha')
+
+    test_url = reverse('dispositivo_detail', kwargs={'serie': disp.wisol.serie}, host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+
+    assert set(pedidos) == set(response.context["pedidos"])
+    assert set(lecturas) == set(response.context["lecturas"])
+
+
+@pytest.mark.django_db
 def test_pedido_context(tp):
     disp = do_user_dispositivo()
     tp.client.login(username=generic_username, password=generic_password)
@@ -186,7 +220,7 @@ def test_pedido_context(tp):
 
 
 @pytest.mark.django_db
-def test_pedido_post(tp):
+def test_pedido_post_no_problem(tp):
     disp = do_user_dispositivo()
     tp.client.login(username=generic_username, password=generic_password)
     precio = mktf.PrecioFactory(localidad=disp.localidad)
@@ -199,4 +233,42 @@ def test_pedido_post(tp):
 
     test_url = reverse('pedido', host=HOST)
     response = tp.client.post(test_url, data=data, SERVER_NAME=FQN)
-    assert True
+
+    from django.contrib.messages import get_messages
+
+    messages = [m.message for m in get_messages(response.wsgi_request)]
+    mensajes_test = [
+        'El pedido ha sido realizado.'
+    ]
+
+    pedido = Pedido.objects.last()
+
+    assert pedido.dispositivo == disp
+    assert pedido.cantidad == 1000
+    assert messages == mensajes_test
+
+
+@pytest.mark.django_db
+def test_pedido_post_no_valid(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+    precio = mktf.PrecioFactory(localidad=disp.localidad)
+
+    data = {
+         'cantidad': '',
+         'dispositivo': disp.pk,
+         'sucursal': precio.sucursal.pk
+        }
+
+    test_url = reverse('pedido', host=HOST)
+    response = tp.client.post(test_url, data=data, SERVER_NAME=FQN)
+
+    from django.contrib.messages import get_messages
+
+    messages = [m.message for m in get_messages(response.wsgi_request)]
+    mensajes_test = [
+        'Ha ocurrido un error con la solicitud, vuelve a intentarlo.'
+    ]
+
+    assert response.status_code == 302
+    assert messages == mensajes_test
