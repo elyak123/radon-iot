@@ -28,7 +28,7 @@ class User(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
-        if not self.pk:
+        if not self.pk and not issubclass(User, self.__class__):
             self.tipo = self.base_type
         return super().save(*args, **kwargs)
 
