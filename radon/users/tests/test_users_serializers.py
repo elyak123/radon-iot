@@ -2,7 +2,8 @@ import pytest
 from radon.iot.models import Dispositivo, Wisol, DeviceType
 from radon.users import serializers
 from radon.users.models import User
-from radon.market.models import Gasera, Sucursal
+from radon.market.models import Sucursal
+from radon.market.tests.factories import SucursalFactory
 from radon.georadon.tests.factories import LocalidadFactory
 from radon.georadon.models import Localidad, Municipio
 
@@ -171,7 +172,7 @@ def test_AsistedUserDispositivoCreation_with_db(mocker):
         'location': 'POINT(122.123455 -133.1235)', 'capacidad': 122, 'wisol': wisol.serie
     }
     req = mocker.MagicMock()
-    req.user.gasera = Gasera.objects.create(nombre='Test')
+    req.user.sucursal = SucursalFactory()
     context = {'request': req}
     loc = LocalidadFactory()
     mocker.patch('radon.users.serializers.get_localidad_from_wkt', return_value=loc)
