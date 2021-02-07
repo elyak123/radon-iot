@@ -28,8 +28,8 @@ def test_expiration_jwt_serializer_get_refesh_token(mocker): # FALLA
     assert ser.get_refresh_token(data) == {'token': 'foo', 'exp': 'today'}
 
 
-def test_ExpirationRefreshJWTSerializer_validation(mocker): # FALLA
-    mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
+def test_ExpirationRefreshJWTSerializer_validation(mocker):
+    mock_refresh_klass = mocker.patch('radon.api.serializers.RefreshToken')
     mock_refresh = mocker.MagicMock()
     mock_refresh_klass.return_value = mock_refresh
     mock_refresh.__str__.return_value = 'foo__str__'
@@ -57,9 +57,9 @@ def test_ExpirationRefreshJWTSerializer_validation(mocker): # FALLA
     assert ser.data == data
 
 
-def test_ExpirationRefreshJWTSerializer_validation_no_rotate(settings, mocker): # FALLA
+def test_ExpirationRefreshJWTSerializer_validation_no_rotate(settings, mocker):
     settings.SIMPLE_JWT['ROTATE_REFRESH_TOKENS'] = False
-    mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
+    mock_refresh_klass = mocker.patch('radon.api.serializers.RefreshToken')
     mock_refresh = mocker.MagicMock()
     mock_refresh_klass.return_value = mock_refresh
 
@@ -82,10 +82,10 @@ def test_ExpirationRefreshJWTSerializer_validation_no_rotate(settings, mocker): 
     assert ser.data == data
 
 
-def test_ExpirationRefreshJWTSerializer_rotate_no_blacklist(settings, mocker): # FALLA
+def test_ExpirationRefreshJWTSerializer_rotate_no_blacklist(settings, mocker):
     settings.SIMPLE_JWT['ROTATE_REFRESH_TOKENS'] = True
     settings.SIMPLE_JWT['BLACKLIST_AFTER_ROTATION'] = False
-    mock_refresh_klass = mocker.patch('radon.users.serializers.RefreshToken')
+    mock_refresh_klass = mocker.patch('radon.api.serializers.RefreshToken')
     mock_refresh = mocker.MagicMock()
     mock_refresh.__str__.return_value = 'foo__str__'
     mock_refresh.__getitem__.return_value = 'today'

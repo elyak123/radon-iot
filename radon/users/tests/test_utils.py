@@ -4,19 +4,22 @@ from radon.market.models import Gasera
 from radon.iot.models import Dispositivo, Wisol
 
 
-def test_get_default_user_other(mocker, settings): # FALLA
+def test_get_default_user_other(mocker, settings):
     settings.DEFAULT_USERNAME = 'foo'
+    mock_usr = mocker.MagicMock(spec=User)
+    mock_usr.pk = 2
     attrs = {
-        'objects.get_or_create.return_value': (mocker.MagicMock(spec=User, pk=2), True)
+        'objects.get.return_value': mock_usr
     }
-    mock_user_klass = mocker.MagicMock(**attrs)
-    mocker.patch('radon.users.utils.Consumidor', return_value=mock_user_klass)
+    mock_user_klass = mocker.MagicMock()
+    mock_user_klass.configure_mock(**attrs)
+    mocker.patch('radon.users.utils.User', mock_user_klass)
     assert utils.get_default_user() == 2
-    mock_user_klass.objects.get_or_create.assert_called_once_with(username='foo')
+    mock_user_klass.objects.get.assert_called_once_with(username='foo')
 
 
-def test_create_user_and_dispositivo(mocker): # FALLA
-    mocker.patch('radon.users.models.Gasera')
+def test_create_user_and_dispositivo(mocker):
+    mocker.patch('radon.market.models.Gasera')
     usr = mocker.MagicMock(spec=User, pk=2)
     usr_save = mocker.MagicMock()
     usr.save = usr_save
@@ -37,13 +40,12 @@ def test_create_user_and_dispositivo(mocker): # FALLA
         'capacidad': 122
     }
     mock_user_klass = mocker.MagicMock(**attrs)
-    usr_getter = mocker.patch('radon.users.utils.get_user_model', return_value=mock_user_klass)
+    mocker.patch('radon.users.utils.User', mock_user_klass)
     mock_disp = mocker.patch('radon.iot.models.Dispositivo')
     disp_instance = mocker.MagicMock(spec=Dispositivo, pk=4)
     disp_attrs = {'objects.create.return_value': disp_instance}
     mock_disp.configure_mock(**disp_attrs)
     user, dispositivo = utils.create_user_and_dispositivo(user_data, disp_data)
-    usr_getter.assert_called_once_with()
     assert isinstance(user, User) is True
     assert user.pk == 2
     assert dispositivo.pk == 4
