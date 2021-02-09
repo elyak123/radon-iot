@@ -1,6 +1,8 @@
+import pytz
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from radon.iot import models
 from radon.users.tests.factories import UserFactory, ConsumidorFactory
 from radon.georadon.tests.factories import MunicipioFactory, LocalidadFactory
@@ -8,6 +10,7 @@ from radon.market.tests.factories import SucursalFactory
 
 User = get_user_model()
 fake = Faker(['es_MX'])
+tz = pytz.timezone(settings.TIME_ZONE)
 
 
 class DeviceTypeFactory(factory.django.DjangoModelFactory):
@@ -53,7 +56,7 @@ class DispositivoFactory(factory.django.DjangoModelFactory):
 
 
 class InstalacionFactory(factory.django.DjangoModelFactory):
-    fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
+    fecha = factory.LazyAttribute(lambda o: fake.date_time_this_month(tzinfo=tz))
     operario = factory.SubFactory(UserFactory, tipo='OPERARIO')
     consumidor = factory.SubFactory(UserFactory, tipo='CONSUMIDOR')
 
@@ -62,7 +65,7 @@ class InstalacionFactory(factory.django.DjangoModelFactory):
 
 
 class LecturaFactory(factory.django.DjangoModelFactory):
-    fecha = factory.LazyAttribute(lambda o: fake.date_this_month())
+    fecha = factory.LazyAttribute(lambda o: fake.date_time_this_month(tzinfo=tz))
     porcentaje = factory.LazyAttribute(lambda o: fake.random_int(min=15, max=87))
     sensor = factory.LazyAttribute(lambda o: fake.random_int(min=0, max=4095))
     dispositivo = factory.SubFactory(DispositivoFactory)

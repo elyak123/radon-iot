@@ -9,7 +9,6 @@ from radon.market.tests import factories as mktf
 from radon.rutas.tests import factories as rutf
 from radon.iot.tests import factories as iotf
 from radon.rutas.models import Pedido
-from radon.iot.models import Lectura
 
 HOST = 'app'
 FQN = f'{HOST}.{settings.PARENT_HOST}'
