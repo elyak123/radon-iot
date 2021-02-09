@@ -2,6 +2,7 @@
 import pytest
 from django_hosts.resolvers import reverse
 from django.conf import settings
+from django.contrib.messages import get_messages
 from radon.iot.tests import factories as iof
 from radon.users.tests import factories as uf
 from radon.georadon.tests import factories as geof
@@ -233,8 +234,6 @@ def test_pedido_post_no_problem(tp):
     test_url = reverse('pedido', host=HOST)
     response = tp.client.post(test_url, data=data, SERVER_NAME=FQN)
 
-    from django.contrib.messages import get_messages
-
     messages = [m.message for m in get_messages(response.wsgi_request)]
     mensajes_test = [
         'El pedido ha sido realizado.'
@@ -261,8 +260,6 @@ def test_pedido_post_no_valid(tp):
 
     test_url = reverse('pedido', host=HOST)
     response = tp.client.post(test_url, data=data, SERVER_NAME=FQN)
-
-    from django.contrib.messages import get_messages
 
     messages = [m.message for m in get_messages(response.wsgi_request)]
     mensajes_test = [

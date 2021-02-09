@@ -28,10 +28,6 @@ class CreacionUsuarioView(OperadorTemplateSelector, generic.TemplateView):
     template_name = "operador/creacion-usuario.html"
 
 
-class TestQRView(OperadorTemplateSelector, generic.TemplateView):
-    template_name = "operador/test-qr.html"
-
-
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def ChecarEmailView(request):
