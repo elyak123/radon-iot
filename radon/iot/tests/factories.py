@@ -59,6 +59,7 @@ class InstalacionFactory(factory.django.DjangoModelFactory):
     fecha = factory.LazyAttribute(lambda o: fake.date_time_this_month(tzinfo=tz))
     operario = factory.SubFactory(UserFactory, tipo='OPERARIO')
     consumidor = factory.SubFactory(UserFactory, tipo='CONSUMIDOR')
+    folio = factory.fuzzy.FuzzyText(length=10)
 
     class Meta:
         model = models.Instalacion

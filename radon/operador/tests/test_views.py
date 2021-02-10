@@ -3,6 +3,7 @@ from django_hosts.resolvers import reverse
 from django.conf import settings
 from radon.iot.tests import factories as iof
 from radon.users.tests import factories as uf
+from radon.iot.models import Instalacion
 
 HOST = 'operador'
 FQN = f'{HOST}.{settings.PARENT_HOST}'
@@ -78,3 +79,15 @@ def test_email_taken(tp):
     test_url = reverse('checar-email', host=HOST)
     response = tp.client.post(test_url, data=data, SERVER_NAME=FQN)
     assert response.status_code == 400
+
+
+@pytest.mark.django_db
+def test_operador_inicio_queryset(tp):
+    user = do_operador()
+    iof.InstalacionFactory(operario=user)
+    iof.InstalacionFactory(operario=user)
+    iof.InstalacionFactory()
+    tp.client.login(username=generic_username, password=generic_password)
+    test_url = reverse('inicio', host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+    assert set(Instalacion.objects.filter(operario=user).order_by('-fecha')) == set(response.context["object_list"])
