@@ -2,13 +2,11 @@ from django.conf import settings
 from django.http.request import HttpRequest
 from django_hosts.resolvers import reverse
 from rest_framework.response import Response
-from rest_framework.test import force_authenticate
 import pytest
 from test_plus.test import CBVTestCase
-from radon.users.tests.factories import ConsumidorFactory
+from radon.users.tests.factories import ConsumidorFactory, UserClientFactory
 from radon.api import views
 from radon.api import serializers
-from radon.api import permissions
 
 HOST = 'api'
 FQN = f'{HOST}.{settings.PARENT_HOST}'
@@ -47,10 +45,18 @@ def test_api_localidades_dispositivos(mocker):
 
 
 @pytest.mark.django_db
-def test_permission_checkAPILeadsView(tp):
+def test_permission_checkAPILeadsView_consumdor_denied(client):
     usr = ConsumidorFactory(password='123inhackeable')
     test_url = reverse('leads', host=HOST)
-    tp.login(username=usr.username, password='123inhackeable')
-    request = tp.client.get(test_url, SERVER_NAME=FQN)
-    import pdb; pdb.set_trace()
-    force_authenticate(request, user=usr)
+    client.login(username=usr.username, password='123inhackeable')
+    request = client.get(test_url, SERVER_NAME=FQN)
+    assert request.status_code == 403
+
+
+@pytest.mark.django_db
+def test_permission_checkAPILeadsView_200_cliente(client):  # falla
+    usr = UserClientFactory(password='123inhackeable')
+    test_url = reverse('leads', host=HOST)
+    client.login(username=usr.username, password='123inhackeable')
+    request = client.get(test_url, SERVER_NAME=FQN)
+    assert request.status_code == 200
