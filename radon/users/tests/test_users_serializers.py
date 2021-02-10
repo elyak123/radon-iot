@@ -101,6 +101,17 @@ def test_AsistedUserDispositivoCreation_validate_gasera(mocker):
     assert isinstance(sucursal, Sucursal) is True
 
 
+def test_AsistedUserDispositivoCreation_validate_gasera_None(mocker):
+    mock_request = mocker.MagicMock()
+    mock_user = mocker.MagicMock(spec=User)
+    del mock_user.sucursal
+    mock_request.user = mock_user
+    context = {'request': mock_request}
+    ser = serializers.AsistedUserDispositivoCreation(context=context)
+    sucursal = ser.validate_sucursal('DUMMY')
+    assert sucursal is None
+
+
 def test_AsistedUserDispositivoCreation_validate_username(mocker):
     #  Asumimos que el username no existe
     get_adapter = mocker.patch('radon.users.serializers.get_adapter')
