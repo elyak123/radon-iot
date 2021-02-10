@@ -12,6 +12,7 @@ from rest_framework.generics import ListAPIView
 from dj_rest_auth.registration.views import RegisterView
 from radon.users import serializers
 from radon.users import forms as uf
+from radon.users.models import Cliente
 
 
 User = get_user_model()
@@ -61,7 +62,7 @@ class LeadsView(ListAPIView):
     serializer_class = serializers.LeadSerializer
 
     def get_queryset(self):
-        return User.especial.leads(self.request.user.gasera).order_by('ultima_lectura')
+        return Cliente.objects.leads(self.request.user.sucursal).order_by('ultima_lectura')
 
 
 class UserViewSet(viewsets.ModelViewSet):
