@@ -54,7 +54,8 @@ def test_permission_checkAPILeadsView_consumdor_denied(client):
 
 
 @pytest.mark.django_db
-def test_permission_checkAPILeadsView_200_cliente(client):  # falla
+def test_permission_checkAPILeadsView_200_cliente(client, mocker):
+    mocker.patch('radon.users.views.LeadsView.get_queryset')
     usr = UserClientFactory(password='123inhackeable')
     test_url = reverse('leads', host=HOST)
     client.login(username=usr.username, password='123inhackeable')
