@@ -2,6 +2,7 @@ import pytest
 from radon.iot.models import Dispositivo, Wisol, DeviceType
 from radon.users import serializers
 from radon.users.models import User
+from radon.users.tests.factories import ConsumidorFactory
 from radon.market.models import Sucursal
 from radon.market.tests.factories import SucursalFactory
 from radon.georadon.tests.factories import LocalidadFactory
@@ -132,7 +133,7 @@ def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker):
     mock_loc = mocker.MagicMock(spec=Localidad)
     moc_municipio = mocker.MagicMock(spec=Municipio)
     mock_sucursal = mocker.MagicMock(spec=Sucursal)
-    mocker.patch('radon.users.serializers.get_localidad_from_wkt', return_value=mock_loc)
+    mock_wkt = mocker.patch('radon.users.serializers.get_localidad_from_wkt', return_value=mock_loc)
     mock_loc.municipio = moc_municipio
     adapter = mocker.MagicMock()
     get_adapter.return_value = adapter
@@ -155,6 +156,7 @@ def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker):
         'localidad': mock_loc, 'municipio': moc_municipio
     }
     assert ser.get_cleaned_data() == (control_user, contorl_disp)
+    mock_wkt.assert_called_once_with('POINT(133.1234 -122.344)')
 
 
 def test_AsistedUserDispositivoCreation_save(mocker):
@@ -193,6 +195,32 @@ def test_AsistedUserDispositivoCreation_with_db(mocker):
     assert isinstance(user, User) is True
     assert user.has_usable_password() is False
     assert isinstance(user.pk, int) is True
+
+
+def test_Temporal_Pass_User(mocker):
+    mock_super_rep = mocker.patch('radon.users.serializers.AsistedUserDispositivoCreation.to_representation')
+    mock_super_rep.return_value = {}
+    mock_create_user_pass = mocker.patch('radon.users.serializers.create_user_password')
+    mock_loc = mocker.patch('radon.users.serializers.get_localidad_from_wkt')
+    mock_loc.return_value = mocker.MagicMock(spec=Localidad)
+    mock_create_user_pass.return_value = 'blabla'
+    usr = mocker.MagicMock(password='blabla')
+    data = {
+        'username': usr.username, 'email': usr.email, 'telefono': '3312345622',
+        'location': 'POINT(122.123455 -133.1235)', 'capacidad': 122, 'wisol': '41235'
+    }
+    req = mocker.MagicMock()
+    req.user.sucursal = mocker.MagicMock(spec=Sucursal)
+    context = {'request': req}
+    ser = serializers.TemporalPassUserDispsitivoCreation(data=data, context=context)
+    ser.wisol = '41235'
+    ser._validated_data = data
+    ser.get_cleaned_data()
+    rep = ser.to_representation(usr)
+    assert rep['password'] == 'blabla'
+    mock_create_user_pass.assert_called_once_with()
+    mock_super_rep.assert_called_once()
+    mock_loc.assert_called_once_with('POINT(122.123455 -133.1235)')
 
 
 def test_ActivateUsers_validate_email_doesnot_exist(mocker):
