@@ -1,7 +1,7 @@
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
-from radon.users.tests.factories import UserFactory
+from radon.users.tests.factories import UserFactory, StaffFactory
 from radon.market.tests.factories import PrecioFactory, SucursalFactory
 from radon.iot.tests.factories import DispositivoFactory
 from radon.rutas import models
@@ -55,3 +55,13 @@ class PedidoFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = models.Pedido
+
+
+class MensajeFactory(factory.django.DjangoModelFactory):
+    autor = factory.SubFactory(StaffFactory)
+    texto = factory.fuzzy.FuzzyText(length=10)
+    pedido = factory.SubFactory(PedidoFactory)
+    publicacion = factory.LazyAttribute(lambda o: fake.date_this_month())
+
+    class Meta:
+        model = models.Mensaje

@@ -4,7 +4,7 @@ from faker import Faker
 from django.contrib.auth import get_user_model
 from unidecode import unidecode
 from radon.market.tests.factories import SucursalFactory
-from radon.users.models import Consumidor, Operador
+from radon.users.models import Consumidor, Operador, Staff
 
 User = get_user_model()
 fake = Faker(['es_MX'])
@@ -35,6 +35,12 @@ class ConsumidorFactory(UserFactory):
 class OperadorFactory(UserFactory):
     class Meta:
         model = Operador
+        django_get_or_create = ('username',)
+
+
+class StaffFactory(UserFactory):
+    class Meta:
+        model = Staff
         django_get_or_create = ('username',)
 
 

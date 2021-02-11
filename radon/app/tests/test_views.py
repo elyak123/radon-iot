@@ -128,6 +128,8 @@ def test_app_dispositivo_detail_my_dispositivo_ok(tp):
 def test_app_pedidos_logged_ok(tp):
     disp = do_user_dispositivo()
     tp.client.login(username=generic_username, password=generic_password)
+    pedido = rutf.PedidoFactory(dispositivo=disp)
+    rutf.MensajeFactory(pedido=pedido)
 
     test_url = reverse('pedidos', host=HOST)
     response = tp.client.get(test_url, SERVER_NAME=FQN)
@@ -142,6 +144,31 @@ def test_app_pedido_detail_logged_not_found(tp):
     test_url = reverse('detalle-pedido', kwargs={'pk': 1}, host=HOST)
     response = tp.client.get(test_url, SERVER_NAME=FQN)
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_app_pedido_detail_logged_ok(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+    pedido = rutf.PedidoFactory(dispositivo=disp)
+
+    test_url = reverse('detalle-pedido', kwargs={'pk': pedido.pk}, host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_app_pedido_detail_correct_obj(tp):
+    disp = do_user_dispositivo()
+    tp.client.login(username=generic_username, password=generic_password)
+    pedido = rutf.PedidoFactory(dispositivo=disp)
+    rutf.PedidoFactory(dispositivo=disp)
+    rutf.MensajeFactory(pedido=pedido)
+
+    test_url = reverse('detalle-pedido', kwargs={'pk': pedido.pk}, host=HOST)
+    response = tp.client.get(test_url, SERVER_NAME=FQN)
+    objeto_response = response.context["object"]
+    assert objeto_response == pedido
 
 
 @pytest.mark.django_db
