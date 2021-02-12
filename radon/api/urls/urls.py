@@ -3,6 +3,12 @@ from django.urls import path, include
 app_name = 'api'
 
 urlpatterns = [
+
+    ####################################################
+    # ####    U R L S   A P I   P U B L I C A      #####
+    ####################################################
+
+
     ####################
     #  URLS PARA IOT #
     ####################
@@ -33,4 +39,18 @@ urlpatterns = [
     ################################
     path('auth/', include('radon.api.urls.authurls')),
 
+
+    ####################################################
+    # ####    U R L S   A P I   P R I V A D A      #####
+    ####################################################
+
+    #############################
+    #  URLS PARA APP CONSUMIDOR #
+    #############################
+    path('app/', include('radon.app.apiurls')),
+
+    ###########################
+    #  URLS PARA CRM CLIENTES #
+    ###########################
+    path('crm/', include('radon.crm.apiurls')),
 ]
