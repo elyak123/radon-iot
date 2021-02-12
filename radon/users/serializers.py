@@ -141,8 +141,12 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
         disp_data = {
             'wisol': self.wisol,
             'location': self.validated_data.get('location', ''),
-            'sucursal': self.validated_data.get('sucursal', None),
-            'capacidad': self.validated_data.get('capacidad', None)
+            'sucursal': self.validated_data.get('gasera', None),
+            'capacidad': self.validated_data.get('capacidad', None),
+            'calle': self.validated_data.get('calle', ''),
+            'numero': self.validated_data.get('numero', ''),
+            'cp': self.validated_data.get('cp', ''),
+            'colonia': self.validated_data.get('colonia', '')
         }
         loc = get_localidad_from_wkt(self.validated_data.get('location'))
         disp_data['localidad'] = loc
