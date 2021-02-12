@@ -61,11 +61,8 @@
         </div>
         <div id="step-3" class="d-none">
             <!-- if django: Sólo para usuario normal -->
-            <h1 class="starting-text"><b>Lee el código QR</b></h1>
-            <div id="scanner">
-            </div>
+            <h1 class="starting-text"><b>Escribe el código del dispositivo</b></h1>
             <label for="scannedTextMemo"><b>ID</b></label><br>
-            <i id="mensaje-problemas" class="d-none">¿Tiene problemas para leer el código?, escríbalo directamente:</i>
             <input class="form-control" type="text" name="" id="scannedTextMemo" disabled="true">
         </div>
         <div id="step-4" class="d-none">
@@ -88,26 +85,27 @@
                         <input class="form-control" type="text" name="lon" id="lon" disabled>
                     </div>
                 </div>
-                <div>
-                    <div class="form-group">
-                        <label for="direccion"></label>
-                        <input type="text" name="direccion" id="direccion" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="numero"></label>
-                        <input type="text" name="numero" id="numero" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="colonia"></label>
-                        <input type="text" name="colonia" id="colonia" class="form-control">
-                    </div>
-                    <div class="form-group">
-                        <label for="cp"></label>
-                        <input type="text" name="cp" id="cp" class="form-control">
-                    </div>
+            </div>
+            <div>
+                <h3>Dirección completa:</h3>
+                <div class="form-group">
+                    <label for="direccion">Calle</label>
+                    <input type="text" name="calle" id="calle" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="numero">Número Int. y/o Ext.</label>
+                    <input type="text" name="numero" id="numero" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="colonia">Colonia</label>
+                    <input type="text" name="colonia" id="colonia" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="cp">Código Postal</label>
+                    <input type="text" name="cp" id="cp" class="form-control">
                 </div>
             </div>
-            <button class="btn bg-secundario mt-4 w-100 siguiente" id="geo-control" disabled="true">Siguiente</button>
+            <button class="btn bg-secundario mt-4 w-100 siguiente" id="geo-control" disabled="true">Terminar</button>
         </div>
         <div id="step-5" class="d-none">
             <h3>Registro Terminado</h3>
@@ -125,14 +123,12 @@
         email: "",
         wisol: "",
         capacidad: "",
-        telefono: ""
+        telefono: "",
+        calle: "",
+        numero: "",
+        colonia: "",
+        cp: ""
     };
-
-    var payload_instalacion = {
-        folio: "", // Folio de Instalación de la papeleta.
-        operario: "", // Nombre de usuario del operario
-        consumidor: "" // Username del nuevo consumidor
-    }
 </script>
 {% endblock content %}
 <script>
@@ -149,7 +145,6 @@
                 accionarValidacion(evt.target, true);
                 payload.email = evt.currentTarget.value;
                 payload.username = evt.currentTarget.value;
-                payload_instalacion.consumidor = evt.currentTarget.value;
                 $("#email-control").prop({ 'disabled': false });
             }).fail(function (response) {
                 accionarValidacion(evt.target, false);
@@ -159,12 +154,12 @@
         }
     });
 
-    var phone_reg = /(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]‌​)\s*)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)([2-9]1[02-9]‌​|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})\s*(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+)\s*)?$/gm;
+    var phone_reg = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
     $("#phone").on("keyup", function (evt) {
         payload.telefono = evt.target.value;
         accionarValidacion(evt.target, (phone_reg.test(evt.target.value) && evt.target.value.length == 10));
-        $("#phone-control").prop({ 'disabled': !phone_reg.test(evt.target.value) && !evt.target.value.length == 10 });
+        $("#phone-control").prop({ 'disabled': !(phone_reg.test(evt.target.value) && evt.target.value.length == 10) });
     });
 
     $("#phone-control").on("click", function (evt) {
@@ -177,11 +172,10 @@
 <script type="text/javascript">
     var jbScanner;
     var scannerParentElement = document.getElementById("scanner");
-    var reg = new RegExp(/^[0-9a-fA-F]{7}$/);
+    var reg = new RegExp(/^[0-9a-fA-F]{6}$/);
     var scanning = false;
     function onQRCodeScanned(scannedText) {
         var error;
-        scanning = jbScanner.isScanning()
 
         var scannedTextMemo = document.getElementById("scannedTextMemo");
         if (scannedTextMemo) {
@@ -190,9 +184,7 @@
 
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText;
-            var numero = parseInt(id_dispositivo, 16);
-            var hexstring = numero.toString(16).toUpperCase();
-            var data = { 'wisol': hexstring };
+            var data = { 'wisol': id_dispositivo };
 
             payload.wisol = id_dispositivo;
 
@@ -213,7 +205,6 @@
                         }
                     }).fail(function (error) {
                         if (error.responseJSON.detail == "No encontrado.") {
-                            if (scanning) jbScanner.removeFrom(scannerParentElement);
                             $(document).trigger("stepChange");
                         } else {
                             showModal("Ocurrió un error, por favor contacta a soporte.");
@@ -227,7 +218,6 @@
         } else if (scannedText.split(" ").length > 1) {
             showModal("No permitiste el uso de cámara. Introduce el código manualmente.");
             $("#scannedTextMemo").val("");
-            jbScanner.removeFrom(scannerParentElement);
         } else {
             showModal("El código QR que se leyó es incorrecto.");
         }
@@ -302,8 +292,6 @@
             document.getElementById("lon").value = lon;
             payload.location = "POINT(" + lon + " " + lat + ")";
         });
-
-        $("#geo-control").prop({ 'disabled': false });
     }
 
     function exito(posicion) {
@@ -361,7 +349,7 @@
         */
         function problemasEjecucion() {
             $("#mensaje-problemas").removeClass("d-none");
-            // $("#scannedTextMemo").prop({ disabled: false });
+            $("#scannedTextMemo").prop({ disabled: false });
             $("#scannedTextMemo").on("keyup", function (evt) {
                 if (reg.test(evt.target.value)) {
                     onQRCodeScanned(evt.target.value);
@@ -372,8 +360,7 @@
             if (step) {
                 switch (step) {
                     case 2:
-                        jbScanner.appendTo(scannerParentElement);
-                        setTimeout(problemasEjecucion, 7500);
+                        problemasEjecucion();
                         break;
                     case 3:
                         getCoordenadas();
@@ -429,6 +416,22 @@
                 error_str += "</ul>";
                 showModal(error_str);
             });
+        });
+
+        $("#calle, #numero, #colonia, #cp").on("keyup", function(evt){
+            accionarValidacion(evt.target, evt.target.value.length > 1);
+            var validacion_calle = $("#calle").val().length > 1;
+            var validacion_numero = $("#numero").val().length > 1;
+            var validacion_colonia = $("#colonia").val().length > 1;
+            var validacion_cp = $("#cp").val().length > 1;
+
+            if(validacion_calle && validacion_numero && validacion_colonia && validacion_cp) {
+                $("#geo-control").prop({ 'disabled': false });
+                payload.calle = $("#calle").val();
+                payload.numero = $("#numero").val();
+                payload.colonia = $("#colonia").val();
+                payload.cp = $("#cp").val();
+            }
         });
     });
 </script>
