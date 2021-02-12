@@ -144,7 +144,8 @@ def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker):
     ser.wisol = '41235'
     ser._validated_data = {
         'username': 'bla', 'email': 'yo@yo.com', 'tipo': 'CONSUMIDOR', 'pwdtemporal': True,
-        'sucursal': mock_sucursal, 'location': 'POINT(133.1234 -122.344)', 'capacidad': 123
+        'sucursal': mock_sucursal, 'location': 'POINT(133.1234 -122.344)', 'capacidad': 123,
+        'calle': 'Avenida SiembreViva', 'numero': '1234', 'cp': '20120', 'colonia': 'Alguna Colonia'
     }
     control_user = {
         'username': 'bla', 'email': 'yo@yo.com', 'tipo': 'CONSUMIDOR', 'pwdtemporal': True,
@@ -153,7 +154,11 @@ def test_AsistedUserDispositivoCreation_get_cleaned_data(mocker):
         'location': 'POINT(133.1234 -122.344)',
         'capacidad': 123, 'wisol': '41235',
         'sucursal': mock_sucursal,
-        'localidad': mock_loc, 'municipio': moc_municipio
+        'localidad': mock_loc, 'municipio': moc_municipio,
+        'calle': 'Avenida SiembreViva',
+        'numero': '1234',
+        'cp': '20120',
+        'colonia': 'Alguna Colonia'
     }
     assert ser.get_cleaned_data() == (control_user, contorl_disp)
     mock_wkt.assert_called_once_with('POINT(133.1234 -122.344)')

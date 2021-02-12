@@ -124,6 +124,10 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
     telefono = PhoneNumberField(required=False)
     location = GeometryField(precision=14)
     capacidad = serializers.IntegerField(required=False)
+    calle = serializers.CharField()
+    numero = serializers.CharField()
+    cp = serializers.CharField()
+    colonia = serializers.CharField()
 
     def validate_sucursal(self, sucursal):
         if hasattr(self.context['request'].user, 'sucursal'):
