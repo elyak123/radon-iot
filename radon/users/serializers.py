@@ -94,6 +94,10 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
     telefono: (string) Telefono del futuro usuario a 10 digitos
     location: (string) Ubicacion geografica del futuro dispositivo en formato POINT(x.abcd -y.xyz)
     capacidad: (int) Capacidad del tanque del futuro dispositivo
+    calle: (string) Nombre de la calle del dispositivo
+    numero: (string) Numero e interior si existe
+    cp: (string) Código postal
+    colonia: (string) Colonia de la ubicación del dispositivo
 
     CAMPOS OCULTOS (NO UTILIZABLES PARA EL CLIENTE)
     sucursal: (<Sucursal: Model>) Sera la sucursal del cliente que da de alta el consumidor
@@ -145,7 +149,7 @@ class AsistedUserDispositivoCreation(WisolValidation, EmailValidator, UsernameVa
         disp_data = {
             'wisol': self.wisol,
             'location': self.validated_data.get('location', ''),
-            'sucursal': self.validated_data.get('gasera', None),
+            'sucursal': self.validated_data.get('sucursal', None),
             'capacidad': self.validated_data.get('capacidad', None),
             'calle': self.validated_data.get('calle', ''),
             'numero': self.validated_data.get('numero', ''),

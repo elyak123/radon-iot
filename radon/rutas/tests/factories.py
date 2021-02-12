@@ -1,6 +1,8 @@
+import pytz
 import factory
 from faker import Faker
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from radon.users.tests.factories import UserFactory, StaffFactory
 from radon.market.tests.factories import PrecioFactory, SucursalFactory
 from radon.iot.tests.factories import DispositivoFactory
@@ -8,6 +10,7 @@ from radon.rutas import models
 
 User = get_user_model()
 fake = Faker(['es_MX'])
+tz = pytz.timezone(settings.TIME_ZONE)
 
 
 class JornadaFactory(factory.django.DjangoModelFactory):
@@ -61,7 +64,7 @@ class MensajeFactory(factory.django.DjangoModelFactory):
     autor = factory.SubFactory(StaffFactory)
     texto = factory.fuzzy.FuzzyText(length=10)
     pedido = factory.SubFactory(PedidoFactory)
-    publicacion = factory.LazyAttribute(lambda o: fake.date_this_month())
+    publicacion = factory.LazyAttribute(lambda o: fake.date_time_this_month(tzinfo=tz))
 
     class Meta:
         model = models.Mensaje

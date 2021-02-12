@@ -187,7 +187,8 @@ def test_AsistedUserDispositivoCreation_with_db(mocker):
     wisol = serializers.Wisol.objects.create(serie='41245', pac='kalks', deviceTypeId=dt)
     data = {
         'username': 'Joe', 'email': 'email@bla.com', 'telefono': '3312345622',
-        'location': 'POINT(122.123455 -133.1235)', 'capacidad': 122, 'wisol': wisol.serie
+        'location': 'POINT(122.123455 -133.1235)', 'capacidad': 122, 'wisol': wisol.serie,
+        'calle': 'Una calle', 'numero': '213', 'colonia': 'Col. Los Vivos', 'cp': '20900'
     }
     req = mocker.MagicMock()
     req.user.sucursal = SucursalFactory()
@@ -195,7 +196,7 @@ def test_AsistedUserDispositivoCreation_with_db(mocker):
     loc = LocalidadFactory()
     mocker.patch('radon.users.serializers.get_localidad_from_wkt', return_value=loc)
     ser = serializers.AsistedUserDispositivoCreation(data=data, context=context)
-    assert ser.is_valid() is True
+    assert ser.is_valid() is True, ser.errors
     user = ser.save(req)
     assert isinstance(user, User) is True
     assert user.has_usable_password() is False

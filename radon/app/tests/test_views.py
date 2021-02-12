@@ -1,4 +1,3 @@
-
 import pytest
 from django_hosts.resolvers import reverse
 from django.conf import settings
