@@ -4,24 +4,11 @@ from rest_framework.serializers import ValidationError
 from xkcdpass import xkcd_password as xp
 from unidecode import unidecode
 from radon.georadon.models import Localidad
-from radon.users.models import Consumidor as User
+from radon.users.models import User, Consumidor
 
 
 def get_default_user():
-    try:
-        return User.objects.get(
-            username=settings.DEFAULT_USERNAME,
-        ).pk
-    except User.DoesNotExist:
-        usr = User(
-            username=settings.DEFAULT_USERNAME,
-            email=settings.DEFAULT_EMAIL,
-            tipo='CONSUMIDOR',
-        )
-        usr.set_unusable_password()
-        usr.full_clean()
-        usr.save()
-        return usr.pk
+    return 1
 
 
 def get_default_gasera():
@@ -51,7 +38,7 @@ def get_localidad_from_wkt(point):
 
 def create_user_and_dispositivo(user_data, disp_data):
     from radon.iot.models import Dispositivo
-    user = User.objects.create_user(**user_data)
+    user = Consumidor.objects.create_user(**user_data)
     user.save()
     disp_data['usuario'] = user
     disp = Dispositivo.objects.create(**disp_data)
