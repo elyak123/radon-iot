@@ -136,6 +136,26 @@ class Staff(User):
         verbose_name_plural = "Staff"
 
 
+class AdminManager(RadonBaseUserManager):
+    is_staff = True
+    is_admin = True
+    is_superuser = False
+
+    def get_queryset(self, *args, **kwargs):
+        results = super().get_queryset(*args, **kwargs)
+        return results.filter(tipo='ADMIN')
+
+
+class Admin(User):
+    base_type = 'ADMIN'
+    objects = AdminManager()
+
+    class Meta:
+        proxy = True
+        verbose_name = "Admin"
+        verbose_name_plural = "Admin"
+
+
 class SuperUserManager(RadonBaseUserManager):
     is_staff = True
     is_superuser = True
