@@ -47,10 +47,11 @@ class WisolValidation(serializers.Serializer):
 
 
 class DispositivoSerializer(GeoFeatureModelSerializer):
-    usuario = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    # buscar limitar los querysets o revisar la implicacion de querysets abiertos.
-    wisol = serializers.SlugRelatedField(queryset=models.Wisol.objects.all(), slug_field='serie')
+    usuario = serializers.SlugRelatedField(read_only=True, slug_field='email')
+    wisol = serializers.SlugRelatedField(read_only=True, slug_field='serie')
     ultima_lectura = serializers.DictField(source='get_ultima_lectura', read_only=True)
+    municipio = serializers.SlugRelatedField(read_only=True, slug_field='nombre')
+    localidad = serializers.SlugRelatedField(read_only=True, slug_field='nombre')
 
     class Meta:
         model = models.Dispositivo

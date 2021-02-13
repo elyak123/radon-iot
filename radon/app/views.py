@@ -92,7 +92,6 @@ class GraphView(AppAuthBaseClass, generic.TemplateView):
 
 class DispositivoDetailView(AppAuthBaseClass, generic.DetailView):
     model = Dispositivo
-    # TODO: hay que hacer un template para app
     template_name = "app/dispositivo_detail.html"
 
     def get_object(self, queryset=None):

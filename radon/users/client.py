@@ -40,6 +40,7 @@ class RadonCookieRequests(object):
             resp = self.login(username=username, password=password)
         except KeyError:
             return resp
+        return resp
 
     def refresh(self):
         response = self.session.post(
