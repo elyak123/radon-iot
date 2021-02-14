@@ -210,8 +210,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        #'radon.api.auth.UserClassificationJWTCookieAuthentication',
-        'dj_rest_auth.utils.JWTCookieAuthentication',
+        'radon.api.auth.UserClassificationJWTCookieAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
