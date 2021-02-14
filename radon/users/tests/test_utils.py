@@ -1,21 +1,24 @@
 from radon.users import utils
 from radon.users.models import User
-from radon.market.models import Gasera
+from radon.market.models import Sucursal
 from radon.iot.models import Dispositivo, Wisol
 
 
 def test_get_default_user_other(mocker, settings):
     settings.DEFAULT_USERNAME = 'foo'
-    mock_usr = mocker.MagicMock(spec=User)
-    mock_usr.pk = 2
+    mock_usr = mocker.MagicMock()
+    mock_pk = mocker.MagicMock(id=2)
+    mock_usr.__getitem__.side_effect = lambda a: mock_pk
     attrs = {
-        'objects.get.return_value': mock_usr
+        'objects.raw.return_value': mock_usr
     }
     mock_user_klass = mocker.MagicMock()
     mock_user_klass.configure_mock(**attrs)
     mocker.patch('radon.users.utils.User', mock_user_klass)
     assert utils.get_default_user() == 2
-    mock_user_klass.objects.get.assert_called_once_with(username='foo')
+    mock_user_klass.objects.raw.assert_called_once_with("""
+            SELECT id FROM users_user WHERE username = %(usrname)s ORDER BY id ASC LIMIT 1;
+            """, params={'usrname': 'foo'})
 
 
 def test_create_user_and_dispositivo(mocker):
@@ -23,14 +26,14 @@ def test_create_user_and_dispositivo(mocker):
     usr = mocker.MagicMock(spec=User, pk=2)
     usr_save = mocker.MagicMock()
     usr.save = usr_save
-    gasera = mocker.MagicMock(spec=Gasera, pk=1)
+    sucursal = mocker.MagicMock(spec=Sucursal, pk=1)
     attrs = {
         'objects.create_user.return_value': usr
     }
     user_data = {
         'username': 'my_username',
         'email': 'yo@email.com',
-        'gasera': gasera,
+        'sucursal': sucursal,
         'tipo': 'CONSUMIDOR',
         'pwdtemporal': True,
     }
