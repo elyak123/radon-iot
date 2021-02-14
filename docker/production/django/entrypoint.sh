@@ -42,9 +42,12 @@ except psycopg2.OperationalError:
 sys.exit(0)
 END
 }
-
+counter=1
 until postgres_ready; do
-  >&2 echo "Postgres is unavailable - sleeping"
+  if [ "${counter}" -eq "1" ]; then
+    >&2 echo "Postgres is unavailable - sleeping"
+  fi
+  counter=$((counter +1))
   sleep 1
 done
 

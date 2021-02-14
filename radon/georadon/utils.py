@@ -38,7 +38,7 @@ def import_municipios(municipios):
         'geo': 'MULTIPOLYGON'
     }
     lm = LayerMapping(Municipio, municipios_shape, mapping, transform=False)
-    lm.save(strict=True, verbose=True)
+    lm.save(strict=True)
 
 
 def import_localidades(localidades):
@@ -50,7 +50,7 @@ def import_localidades(localidades):
         'geo': 'MULTIPOLYGON'
     }
     lyr_mapping = LayerMapping(Localidad, localidades_shape, mapping_locals, transform=False)
-    lyr_mapping.save(strict=True, verbose=True)
+    lyr_mapping.save(strict=True)
 
 
 def create_estado(estado):
