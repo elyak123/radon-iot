@@ -21,6 +21,10 @@ def user_mapper(user):
 class UserTypeMappingMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
-        if request.headers.get('HOST').split('.')[0] != 'api':
+        try:
+            host = request.headers.get('HOST').split('.')[0]
+        except AttributeError:
+            host = request.environ['SERVER_NAME']  # solo para tests
+        if host != 'api':
             if hasattr(request.user, 'tipo'):
                 user_mapper(request.user)
