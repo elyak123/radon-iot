@@ -210,8 +210,8 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'radon.api.auth.UserClassificationJWTCookieAuthentication',
-        #'dj_rest_auth.utils.JWTCookieAuthentication',
+        #'radon.api.auth.UserClassificationJWTCookieAuthentication',
+        'dj_rest_auth.utils.JWTCookieAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
@@ -252,7 +252,7 @@ SIMPLE_JWT = {
 
 # Modelo Personalizado de Usuario
 AUTH_USER_MODEL = 'users.User'
-
+AUTHENTICATION_METHOD = 'username_email'
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',

@@ -12,6 +12,18 @@ HOST = 'api'
 FQN = f'{HOST}.{settings.PARENT_HOST}'
 
 
+def login_for_tests(user, pwd, api_client):
+    login_url = reverse('rest_login', host=HOST)
+    res = api_client.post(
+        login_url,
+        data={'username': user.username, 'password': pwd},
+        format='json', SERVER_NAME=FQN).json()
+    token = res['access_token']['token']
+    headers = {'Authorization': f'Bearer {token}'}
+    api_client.headers = headers
+    return api_client
+
+
 def test_APIUsersLoginView_response_serializer(tp):
     view = CBVTestCase.get_instance(views.APIUsersLoginView)
     ser = view.get_response_serializer()
@@ -45,19 +57,19 @@ def test_api_localidades_dispositivos(mocker):
 
 
 @pytest.mark.django_db
-def test_permission_checkAPILeadsView_consumdor_denied(client):
+def test_permission_checkAPILeadsView_consumdor_denied(api_client):
     usr = ConsumidorFactory(password='123inhackeable')
     test_url = reverse('leads', host=HOST)
-    client.login(username=usr.username, password='123inhackeable')
-    request = client.get(test_url, SERVER_NAME=FQN)
+    api_client = login_for_tests(usr, '123inhackeable', api_client)
+    request = api_client.get(test_url, SERVER_NAME=FQN)
     assert request.status_code == 403
 
 
 @pytest.mark.django_db
-def test_permission_checkAPILeadsView_200_cliente(client, mocker):
+def test_permission_checkAPILeadsView_200_cliente(api_client, mocker):
     mocker.patch('radon.users.views.LeadsView.get_queryset')
     usr = UserClientFactory(password='123inhackeable')
     test_url = reverse('leads', host=HOST)
-    client.login(username=usr.username, password='123inhackeable')
-    request = client.get(test_url, SERVER_NAME=FQN)
+    api_client = login_for_tests(usr, '123inhackeable', api_client)
+    request = api_client.get(test_url, SERVER_NAME=FQN)
     assert request.status_code == 200
