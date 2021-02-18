@@ -19,6 +19,6 @@ urlpatterns = [
     path('checar-email/', ChecarEmailView, name="checar-email"),
     path('iot/', include('radon.api.urls.ioturls')),
     path('auth/', include('radon.api.urls.authurls')),
-    path('.well-known/assetlinks.json/', asset_links, name="assetlinks"),
+    path('.well-known/assetlinks.json', asset_links, name="assetlinks"),
     path("consumo/", GraphView.as_view(), name="grafica")
 ]
