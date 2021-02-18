@@ -1,6 +1,7 @@
 from django.urls import path, re_path, include
 from radon.app.views import (DashboardView, GraphView, RegisterView,
-                             PedidoView, PedidosView, PedidoDetailView, DispositivoDetailView)
+                             PedidoView, PedidosView, PedidoDetailView, DispositivoDetailView,
+                             asset_links)
 from radon.operador.views import ChecarEmailView
 
 
@@ -18,5 +19,6 @@ urlpatterns = [
     path('checar-email/', ChecarEmailView, name="checar-email"),
     path('iot/', include('radon.api.urls.ioturls')),
     path('auth/', include('radon.api.urls.authurls')),
+    path('.well-known/assetlinks.json/', asset_links, name="assetlinks"),
     path("consumo/", GraphView.as_view(), name="grafica")
 ]

@@ -1,4 +1,5 @@
 from django.views import generic
+from django.http import JsonResponse
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, get_object_or_404
@@ -107,3 +108,13 @@ class DispositivoDetailView(AppAuthBaseClass, generic.DetailView):
         context["lecturas"] = self.object.lecturas_ordenadas()[:10]
         context["pedidos"] = self.object.pedidos_ordenados()[:10]
         return context
+
+
+def asset_links(req):
+    respuesta = [{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {"namespace": "android_app", "package_name": "com.radargas.app.twa",
+                 "sha256_cert_fingerprints": ["05:7D:13:15:D1:AE:05:18:AB:45:0A:E4:56:84:6D:85:BF:86:29:FD:2E:"
+                                              "D6:7C:68:D9:94:B8:FE:30:9B:2A:2E"]}
+    }]
+    return JsonResponse(respuesta, safe=False)
