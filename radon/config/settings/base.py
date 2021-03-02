@@ -23,6 +23,9 @@ BASE_DIR = ROOT_DIR
 # Load operating system environment variables and then prepare to use them
 env = environ.Env()
 
+# This SHA256 is for delete the address bar of the app.
+PLAYSTORE_APP_KEY = env('PLAYSTORE_APP_KEY', default='')
+
 # .env file, should load only in development environment
 READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
 

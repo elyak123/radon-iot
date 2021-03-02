@@ -9,6 +9,7 @@ from radon.market.models import Sucursal
 from radon.iot.models import Dispositivo
 from radon.rutas.models import Pedido
 from radon.users.auth import ConsumidorAutenticationMixin
+from django.conf import settings
 
 
 class BaseTemplateSelector(object):
@@ -114,7 +115,6 @@ def asset_links(req):
     respuesta = [{
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {"namespace": "android_app", "package_name": "com.radargas.app.twa",
-                 "sha256_cert_fingerprints": ["05:7D:13:15:D1:AE:05:18:AB:45:0A:E4:56:84:6D:85:BF:86:29:FD:2E:"
-                                              "D6:7C:68:D9:94:B8:FE:30:9B:2A:2E"]}
+                 "sha256_cert_fingerprints": [settings.PLAYSTORE_APP_KEY]}
     }]
     return JsonResponse(respuesta, safe=False)

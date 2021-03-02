@@ -51,6 +51,9 @@ def immutable_file_test(path, url):
 
 WHITENOISE_IMMUTABLE_FILE_TEST = immutable_file_test
 
+# This SHA256 is for delete the address bar of the app.
+PLAYSTORE_APP_KEY = env('PLAYSTORE_APP_KEY')
+
 
 # SECURITY CONFIGURATION
 # ------------------------------------------------------------------------------
