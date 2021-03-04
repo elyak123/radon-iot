@@ -15,8 +15,8 @@
             <h4 class="mt-4">Genera tu pedido de gas</h4>
             <p class="my-2"><b>Gaseras locales:</b></p>
             <div class="row">
-                <div class="col-3"></div>
-                <div class="col-6">
+                <div class="col-1"></div>
+                <div class="col-10">
                     <div id="carouselExampleControls" class="carousel slide my-2">
                         <div class="carousel-inner">
                             {% for sucursal in sucursales %}
@@ -47,7 +47,7 @@
                     </div>
                     <input class="d-none" id="sucursal" type="number" value="{{ sucursales.first.id }}" name="sucursal"></input>
                 </div>
-                <div class="col-3"></div>
+                <div class="col-1"></div>
             </div>
             <p class="my-2"><b>Elige cómo quieres hacer tu pedido:</b></p>
             <input class="d-none" type="number" id="tipo" name="tipo" value="1"></input>
