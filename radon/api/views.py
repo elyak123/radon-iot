@@ -94,7 +94,7 @@ class APIDeviceTypeViewSet(iotviews.DeviceTypeViewSet):
 
 
 class APIDeviceViewSet(iotviews.DeviceViewSet):
-    permission_classes = [drf_permissions.IsAdminUser]
+    permission_classes = [permissions.APIOperadorPermission | drf_permissions.IsAdminUser]
 
 
 class APIInstalacionViewSet(iotviews.InstalacionViewSet):

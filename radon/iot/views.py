@@ -22,7 +22,7 @@ class DeviceTypeViewSet(viewsets.ModelViewSet):
 
 class DeviceViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows users to be view or edit devices.
     """
     queryset = models.Dispositivo.objects.all()
     serializer_class = serializers.DispositivoSerializer
@@ -39,7 +39,7 @@ class InstalacionViewSet(viewsets.ModelViewSet):
 
 class WisolViewSet(viewsets.ModelViewSet):
     """
-    API endpoint that allows users to be viewed or edited.
+    API endpoint that allows users to be view or edited Wisols.
     """
     queryset = models.Wisol.objects.all()
     serializer_class = serializers.WisolSerializer
