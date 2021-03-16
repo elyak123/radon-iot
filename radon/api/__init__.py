@@ -1,0 +1,1 @@
+from radon.api.schema import UserClassificationJWTCookieAuthenticationScheme

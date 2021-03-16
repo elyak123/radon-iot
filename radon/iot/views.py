@@ -105,6 +105,9 @@ def registrolectura(request):
 
 
 def mock_lectura(request):
+    """
+    Generar una lectura, importante: solo usar en DEBUG =True.
+    """
     disp = models.Dispositivo.objects.get(wisol__serie=request.data['dispositivo'])
     porcentaje = utils.convertir_lectura(int(request.data['sensor']))
     models.Lectura.objects.create(sensor=request.data['sensor'], porcentaje=porcentaje, dispositivo=disp)
@@ -112,6 +115,9 @@ def mock_lectura(request):
 
 
 def mock_lecturas(request):
+    """
+    Igual que mock_lectura, solo para crear muchas al mismo tiempo.
+    """
     disp = models.Dispositivo.objects.get(wisol__serie=request.data['dispositivo'])
     if not disp.lectura_set.last():
         inicial = 85 + round(random()*10, 2)

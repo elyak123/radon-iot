@@ -43,7 +43,7 @@ class LeadSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'username', 'first_name', 'last_name',
-            'email', 'telefono', 'dispositivo_set', 'tipo', 'gasera',
+            'email', 'telefono', 'dispositivo_set', 'tipo', 'sucursal',
         ]
         read_only_fields = fields
         depth = 2

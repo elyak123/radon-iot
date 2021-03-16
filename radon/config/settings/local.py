@@ -14,7 +14,14 @@ MOCK_URL_CONF = env('DJANGO_MOCK_URL_CONF', default='radon.app.urls')
 SITE_ID = env.int('DJANGO_SITE_ID', '')
 CORS_ORIGIN_ALLOW_ALL = True
 
+INSTALLED_APPS += ['drf_spectacular', ]
+
+SPECTACULAR_DEFAULTS = {
+    'SERVERS': [{'url': 'https://api.radargas.com', 'description': 'Url de servidor de producción.'}]
+}
+
 REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'].append('rest_framework.renderers.BrowsableAPIRenderer')
+REST_FRAMEWORK['DEFAULT_SCHEMA_CLASS'] = 'drf_spectacular.openapi.AutoSchema'
 
 MIDDLEWARE.append('django_hosts.middleware.HostsResponseMiddleware')
 

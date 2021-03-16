@@ -3,6 +3,8 @@ from rest_framework import permissions as drf_permissions
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.decorators import parser_classes
 from dj_rest_auth.views import LoginView
+from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.types import OpenApiTypes
 from radon.users import views as userviews
 from radon.iot import views as iotviews
 from radon.market import views as marketviews
@@ -43,6 +45,12 @@ class APIRegisterUsersView(userviews.RegisterUsersView):
     permission_classes = [drf_permissions.AllowAny]
 
 
+@extend_schema(
+    request=userviews.serializers.ActivateUsers,
+    responses={
+        200: userviews.serializers.ActivateUsers,
+    }
+)
 @api_view(['POST'])
 @permission_classes([drf_permissions.IsAuthenticated])
 def api_activacion_usuarios(request):
@@ -77,10 +85,15 @@ class APIPreciosViewSet(marketviews.PreciosViewSet):
 ########################
 #  VIEWS PARA GEORADON #
 ########################
-
+@extend_schema(
+    responses=geoviews.serializers.LocalidadSerializer(many=True)
+)
 @api_view(['GET'])
 @permission_classes([drf_permissions.IsAdminUser])
 def localidades_dispositivos(request):
+    """
+    Regresa las localidades donde existen dispositivos.
+    """
     return geoviews.localidades_dispositivos(request)
 
 
@@ -93,6 +106,8 @@ class APIDeviceTypeViewSet(iotviews.DeviceTypeViewSet):
     permission_classes = [drf_permissions.IsAdminUser]
 
 
+@extend_schema(
+    parameters=[OpenApiParameter("wisol__serie", OpenApiTypes.STR, OpenApiParameter.PATH)])
 class APIDeviceViewSet(iotviews.DeviceViewSet):
     permission_classes = [permissions.APIOperadorPermission | drf_permissions.IsAdminUser]
 
@@ -112,12 +127,27 @@ class APILecturaViewSet(iotviews.LecturaViewSet):
         permissions.APIClientePermission]
 
 
+@extend_schema(
+    request=iotviews.serializers.WisolValidation,
+    responses={
+        200: {'wisol': 'valid'},
+        401: {'detail': 'Las credenciales de autenticación no se proveyeron.'},
+        404: {'detail': 'No encontrado.'}
+    }
+)
 @api_view(['POST'])
 @permission_classes([drf_permissions.AllowAny])  # por lo pronto....
 def api_wisol_initial_validation(request):
     return iotviews.wisol_initial_validation(request)
 
 
+@extend_schema(
+    responses={
+        (201, 'text/html'), 'Registro Creado',
+        (400, 'text/html'), '400 Bad Request'
+    },
+    description='Para uso exclusivo de AWS con IOT Core'
+)
 @api_view(['POST'])
 @parser_classes([parsers.PlainTextParser])
 @permission_classes([drf_permissions.AllowAny])
@@ -125,6 +155,9 @@ def api_registrolectura(request):
     return iotviews.registrolectura(request)
 
 
+@extend_schema(
+    responses=OpenApiTypes.STR
+)
 @api_view(['POST'])
 def api_mock_lectura(request):
     return iotviews.mock_lectura(request)
