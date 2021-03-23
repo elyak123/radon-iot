@@ -16,4 +16,5 @@ urlpatterns = [
     #  URLS PARA MARKET #
     #####################
     path(r'', include(marketrouter.urls)),
+    path(r'sucursales/<wisol>', views.APISucursalesByDispositivoView.as_view(), name='sucursales_por_wisol'),
 ]

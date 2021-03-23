@@ -10,7 +10,7 @@ user_mapping = {
 
 def user_mapper(user):
     if user.tipo == 'STAFF':
-        if user.is_superuser():
+        if user.is_superuser:
             user.__class__ = SuperUser
         else:
             user.__class__ = Staff

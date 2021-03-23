@@ -57,7 +57,7 @@ class DispositivoSerializer(GeoFeatureModelSerializer):
         model = models.Dispositivo
         geo_field = 'location'
         fields = [
-            'nombre', 'wisol', 'capacidad', 'sucursal', 'municipio',
+            'pk', 'nombre', 'wisol', 'capacidad', 'sucursal', 'municipio',
             'localidad', 'usuario', 'calendarizado', 'ultima_lectura'
         ]
         depth = 2

@@ -185,11 +185,14 @@ class Pedido(ModelFieldRequiredMixin, models.Model):
 class Mensaje(models.Model):
     autor = models.ForeignKey(User, on_delete=models.CASCADE)
     texto = models.CharField(max_length=150)
-    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    pedido = models.ForeignKey(Pedido, related_name="mensajes", on_delete=models.CASCADE)
     publicacion = models.DateTimeField()
 
     class Meta:
         ordering = ("-publicacion", )
+
+    def __str__(self):
+        return '{}: {}'.format(self.publicacion, self.texto)
 
 
 class Position(models.Model):

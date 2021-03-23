@@ -24,9 +24,16 @@ class DeviceViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be view or edit devices.
     """
-    queryset = models.Dispositivo.objects.all()
     serializer_class = serializers.DispositivoSerializer
     lookup_field = 'wisol__serie'
+
+    def get_queryset(self):
+        if self.request.user.tipo == 'CONSUMIDOR':
+            return models.Dispositivo.objects.filter(usuario=self.request.user)
+        elif self.request.user.tipo == 'STAFF':
+            return models.Dispositivo.objects.all()
+        else:
+            return None
 
 
 class InstalacionViewSet(viewsets.ModelViewSet):

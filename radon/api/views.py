@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.http import HttpResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import permissions as drf_permissions
 from rest_framework_simplejwt.views import TokenRefreshView
@@ -7,8 +9,11 @@ from drf_spectacular.utils import OpenApiParameter, extend_schema
 from drf_spectacular.types import OpenApiTypes
 from radon.users import views as userviews
 from radon.iot import views as iotviews
+from radon.iot.models import Dispositivo
 from radon.market import views as marketviews
+from radon.market.models import Sucursal
 from radon.rutas import views as rutasviews
+from radon.rutas.models import Pedido
 from radon.georadon import views as geoviews
 from radon.api import serializers, parsers, permissions
 
@@ -62,7 +67,23 @@ def api_activacion_usuarios(request):
 
 
 class APIPedidoViewSet(rutasviews.PedidoViewSet):
-    permission_classes = [drf_permissions.IsAdminUser]
+    permission_classes = [
+        drf_permissions.IsAdminUser |
+        permissions.APIConsumidorPermission]
+
+    # def post(self, request, *args, **kwargs):
+    #     datos = self.request.POST
+    #     pedido = Pedido(
+    #         cantidad=datos["cantidad"],
+    #         dispositivo=Dispositivo.objects.get(id=datos["dispositivo"]),
+    #         precio=Sucursal.objects.get(id=datos["sucursal"]).precio_set.last()
+    #     )
+    #     try:
+    #         pedido.full_clean()
+    #     except ValidationError:
+    #         return HttpResponse('Error de datos', status=500)
+    #     pedido.save()
+    #     return HttpResponse('Registro Creado', status=201)
 
 
 ######################
@@ -76,6 +97,11 @@ class APIGaseraViewSet(marketviews.GaseraViewSet):
 
 class APISucursalViewSet(marketviews.SucursalViewSet):
     permission_classes = [drf_permissions.IsAdminUser]
+
+
+class APISucursalesByDispositivoView(marketviews.ListSucursalesByDispositivoView):
+    # authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.APIConsumidorPermission]
 
 
 class APIPreciosViewSet(marketviews.PreciosViewSet):
@@ -109,7 +135,10 @@ class APIDeviceTypeViewSet(iotviews.DeviceTypeViewSet):
 @extend_schema(
     parameters=[OpenApiParameter("wisol__serie", OpenApiTypes.STR, OpenApiParameter.PATH)])
 class APIDeviceViewSet(iotviews.DeviceViewSet):
-    permission_classes = [permissions.APIOperadorPermission | drf_permissions.IsAdminUser]
+    permission_classes = [
+        permissions.APIOperadorPermission |
+        drf_permissions.IsAdminUser |
+        permissions.APIConsumidorPermission]
 
 
 class APIInstalacionViewSet(iotviews.InstalacionViewSet):

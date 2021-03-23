@@ -7,7 +7,7 @@ from django.conf import settings
 class RadonCookieRequests(object):
     radon_username = settings.TEST_USERNAME
     radon_password = settings.TEST_PASSWORD
-    radon_base_url = settings.TEST_URL
+    radon_base_url = "http://api.radargas.com:8000/"
 
     def __init__(self, *args, **kwargs):
         super(RadonCookieRequests, self).__init__(*args, **kwargs)
