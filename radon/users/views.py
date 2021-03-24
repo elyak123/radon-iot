@@ -74,6 +74,9 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_value_regex = '[^/]+'
 
     def get_queryset(self):
+        import pdb; pdb.set_trace()
+        if self.request.user.tipo == 'CONSUMIDOR':
+            return self.request.user
         return User.objects.all().order_by('-date_joined')
 
 
