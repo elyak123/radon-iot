@@ -11,9 +11,19 @@ class PedidoViewSet(viewsets.ModelViewSet):
     queryset = Pedido.objects.all()
 
     def get_queryset(self):
-        if self.request.user.tipo == 'CONSUMIDOR':
-            return Pedido.objects.filter(dispositivo__usuario=self.request.user)
-        elif self.request.user.tipo == 'STAFF':
-            return Pedido.objects.all()
-        else:
-            return None
+        try:
+            if self.request.user.tipo == 'CONSUMIDOR':
+                return Pedido.objects.filter(
+                    dispositivo__wisol__serie=self.request.GET['dispositivo'],
+                    dispositivo__usuario=self.request.user
+                )
+            elif self.request.user.tipo == 'STAFF':
+                return Pedido.objects.filter(
+                    dispositivo__wisol__serie=self.request.GET['dispositivo']
+                )
+        except KeyError:
+            if self.request.user.tipo == 'CONSUMIDOR':
+                return Pedido.objects.filter(dispositivo__usuario=self.request.user)
+            elif self.request.user.tipo == 'STAFF':
+                return Pedido.objects.all()
+        return None

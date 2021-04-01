@@ -3,9 +3,227 @@ info:
   title: ''
   version: 0.0.0
 paths:
+  /checar-email/:
+    post:
+      operationId: checar_email_create
+      description: 'Verifica que la dirección de email que se introduce no hay sido utilizada por otro usuario.'
+      parameters:
+      - name: email
+        required: true
+        in: query
+        description: Email que se desea verificar.
+        schema:
+          type: email
+      tags:
+      - checar-email
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailUnico'
+  /iot/disponibilidad-wisol/:
+    post:
+      operationId: disponibilidad_wisol_create
+      description: 'Endpoint que permite la verificación del Wisol en base de datos antes de proceder con la instalación.'
+      parameters:
+      - name: wisol
+        required: true
+        in: query
+        description: Wisol que se desea verificar.
+        schema:
+          type: string
+      tags:
+      - disponibilidad-wisol
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WisolValidation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/WisolValidation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/WisolValidation'
+        required: true
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: 'El wisol es válido y se puede continuar con la instalación.'
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+        '404':
+          description: 'Es un wisol que no ha sido encontrado y por lo tanto la instalación no puede continuar.'
+        '400':
+          description: 'Wisol: Este campo es requerido. o El chip que corresponde al dispositivo no existe favor de llamar a soporte. o El chip Wisol ya tiene un dispositivo asignado'
+  /iot/dispositivos/:
+    get:
+      operationId: dispositivos_list
+      description: Lista los dispositivos que están registrados con el usuario en sesión.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: Página que se desea obtener.
+        schema:
+          type: integer
+      - in: path
+        name: wisol__serie
+        schema:
+          type: string
+        required: false
+      tags:
+      - dispositivos
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDispositivoList'
+          description: 'Obtiene los dispositivos del usuario autenticado'
+  /iot/dispositivos/{wisol__serie}/:
+    get:
+      operationId: dispositivos_retrieve
+      description: Regresa un dispositivo concreto por medio del número de serie Wisol.
+      parameters:
+      - in: path
+        name: wisol__serie
+        schema:
+          type: string
+        required: true
+      tags:
+      - dispositivos
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '404':
+          description: Dispositivo no encontrado.
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DispositivoGeo'
+          description: 'Obtiene un dispositivo específico del usuario.'
+    patch:
+      operationId: dispositivos_update
+      description: Edita el Dispositivo por el número de Serie del Wisol dado.
+      parameters:
+      - in: path
+        name: wisol__serie
+        schema:
+          type: string
+        required: true
+      tags:
+      - dispositivos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DispositivoGeo'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/DispositivoGeo'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DispositivoGeo'
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dispositivo'
+          description: ''
+        '404':
+          description: Dispositivo no encontrado.
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+    delete:
+      operationId: dispositivos_destroy
+      description: Elimina el dispositivo por el número de serie de Wisol dado.
+      parameters:
+      - in: path
+        name: wisol__serie
+        schema:
+          type: string
+        required: true
+      tags:
+      - dispositivos
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+        '404':
+          description: Dispositivo no encontrado.
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+  /iot/lecturas/:
+    get:
+      operationId: lecturas_list
+      description: 'Listado de lecturas geneal o específica de cada dispositivo.'
+      parameters:
+      - name: dispositivo
+        required: true
+        in: query
+        description: Serie del Wisol del dispositivo del que se desea obtener las lecturas.
+        schema:
+          type: integer
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - lecturas
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedLecturaList'
+          description: 'Lecturas del dispositivo seleccionado'
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
   /auth/login/:
     post:
-      operationId: auth_login_create
+      operationId: login_create
       description: |-
         Check the credentials and return the REST Token
         if the credentials are valid and authenticated.
@@ -15,7 +233,7 @@ paths:
         Accept the following POST parameters: username, password
         Return the REST Framework Token Object's key.
       tags:
-      - auth
+      - login
       requestBody:
         content:
           application/json:
@@ -35,16 +253,22 @@ paths:
               schema:
                 $ref: '#/components/schemas/Login'
           description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FailedLogin'
+          description: '[Se proporcionaron credenciales incorrectas.]'
   /auth/logout/:
     post:
-      operationId: auth_logout_create
+      operationId: logout_create
       description: |-
         Calls Django logout method and delete the Token object
         assigned to the current User object.
 
         Accepts/Returns nothing.
       tags:
-      - auth
+      - logout
       security:
       - UserClassificationJWTCookieAuthentication: []
       - cookieAuth: []
@@ -57,16 +281,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestAuthDetail'
           description: ''
-  /auth/password/change/:
+  /password/change/:
     post:
-      operationId: auth_password_change_create
+      operationId: password_change_create
       description: |-
         Calls Django Auth SetPasswordForm save method.
 
         Accepts the following POST parameters: new_password1, new_password2
         Returns the success/fail message.
       tags:
-      - auth
+      - password
       requestBody:
         content:
           application/json:
@@ -90,84 +314,161 @@ paths:
               schema:
                 $ref: '#/components/schemas/RestAuthDetail'
           description: ''
-  /auth/password/reset/:
-    post:
-      operationId: auth_password_reset_create
-      description: |-
-        Calls Django Auth PasswordResetForm save method.
-
-        Accepts the following POST parameters: email
-        Returns the success/fail message.
+  /rutas/pedido/:
+    get:
+      operationId: pedido_list
+      description: 'Listado de pedidos del usuario autenticado.'
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
       tags:
-      - auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PasswordReset'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PasswordReset'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PasswordReset'
-        required: true
+      - pedido
       security:
       - UserClassificationJWTCookieAuthentication: []
       - cookieAuth: []
       - basicAuth: []
-      - {}
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestAuthDetail'
-          description: ''
-  /auth/password/reset/confirm/:
+                $ref: '#/components/schemas/PaginatedPedidoSerialiserList'
+          description: 'Listado de pedidos del usuario autenticado.'
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
     post:
-      operationId: auth_password_reset_confirm_create
-      description: |-
-        Password reset e-mail link is confirmed, therefore
-        this resets the user's password.
-
-        Accepts the following POST parameters: token, uid,
-            new_password1, new_password2
-        Returns the success/fail message.
+      operationId: pedido_create
+      description: 'Creación de un nuevo pedido para determinado dispositivo.'
       tags:
-      - auth
+      - pedido
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PasswordResetConfirm'
+              $ref: '#/components/schemas/PedidoSerialiser'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PasswordResetConfirm'
+              $ref: '#/components/schemas/PedidoSerialiser'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PasswordResetConfirm'
+              $ref: '#/components/schemas/PedidoSerialiser'
         required: true
       security:
       - UserClassificationJWTCookieAuthentication: []
       - cookieAuth: []
       - basicAuth: []
-      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PedidoSerialiser'
+          description: ''
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+        '404':
+          description: No encontrado.
+  /rutas/pedido/{id}/:
+    get:
+      operationId: pedido_retrieve
+      description: 'Obtiene un pedido por ID de base de datos.'
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Pedido.
+        required: true
+      tags:
+      - pedido
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
       responses:
         '200':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestAuthDetail'
+                $ref: '#/components/schemas/PedidosSerialiser'
           description: ''
-  /auth/refresh/:
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+        '404':
+          description: No encontrado.
+    patch:
+      operationId: pedido_partial_update
+      description: ''
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Pedido.
+        required: true
+      tags:
+      - pedido
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPedidoSerialiser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPedidoSerialiser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPedidoSerialiser'
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PedidoSerialiser'
+          description: ''
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+        '404':
+          description: No encontrado.
+    delete:
+      operationId: pedido_destroy
+      description: ''
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Pedido.
+        required: true
+      tags:
+      - pedido
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: Las credenciales de autenticación no se proveyeron.
+        '404':
+          description: No encontrado.
+  auth/refresh/:
     post:
-      operationId: auth_refresh_create
+      operationId: refresh_create
       description: |-
         Takes a refresh type JSON web token and returns an access type JSON web
         token if the refresh token is valid.
       tags:
-      - auth
+      - refresh
       requestBody:
         content:
           application/json:
@@ -187,186 +488,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/ExpirationRefreshJWT'
           description: ''
-  /auth/user/:
+  /market/sucursales/{wisol}:
     get:
-      operationId: auth_user_retrieve
-      description: |-
-        Reads and updates UserModel fields
-        Accepts GET, PUT, PATCH methods.
-
-        Default accepted fields: username, first_name, last_name
-        Default display fields: pk, username, email, first_name, last_name
-        Read-only fields: pk, email
-
-        Returns UserModel fields.
-      tags:
-      - auth
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserDetails'
-          description: ''
-    put:
-      operationId: auth_user_update
-      description: |-
-        Reads and updates UserModel fields
-        Accepts GET, PUT, PATCH methods.
-
-        Default accepted fields: username, first_name, last_name
-        Default display fields: pk, username, email, first_name, last_name
-        Read-only fields: pk, email
-
-        Returns UserModel fields.
-      tags:
-      - auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserDetails'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/UserDetails'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/UserDetails'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserDetails'
-          description: ''
-    patch:
-      operationId: auth_user_partial_update
-      description: |-
-        Reads and updates UserModel fields
-        Accepts GET, PUT, PATCH methods.
-
-        Default accepted fields: username, first_name, last_name
-        Default display fields: pk, username, email, first_name, last_name
-        Read-only fields: pk, email
-
-        Returns UserModel fields.
-      tags:
-      - auth
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedUserDetails'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedUserDetails'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedUserDetails'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserDetails'
-          description: ''
-  /geo/localidades/dispositivos/:
-    get:
-      operationId: geo_localidades_dispositivos_list
-      description: Regresa las localidades donde existen dispositivos.
-      tags:
-      - geo
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Localidad'
-          description: ''
-  /iot/devicetype/:
-    get:
-      operationId: iot_devicetype_list
-      description: ''
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedDeviceTypeList'
-          description: ''
-    post:
-      operationId: iot_devicetype_create
-      description: ''
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeviceType'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/DeviceType'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/DeviceType'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeviceType'
-          description: ''
-  /iot/devicetype/{id}/:
-    get:
-      operationId: iot_devicetype_retrieve
-      description: ''
+      operationId: sucursales_retrieve
+      description: 'Obtiene las sucursales basado en la ubicación actual del dispositivo.'
       parameters:
       - in: path
-        name: id
+        name: wisol
         schema:
-          type: integer
-        description: A unique integer value identifying this DeviceType.
+          type: string
+        description: 'Serie del wisol del dispositivo deseado.'
         required: true
       tags:
-      - iot
+      - sucursales
       security:
       - UserClassificationJWTCookieAuthentication: []
       - cookieAuth: []
@@ -376,1768 +510,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeviceType'
-          description: ''
-    put:
-      operationId: iot_devicetype_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this DeviceType.
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeviceType'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/DeviceType'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/DeviceType'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeviceType'
-          description: ''
-    patch:
-      operationId: iot_devicetype_partial_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this DeviceType.
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedDeviceType'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedDeviceType'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedDeviceType'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DeviceType'
-          description: ''
-    delete:
-      operationId: iot_devicetype_destroy
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this DeviceType.
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /iot/disponibilidad-wisol/:
-    post:
-      operationId: iot_disponibilidad_wisol_create
-      description: ''
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/WisolValidation'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/WisolValidation'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/WisolValidation'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                wisol: valid
-          description: ''
+                $ref: '#/components/schemas/SucursalPrecio'
+          description: 'Lista de sucursales y el precio actual que manejan.'
         '401':
-          content:
-            application/json:
-              schema:
-                detail: Las credenciales de autenticación no se proveyeron.
-          description: ''
-        '404':
-          content:
-            application/json:
-              schema:
-                detail: No encontrado.
-          description: ''
-  /iot/dispositivos/:
-    get:
-      operationId: iot_dispositivos_list
-      description: API endpoint that allows users to be view or edit devices.
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      - in: path
-        name: wisol__serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedDispositivoList'
-          description: ''
-    post:
-      operationId: iot_dispositivos_create
-      description: API endpoint that allows users to be view or edit devices.
-      parameters:
-      - in: path
-        name: wisol__serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Dispositivo'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Dispositivo'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Dispositivo'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Dispositivo'
-          description: ''
-  /iot/dispositivos/{wisol__serie}/:
-    get:
-      operationId: iot_dispositivos_retrieve
-      description: API endpoint that allows users to be view or edit devices.
-      parameters:
-      - in: path
-        name: wisol__serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Dispositivo'
-          description: ''
-    put:
-      operationId: iot_dispositivos_update
-      description: API endpoint that allows users to be view or edit devices.
-      parameters:
-      - in: path
-        name: wisol__serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Dispositivo'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Dispositivo'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Dispositivo'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Dispositivo'
-          description: ''
-    patch:
-      operationId: iot_dispositivos_partial_update
-      description: API endpoint that allows users to be view or edit devices.
-      parameters:
-      - in: path
-        name: wisol__serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedDispositivo'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedDispositivo'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedDispositivo'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Dispositivo'
-          description: ''
-    delete:
-      operationId: iot_dispositivos_destroy
-      description: API endpoint that allows users to be view or edit devices.
-      parameters:
-      - in: path
-        name: wisol__serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /iot/instalaciones/:
-    get:
-      operationId: iot_instalaciones_list
-      description: ''
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedInstalacionList'
-          description: ''
-    post:
-      operationId: iot_instalaciones_create
-      description: ''
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Instalacion'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Instalacion'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Instalacion'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Instalacion'
-          description: ''
-  /iot/instalaciones/{id}/:
-    get:
-      operationId: iot_instalaciones_retrieve
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Instalacion'
-          description: ''
-    put:
-      operationId: iot_instalaciones_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Instalacion'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Instalacion'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Instalacion'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Instalacion'
-          description: ''
-    patch:
-      operationId: iot_instalaciones_partial_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedInstalacion'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedInstalacion'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedInstalacion'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Instalacion'
-          description: ''
-    delete:
-      operationId: iot_instalaciones_destroy
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /iot/lecturas/:
-    get:
-      operationId: iot_lecturas_list
-      description: ''
-      parameters:
-      - name: limit
-        required: false
-        in: query
-        description: Number of results to return per page.
-        schema:
-          type: integer
-      - name: offset
-        required: false
-        in: query
-        description: The initial index from which to return the results.
-        schema:
-          type: integer
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedLecturaList'
-          description: ''
-    post:
-      operationId: iot_lecturas_create
-      description: ''
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Lectura'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Lectura'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Lectura'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Lectura'
-          description: ''
-  /iot/lecturas/{id}/:
-    get:
-      operationId: iot_lecturas_retrieve
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Lectura'
-          description: ''
-    put:
-      operationId: iot_lecturas_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Lectura'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Lectura'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Lectura'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Lectura'
-          description: ''
-    patch:
-      operationId: iot_lecturas_partial_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedLectura'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedLectura'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedLectura'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Lectura'
-          description: ''
-    delete:
-      operationId: iot_lecturas_destroy
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /iot/mock_lectura/:
-    post:
-      operationId: iot_mock_lectura_create
-      description: ''
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: string
-          description: ''
-  /iot/mock_lecturas/:
-    post:
-      operationId: iot_mock_lecturas_create
-      description: ''
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          description: No response body
-  /iot/sns-lectura-registro/:
-    post:
-      operationId: iot_sns_lectura_registro_create
-      description: Para uso exclusivo de AWS con IOT Core
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      - {}
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties: {}
-                description: Unspecified response body
-          description: ''
-  /iot/wisol/:
-    get:
-      operationId: iot_wisol_list
-      description: API endpoint that allows users to be view or edited Wisols.
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedWisolList'
-          description: ''
-    post:
-      operationId: iot_wisol_create
-      description: API endpoint that allows users to be view or edited Wisols.
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Wisol'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Wisol'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Wisol'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Wisol'
-          description: ''
-  /iot/wisol/{serie}/:
-    get:
-      operationId: iot_wisol_retrieve
-      description: API endpoint that allows users to be view or edited Wisols.
-      parameters:
-      - in: path
-        name: serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Wisol'
-          description: ''
-    put:
-      operationId: iot_wisol_update
-      description: API endpoint that allows users to be view or edited Wisols.
-      parameters:
-      - in: path
-        name: serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Wisol'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Wisol'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Wisol'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Wisol'
-          description: ''
-    patch:
-      operationId: iot_wisol_partial_update
-      description: API endpoint that allows users to be view or edited Wisols.
-      parameters:
-      - in: path
-        name: serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedWisol'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedWisol'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedWisol'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Wisol'
-          description: ''
-    delete:
-      operationId: iot_wisol_destroy
-      description: API endpoint that allows users to be view or edited Wisols.
-      parameters:
-      - in: path
-        name: serie
-        schema:
-          type: string
-        required: true
-      tags:
-      - iot
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /market/gasera/:
-    get:
-      operationId: market_gasera_list
-      description: ''
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedGaseraList'
-          description: ''
-    post:
-      operationId: market_gasera_create
-      description: ''
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Gasera'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Gasera'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Gasera'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Gasera'
-          description: ''
-  /market/gasera/{nombre}/:
-    get:
-      operationId: market_gasera_retrieve
-      description: ''
-      parameters:
-      - in: path
-        name: nombre
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Gasera'
-          description: ''
-    put:
-      operationId: market_gasera_update
-      description: ''
-      parameters:
-      - in: path
-        name: nombre
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Gasera'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Gasera'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Gasera'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Gasera'
-          description: ''
-    patch:
-      operationId: market_gasera_partial_update
-      description: ''
-      parameters:
-      - in: path
-        name: nombre
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedGasera'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedGasera'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedGasera'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Gasera'
-          description: ''
-    delete:
-      operationId: market_gasera_destroy
-      description: ''
-      parameters:
-      - in: path
-        name: nombre
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /market/precios/:
-    get:
-      operationId: market_precios_list
-      description: ''
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedMarketLocalidadList'
-          description: ''
-    post:
-      operationId: market_precios_create
-      description: ''
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-          application/x-www-form-urlencoded:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-          multipart/form-data:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedMarketLocalidadList'
-          description: ''
-  /market/precios/{id}/:
-    get:
-      operationId: market_precios_list_2
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Precio.
-        required: true
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedMarketLocalidadList'
-          description: ''
-    put:
-      operationId: market_precios_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Precio.
-        required: true
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-          application/x-www-form-urlencoded:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-          multipart/form-data:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedMarketLocalidadList'
-          description: ''
-    patch:
-      operationId: market_precios_partial_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Precio.
-        required: true
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-          application/x-www-form-urlencoded:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-          multipart/form-data:
-            schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/MarketLocalidad'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedMarketLocalidadList'
-          description: ''
-    delete:
-      operationId: market_precios_destroy
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Precio.
-        required: true
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /market/sucursal/:
-    get:
-      operationId: market_sucursal_list
-      description: ''
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedSucursalList'
-          description: ''
-    post:
-      operationId: market_sucursal_create
-      description: ''
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Sucursal'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Sucursal'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Sucursal'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sucursal'
-          description: ''
-  /market/sucursal/{numeroPermiso}/:
-    get:
-      operationId: market_sucursal_retrieve
-      description: ''
-      parameters:
-      - in: path
-        name: numeroPermiso
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sucursal'
-          description: ''
-    put:
-      operationId: market_sucursal_update
-      description: ''
-      parameters:
-      - in: path
-        name: numeroPermiso
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Sucursal'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Sucursal'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Sucursal'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sucursal'
-          description: ''
-    patch:
-      operationId: market_sucursal_partial_update
-      description: ''
-      parameters:
-      - in: path
-        name: numeroPermiso
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedSucursal'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedSucursal'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedSucursal'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Sucursal'
-          description: ''
-    delete:
-      operationId: market_sucursal_destroy
-      description: ''
-      parameters:
-      - in: path
-        name: numeroPermiso
-        schema:
-          type: string
-        required: true
-      tags:
-      - market
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /rutas/pedido/:
-    get:
-      operationId: rutas_pedido_list
-      description: ''
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - rutas
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedPedidoSerialiserList'
-          description: ''
-    post:
-      operationId: rutas_pedido_create
-      description: ''
-      tags:
-      - rutas
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PedidoSerialiser'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PedidoSerialiser'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PedidoSerialiser'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PedidoSerialiser'
-          description: ''
-  /rutas/pedido/{id}/:
-    get:
-      operationId: rutas_pedido_retrieve
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Pedido.
-        required: true
-      tags:
-      - rutas
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PedidoSerialiser'
-          description: ''
-    put:
-      operationId: rutas_pedido_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Pedido.
-        required: true
-      tags:
-      - rutas
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PedidoSerialiser'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PedidoSerialiser'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PedidoSerialiser'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PedidoSerialiser'
-          description: ''
-    patch:
-      operationId: rutas_pedido_partial_update
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Pedido.
-        required: true
-      tags:
-      - rutas
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedPedidoSerialiser'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedPedidoSerialiser'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedPedidoSerialiser'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PedidoSerialiser'
-          description: ''
-    delete:
-      operationId: rutas_pedido_destroy
-      description: ''
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this Pedido.
-        required: true
-      tags:
-      - rutas
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /users/:
-    get:
-      operationId: users_list
-      description: API endpoint that allows users to be viewed or edited.
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - users
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedUserList'
-          description: ''
-    post:
-      operationId: users_create
-      description: API endpoint that allows users to be viewed or edited.
-      tags:
-      - users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/User'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
-  /users/{username}/:
-    get:
-      operationId: users_retrieve
-      description: API endpoint that allows users to be viewed or edited.
-      parameters:
-      - in: path
-        name: username
-        schema:
-          type: string
-          description: Obligatorio. Longitud máxima 150 caracteres alfanuméricos.
-            Letras, dígitos y @/./+/-/_ únicamente.
-        required: true
-      tags:
-      - users
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
-    put:
-      operationId: users_update
-      description: API endpoint that allows users to be viewed or edited.
-      parameters:
-      - in: path
-        name: username
-        schema:
-          type: string
-          description: Obligatorio. Longitud máxima 150 caracteres alfanuméricos.
-            Letras, dígitos y @/./+/-/_ únicamente.
-        required: true
-      tags:
-      - users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/User'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/User'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/User'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
-    patch:
-      operationId: users_partial_update
-      description: API endpoint that allows users to be viewed or edited.
-      parameters:
-      - in: path
-        name: username
-        schema:
-          type: string
-          description: Obligatorio. Longitud máxima 150 caracteres alfanuméricos.
-            Letras, dígitos y @/./+/-/_ únicamente.
-        required: true
-      tags:
-      - users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedUser'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedUser'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedUser'
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-          description: ''
-    delete:
-      operationId: users_destroy
-      description: API endpoint that allows users to be viewed or edited.
-      parameters:
-      - in: path
-        name: username
-        schema:
-          type: string
-          description: Obligatorio. Longitud máxima 150 caracteres alfanuméricos.
-            Letras, dígitos y @/./+/-/_ únicamente.
-        required: true
-      tags:
-      - users
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '204':
-          description: No response body
-  /users/activacion-usuarios/:
-    post:
-      operationId: users_activacion_usuarios_create
-      description: ''
-      tags:
-      - users
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ActivateUsers'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ActivateUsers'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/ActivateUsers'
-        required: true
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ActivateUsers'
-          description: ''
-  /users/leads/:
-    get:
-      operationId: users_leads_list
-      description: Se llama desde API, sirve para obtener los leads desde CRM 'posiblemente'
-      parameters:
-      - name: page
-        required: false
-        in: query
-        description: A page number within the paginated result set.
-        schema:
-          type: integer
-      tags:
-      - users
-      security:
-      - UserClassificationJWTCookieAuthentication: []
-      - cookieAuth: []
-      - basicAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PaginatedLeadList'
-          description: ''
+          description: No hay sucursales para el dispositivo seleccionado.
   /users/user-dispositivo-registration/:
     post:
-      operationId: users_user_dispositivo_registration_create
+      operationId: user_dispositivo_registration_create
       description: |-
         Se llama desde API permite la creacion de Consumidores por medio de
-        app y operador
+        app y operador, el objetivo principal de este endpoint es el de la 
+        creación de un nuevo consumidor desde la app.
       tags:
-      - users
+      - user-dispositivo-registration
       requestBody:
         content:
           application/json:
@@ -2162,61 +547,151 @@ paths:
               schema:
                 $ref: '#/components/schemas/TemporalPassUserDispsitivoCreation'
           description: ''
+        '500':
+          description: La información enviada no ha sido verificada correctamente desde el frontend.
+  /users/:
+    get:
+      operationId: users_list
+      description: API endpoint that allows users to be viewed or edited.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - users
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedUserList'
+          description: ''
+  /users/{username}/:
+    get:
+      operationId: users_retrieve
+      description: Obtén el detalle del usuario por medio de su username.
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      description: API endpoint that allows users to be viewed or edited.
+      parameters:
+      - in: path
+        name: username
+        schema:
+          type: string
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - UserClassificationJWTCookieAuthentication: []
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
 components:
   schemas:
-    ActivateUsers:
-      type: object
-      description: |-
-        ENDPOINT:
-        /users/activacion-usuarios/
-        wisol: <serie>
-        email: <bla@hola.com>
-        password1: pwd
-        password2: pwd
-
-        VALIDA:
-        * Usuario existe
-        * Wisol existe
-        * Wisol fue asignado al usuario
-        * Los pwd son iguales
-
-        ACCIONES:
-        * Establece pwd
-        * Quita bandera `pwdtemporal`
-        * Pone bandera `is_active`
-        * Guarda en DB
-      properties:
-        wisol:
-          type: string
-        email:
-          type: string
-          format: email
-        password1:
-          type: string
-          writeOnly: true
-        password2:
-          type: string
-          writeOnly: true
-      required:
-      - password1
-      - password2
-      - wisol
-    DeviceType:
+    DispositivoGeo:
       type: object
       properties:
-        pk:
-          type: integer
+        geometry:
+          type: object
           readOnly: true
-        key:
+          properties:
+            coordinates:
+              type: array
+              example: [0.0, 0.0]
+              description: "Coordenadas en formato Y, X."
+            type:
+              type: string
+              example: 'Point'
+        properties:
+          type: object
+          properties:
+            pk:
+              type: integer
+              readOnly: true
+            nombre:
+              type: string
+              maxLength: 45
+            wisol:
+              type: string
+              readOnly: true
+            capacidad:
+              type: integer
+              maximum: 2147483647
+              minimum: -2147483648
+              nullable: true
+            sucursal:
+              allOf:
+              - $ref: '#/components/schemas/Nested'
+              readOnly: true
+            municipio:
+              type: string
+              readOnly: true
+            localidad:
+              type: string
+              readOnly: true
+            usuario:
+              type: string
+              readOnly: true
+            calendarizado:
+              type: boolean
+            ultima_lectura:
+              type: object
+              additionalProperties: {}
+              readOnly: true
+            required:
+            - localidad
+            - municipio
+            - pk
+            - sucursal
+            - ultima_lectura
+            - usuario
+            - wisol
+        type:
           type: string
-          maxLength: 45
-        name:
-          type: string
-          maxLength: 45
-      required:
-      - key
-      - name
-      - pk
+          example: 'Feature'
     Dispositivo:
       type: object
       description: |-
@@ -2224,6 +699,9 @@ components:
         that outputs geojson-ready data as
         features and feature collections
       properties:
+        pk:
+          type: integer
+          readOnly: true
         nombre:
           type: string
           maxLength: 45
@@ -2261,10 +739,38 @@ components:
       required:
       - localidad
       - municipio
+      - pk
       - sucursal
       - ultima_lectura
       - usuario
       - wisol
+    SucursalPrecio:
+      type: object
+      properties:
+        gasera:
+          type: string
+          example: 'Gasera patito S.A. de C.V.'
+          description: 'Nombre de la gasera'
+        numeroPermiso:
+          type: string
+          format: email
+          description: 'Número de permiso ante la CRE'
+        precio:
+          type: number
+          example: 10.10
+          description: 'Precio actual que maneja la gasera por litro de gas'
+        precio_pk:
+          type: integer
+          example: 3
+          description: 'ID en base de datos del precio'
+        sucursal_pk:
+          type: integer
+          example: 10
+          description: 'ID en base de datos de la sucursal'
+        telefono:
+          type: string
+          example: '4491234657'
+          description: 'Teléfono del usuario que ha hecho el pedido'
     ExpirationRefreshJWT:
       type: object
       properties:
@@ -2272,82 +778,6 @@ components:
           type: string
       required:
       - refresh
-    Gasera:
-      type: object
-      properties:
-        nombre:
-          type: string
-        sucursal:
-          $ref: '#/components/schemas/Sucursal'
-      required:
-      - nombre
-      - sucursal
-    Instalacion:
-      type: object
-      properties:
-        fecha:
-          type: string
-          format: date-time
-          readOnly: true
-        operario:
-          type: string
-        consumidor:
-          type: string
-        folio:
-          type: string
-          maxLength: 10
-      required:
-      - consumidor
-      - fecha
-      - folio
-      - operario
-    Lead:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        username:
-          type: string
-          readOnly: true
-          description: Obligatorio. Longitud máxima 150 caracteres alfanuméricos.
-            Letras, dígitos y @/./+/-/_ únicamente.
-        first_name:
-          type: string
-          readOnly: true
-        last_name:
-          type: string
-          readOnly: true
-        email:
-          type: string
-          format: email
-          readOnly: true
-        telefono:
-          type: string
-          readOnly: true
-        dispositivo_set:
-          type: array
-          items:
-            $ref: '#/components/schemas/NestedDispositivo'
-          readOnly: true
-        tipo:
-          allOf:
-          - $ref: '#/components/schemas/TipoEnum'
-          readOnly: true
-        sucursal:
-          allOf:
-          - $ref: '#/components/schemas/Nested'
-          readOnly: true
-      required:
-      - dispositivo_set
-      - email
-      - first_name
-      - id
-      - last_name
-      - sucursal
-      - telefono
-      - tipo
-      - username
     Lectura:
       type: object
       properties:
@@ -2378,14 +808,6 @@ components:
       - porcentaje
       - sensor
       - url
-    Localidad:
-      type: object
-      properties:
-        clave:
-          type: string
-          maxLength: 13
-      required:
-      - clave
     Login:
       type: object
       properties:
@@ -2398,18 +820,12 @@ components:
           type: string
       required:
       - password
-    MarketLocalidad:
+    FailedLogin:
       type: object
       properties:
-        clave:
+        non_field_errors:
           type: string
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Gasera'
-      required:
-      - clave
-      - data
+          example: "No puede iniciar sesión con las credenciales proporcionadas."
     Nested:
       type: object
       properties:
@@ -2489,28 +905,12 @@ components:
       - ultima_lectura
       - usuario
       - wisol
-    PaginatedDeviceTypeList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/DeviceType'
     PaginatedDispositivoList:
       type: object
       properties:
         count:
           type: integer
-          example: 123
+          example: 1
         next:
           type: string
           nullable: true
@@ -2518,57 +918,21 @@ components:
           type: string
           nullable: true
         results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Dispositivo'
-    PaginatedGaseraList:
+          type: object
+          properties:
+            features:
+              type: array
+              items:
+                $ref: '#/components/schemas/DispositivoGeo'
+            type:
+              type: string
+              example: 'FeatureCollection'
+    EmailUnico:
       type: object
       properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Gasera'
-    PaginatedInstalacionList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Instalacion'
-    PaginatedLeadList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Lead'
+        emailIsUnique:
+          type: boolean
+          example: True
     PaginatedLecturaList:
       type: object
       properties:
@@ -2585,22 +949,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Lectura'
-    PaginatedMarketLocalidadList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/MarketLocalidad'
     PaginatedPedidoSerialiserList:
       type: object
       properties:
@@ -2616,23 +964,7 @@ components:
         results:
           type: array
           items:
-            $ref: '#/components/schemas/PedidoSerialiser'
-    PaginatedSucursalList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Sucursal'
+            $ref: '#/components/schemas/PedidosSerialiser'
     PaginatedUserList:
       type: object
       properties:
@@ -2649,22 +981,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/User'
-    PaginatedWisolList:
-      type: object
-      properties:
-        count:
-          type: integer
-          example: 123
-        next:
-          type: string
-          nullable: true
-        previous:
-          type: string
-          nullable: true
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/Wisol'
     PasswordChange:
       type: object
       properties:
@@ -2705,18 +1021,6 @@ components:
       - new_password2
       - token
       - uid
-    PatchedDeviceType:
-      type: object
-      properties:
-        pk:
-          type: integer
-          readOnly: true
-        key:
-          type: string
-          maxLength: 45
-        name:
-          type: string
-          maxLength: 45
     PatchedDispositivo:
       type: object
       description: |-
@@ -2724,6 +1028,9 @@ components:
         that outputs geojson-ready data as
         features and feature collections
       properties:
+        pk:
+          type: integer
+          readOnly: true
         nombre:
           type: string
           maxLength: 45
@@ -2758,27 +1065,6 @@ components:
           type: object
           additionalProperties: {}
           nullable: true
-    PatchedGasera:
-      type: object
-      properties:
-        nombre:
-          type: string
-        sucursal:
-          $ref: '#/components/schemas/Sucursal'
-    PatchedInstalacion:
-      type: object
-      properties:
-        fecha:
-          type: string
-          format: date-time
-          readOnly: true
-        operario:
-          type: string
-        consumidor:
-          type: string
-        folio:
-          type: string
-          maxLength: 10
     PatchedLectura:
       type: object
       properties:
@@ -2806,27 +1092,24 @@ components:
     PatchedPedidoSerialiser:
       type: object
       properties:
+        pk:
+          type: integer
+          readOnly: true
         cantidad:
           type: string
           format: decimal
           maximum: 10000000000
           minimum: -10000000000
         dispositivo:
-          type: integer
-        precio:
-          type: integer
-        gasera:
-          type: string
-    PatchedSucursal:
-      type: object
-      properties:
-        numeroPermiso:
           type: string
         precio:
-          type: string
-          format: decimal
-          maximum: 10000000000
-          minimum: -10000000000
+          allOf:
+          - $ref: '#/components/schemas/Precio'
+          readOnly: true
+        mensajes:
+          type: array
+          items:
+            type: string
     PatchedUser:
       type: object
       properties:
@@ -2885,39 +1168,71 @@ components:
         last_name:
           type: string
           maxLength: 150
-    PatchedWisol:
+    PedidoSerialiser:
       type: object
       properties:
         pk:
           type: integer
           readOnly: true
-        serie:
-          type: string
-          maxLength: 8
-        pac:
-          type: string
-          maxLength: 16
-        deviceTypeId:
-          type: integer
-        prototype:
-          type: boolean
-    PedidoSerialiser:
-      type: object
-      properties:
         cantidad:
           type: string
           format: decimal
           maximum: 10000000000
           minimum: -10000000000
+          description: "Cantidad de gas en L"
         dispositivo:
-          type: integer
-        precio:
-          type: integer
-        gasera:
+          required: true
           type: string
+          description: "Serie del wisol del dispositivo al cual se realizara el pedido."
+        precio:
+          required: true
+          type: integer
+          description: "PK del precio que el usuario ha seleccionado."
+    PedidosSerialiser:
+      type: object
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          example: 1
+          description: "ID de base de datos del pedido."
+        cantidad:
+          type: string
+          format: decimal
+          minimum: 0
+          example: 95
+          description: 'Cantidad en L que se pidió de gas.'
+        dispositivo:
+          type: string
+          example: "4904902"
+          description: "Serie del wisol asociado al dispositivo del cual se hizo el pedido de gas"
+        precio:
+          allOf:
+          - $ref: '#/components/schemas/Precio'
+          readOnly: true
+        mensajes:
+          type: array
+          items:
+            type: string
+          description: "Array de mensajes que se han anexado al pedido."
       required:
       - cantidad
       - dispositivo
+      - pk
+      - precio
+    Precio:
+      type: object
+      properties:
+        precio:
+          type: string
+          format: decimal
+          description: "Precio en MXN de la gasera."
+          minimum: 0
+        gasera:
+          type: string
+          readOnly: true
+          description: "Gasera que va a surtir el pedido."
+      required:
       - gasera
       - precio
     RestAuthDetail:
@@ -2926,21 +1241,9 @@ components:
         detail:
           type: string
           readOnly: true
+          example: "Sesión cerrada con éxito."
       required:
       - detail
-    Sucursal:
-      type: object
-      properties:
-        numeroPermiso:
-          type: string
-        precio:
-          type: string
-          format: decimal
-          maximum: 10000000000
-          minimum: -10000000000
-      required:
-      - numeroPermiso
-      - precio
     TemporalPassUserDispsitivoCreation:
       type: object
       description: |-
@@ -2951,25 +1254,6 @@ components:
         Este endpoint es para crear el usuario con password inutilizable y el dispositivo del chip wisol
         que se esta instalando. El dispositivo deberá de comenzar a funcionar pero el usuario aún necesita
         activación.
-
-        CAMPOS:
-        telefono: (string) Telefono del futuro usuario a 10 digitos
-        location: (string) Ubicacion geografica del futuro dispositivo en formato POINT(x.abcd -y.xyz)
-        capacidad: (int) Capacidad del tanque del futuro dispositivo
-        calle: (string) Nombre de la calle del dispositivo
-        numero: (string) Numero e interior si existe
-        cp: (string) Código postal
-        colonia: (string) Colonia de la ubicación del dispositivo
-
-        CAMPOS OCULTOS (NO UTILIZABLES PARA EL CLIENTE)
-        sucursal: (<Sucursal: Model>) Sera la sucursal del cliente que da de alta el consumidor
-        tipo: (string) En este caso siempre será `CONSUMIDOR`
-        pwdtemporal: (bool) En este caso siempre será True
-
-        CAMPOS EN HERENCIA:
-        username: Nombre de usuario del futuro usuario
-        email: Correo del futuro usuario
-        wisol: Numero de serie del wisol a validar y unir al dispositivo
 
         VALIDA:
         * Wisol con serie existe
@@ -2985,28 +1269,38 @@ components:
       properties:
         wisol:
           type: string
+          description: Numero de serie del wisol a validar y unir al dispositivo
         email:
           type: string
           format: email
+          description: Correo del futuro usuario
         username:
           type: string
           maxLength: 150
           minLength: 1
+          description: Nombre de usuario del futuro usuario
         telefono:
           type: string
+          description: 'telefono: Telefono del futuro usuario a 10 digitos'
         location:
-          type: object
+          type: string
+          description: Ubicacion geografica del futuro dispositivo en formato POINT(x.abcd -y.xyz)
           additionalProperties: {}
         capacidad:
           type: integer
+          description: Capacidad del tanque del futuro dispositivo
         calle:
           type: string
+          description: Nombre de la calle del dispositivo
         numero:
           type: string
+          description: Numero e interior si existe
         cp:
           type: string
+          description: Código postal
         colonia:
           type: string
+          description: Colonia de la ubicación del dispositivo
       required:
       - calle
       - colonia
@@ -3015,6 +1309,9 @@ components:
       - numero
       - username
       - wisol
+      - telefono
+      - email
+      - capacidad
     TipoEnum:
       enum:
       - CLIENTE
@@ -3089,27 +1386,6 @@ components:
       - email
       - pk
       - username
-    Wisol:
-      type: object
-      properties:
-        pk:
-          type: integer
-          readOnly: true
-        serie:
-          type: string
-          maxLength: 8
-        pac:
-          type: string
-          maxLength: 16
-        deviceTypeId:
-          type: integer
-        prototype:
-          type: boolean
-      required:
-      - deviceTypeId
-      - pac
-      - pk
-      - serie
     WisolValidation:
       type: object
       description: |-

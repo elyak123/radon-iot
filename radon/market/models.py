@@ -21,7 +21,7 @@ class SucursalSet(models.QuerySet):
     def from_localidad(self, loc):
         tz = pytz.timezone(settings.TIME_ZONE)
         now = tz.fromutc(datetime.datetime.utcnow())
-        fecha = now - datetime.timedelta(days=30)
+        fecha = now - datetime.timedelta(days=1000)
         return Precio.objects.filter(localidad=loc, fecha__gt=fecha).values(
             sucursal_pk=models.F('sucursal__pk'),
             gasera=models.F('sucursal__gasera__nombre'),

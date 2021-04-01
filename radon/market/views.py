@@ -25,6 +25,7 @@ class ListSucursalesByDispositivoView(APIView):
             for i in sucursales:
                 precio = models.Sucursal.objects.get(pk=sucursales[0]['sucursal_pk']).precio_set.last()
                 i['precio'] = precio.precio
+                i['precio_pk'] = precio.pk
             respuesta = [x for x in sucursales]
         except Dispositivo.DoesNotExist:
             respuesta = {
