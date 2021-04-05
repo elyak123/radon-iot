@@ -30,7 +30,7 @@ services:
     environment:
       - SWAGGER_JSON=/schema.yml
     volumes:
-      - ./docker/production/swagger/data:/
+      - ./docker/production/swagger/data/schema.yml:/schema.yml
 
 
   nginx:
