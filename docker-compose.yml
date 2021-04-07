@@ -29,6 +29,7 @@ services:
       - 8080
     environment:
       - SWAGGER_JSON=/schema.yml
+      - BASE_URL=/docs
     volumes:
       - ./docker/production/swagger/data/schema.yml:/schema.yml
 
