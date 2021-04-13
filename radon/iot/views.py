@@ -74,6 +74,14 @@ def wisol_initial_validation(request):
     return Response({'wisol': 'valid'}, status.HTTP_200_OK, {})
 
 
+def api_existencia_dispositivo(request, serie):
+    query = models.Dispositivo.objects.filter(wisol__serie=serie)
+    if query.exists():
+        return Response({'asignado': True}, status.HTTP_200_OK, {})
+    else:
+        return Response({'asignado': False}, status.HTTP_404_NOT_FOUND, {})
+
+
 def registrolectura(request):
     # Checar si el sns viene de amazon.
     message_type = request.headers.get('x-amz-sns-message-type')

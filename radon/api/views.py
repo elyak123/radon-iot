@@ -170,6 +170,12 @@ def api_wisol_initial_validation(request):
     return iotviews.wisol_initial_validation(request)
 
 
+@api_view(['GET'])
+@permission_classes([drf_permissions.AllowAny])  # por lo pronto....
+def api_existencia_dispositivo(request, serie):
+    return iotviews.api_existencia_dispositivo(request, serie)
+
+
 @extend_schema(
     responses={
         (201, 'text/html'), 'Registro Creado',

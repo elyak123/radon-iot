@@ -19,6 +19,7 @@ urlpatterns = [
     #  URLS PARA IOT #
     ####################
     path('sns-lectura-registro/', views.api_registrolectura, name='registrolectura'),
+    path(r'dispositivo-existe/<slug:serie>/', views.api_existencia_dispositivo, name='existenciadispositivo'),
     path('disponibilidad-wisol/', views.api_wisol_initial_validation, name='dispwisol'),
     path(r'', include(iotrouter.urls)),
 ]

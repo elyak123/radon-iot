@@ -217,12 +217,12 @@
                         url: "../iot/dispositivos/" + id_dispositivo + "/",
                         context: document.body
                     }).done(function (response) {
-                        if (response['properties']['usuario']) {
+                        if (response['asignado']) {
                             error = "Dispositivo ya registrado.";
                             showModal(error);
                         }
                     }).fail(function (error) {
-                        if (error.responseJSON.detail == "No encontrado.") {
+                        if (!error.responseJSON.asignado) {
                             $(document).trigger("stepChange");
                         } else {
                             showModal("Ocurrió un error, por favor contacta a soporte.");
