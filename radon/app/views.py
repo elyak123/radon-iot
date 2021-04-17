@@ -32,6 +32,7 @@ class DashboardView(AppAuthBaseClass, generic.TemplateView):
         lectura = dispositivo.get_ultima_lectura() if dispositivo else None
         context['dispositivo'] = dispositivo
         context['ultima_lectura'] = lectura
+        context['litros'] = round(dispositivo.capacidad * (lectura.porcentaje/100), 2)
         return context
 
 
