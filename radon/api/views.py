@@ -50,6 +50,10 @@ class APIRegisterUsersView(userviews.RegisterUsersView):
     permission_classes = [drf_permissions.AllowAny]
 
 
+class APIRegisterDispView(userviews.RegisterUsersView):
+    permission_classes = [permissions.APIConsumidorPermission]
+
+
 @extend_schema(
     request=userviews.serializers.ActivateUsers,
     responses={

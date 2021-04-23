@@ -28,16 +28,27 @@ class DashboardView(AppAuthBaseClass, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DashboardView, self).get_context_data(**kwargs)
-        dispositivo = self.request.user.dispositivo_set.first()
-        lectura = dispositivo.get_ultima_lectura() if dispositivo else None
-        context['dispositivo'] = dispositivo
-        context['ultima_lectura'] = lectura
-        context['litros'] = round(dispositivo.capacidad * (lectura['lectura']/100), 0)
+        dispositivos = self.request.user.dispositivo_set.all()
+        context['dispositivos'] = []
+        context['ultimas_lecturas'] = []
+        context['litros'] = []
+        context['indexes'] = []
+        for idx, dispositivo in enumerate(dispositivos):
+            lectura = dispositivo.get_ultima_lectura() if dispositivo else None
+            lectura['counter'] = "nivelLectura" + str(idx)
+            context['dispositivos'].append(dispositivo)
+            context['ultimas_lecturas'].append(lectura)
+            context['litros'].append(round(dispositivo.capacidad * (lectura['lectura']/100), 0))
+            context['indexes'].append(int(idx))
         return context
 
 
 class RegisterView(BaseTemplateSelector, generic.TemplateView):
     template_name = "app/creacion-usuario.html"
+
+
+class RegistroDispositivo(BaseTemplateSelector, generic.TemplateView):
+    template_name = "app/creacion-dispositivo.html"
 
 
 class PedidosView(AppAuthBaseClass, generic.TemplateView):
@@ -60,7 +71,7 @@ class PedidoView(AppAuthBaseClass, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(PedidoView, self).get_context_data(**kwargs)
-        dispositivo = self.request.user.dispositivo_set.first()
+        dispositivo = self.request.user.dispositivo_set.get(wisol__serie=self.kwargs['serie'])
         context['dispositivo'] = dispositivo
         localidad = Localidad.objects.filter(geo__intersect=dispositivo.location.wkt) if not dispositivo.localidad else dispositivo.localidad  # noqa: E501
         context['sucursales'] = Sucursal.especial.from_localidad(localidad)
@@ -88,7 +99,7 @@ class GraphView(AppAuthBaseClass, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(GraphView, self).get_context_data(**kwargs)
-        dispositivo = self.request.user.dispositivo_set.first()
+        dispositivo = self.request.user.dispositivo_set.get(wisol__serie=self.kwargs['serie'])
         context['dispositivo'] = dispositivo
         return context
 

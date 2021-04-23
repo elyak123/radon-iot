@@ -12,7 +12,7 @@
         <div class="col-md-6 card p-3" id="opciones-gas">
             {% if sucursales|length > 0 %}
             {% if not dispositivo.pedido_set.exists or dispositivo.pedido_set.last.estado == "FINALIZADO" %}
-            <h4 class="mt-4">Genera tu pedido de gas</h4>
+            <h4 class="mt-4">Genera tu pedido para {{ dispositivo.nombre }}</h4>
             <p class="my-2"><b>Gaseras locales:</b></p>
             <div class="row">
                 <div class="col-1"></div>
@@ -125,12 +125,12 @@
             {% else %}
             <h1><b>¡Vaya!</b></h1>
             <br>
-            <p>Parece que estás intentando hacer un nuevo pedido pero tienes otro en camino, espera a que éste sea despachado para realizar otro.</p>
+            <p>Parece que estás intentando hacer un nuevo pedido para {{ dispositivo.nombre }}, pero tienes otro en camino, espera a que éste sea despachado para realizar uno nuevo.</p>
             {% endif %}
             {% else %}
             <h1><b>¡Vaya!</b></h1>
             <br>
-            <p>Parece que aún Radargas no ha investigado las gaseras locales. En poco tiempo los tendrás disponibles.</p>
+            <p>Parece que aún Radargas no ha investigado las gaseras locales cerca de {{ dispositivo.nombre }}. En poco tiempo los tendrás disponibles.</p>
             {% endif %}
         </div>
         <div class="col-md-3"></div>

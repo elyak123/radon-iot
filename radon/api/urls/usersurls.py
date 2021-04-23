@@ -14,6 +14,7 @@ urlpatterns = [
     #  URLS PARA USERS #
     ####################
     path('user-dispositivo-registration/', views.APIRegisterUsersView.as_view(), name='usr-disp-reg'),
+    path('dispositivo-registration/', views.APIRegisterDispView.as_view(), name='disp-reg'),
     path('activacion-usuarios/', views.api_activacion_usuarios, name='activacion-usuarios'),
     path('leads/', views.APILeadsView.as_view(), name='leads'),
     path(r'', include(usersrouter.urls)),
