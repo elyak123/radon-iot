@@ -18,3 +18,7 @@ class PreguntasView(generic.TemplateView):
         context = super(PreguntasView, self).get_context_data(**kwargs)
         context['aleatorio'] = random.randint(1, 4)
         return context
+
+
+class ImgView(generic.TemplateView):
+    template_name = "www/img.html"
