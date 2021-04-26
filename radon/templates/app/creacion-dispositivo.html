@@ -1,0 +1,381 @@
+{% extends template %}
+
+{% block content %}
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Error</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="error-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<p class="d-none" id="username">{{ request.user.username }}</p>
+<div class="row">
+    <div class="col-lg-3"></div>
+    <div class="col-lg-6 card p-4 text-center" style="min-height: 300px;">
+        <div id="step-1" class="d-none">
+            <h3 class="starting-text mt-5"><b>Capacidad del Tanque (L)</b></h3>
+            <div class="form-group">
+                <select class="form-control mt-2" id="capacidad">
+                    <option value="120">120</option>
+                    <option value="300" selected>300</option>
+                    <option value="480">500</option>
+                    <option value="800">800</option>
+                    <option value="1000">1,000</option>
+                    <option value="1600">1,600</option>
+                    <option value="2200">2,200</option>
+                    <option value="2800">2,800</option>
+                    <option value="3400">3,400</option>
+                    <option value="5000">5,000</option>
+                </select>
+            </div>
+            <button class="btn bg-secundario my-3 w-100 siguiente" id="phone-control" disabled="true">Siguiente</button>
+        </div>
+        <div id="step-2" class="d-none">
+            <!-- if django: Sólo para usuario normal -->
+            <h1 class="starting-text"><b>Escribe el código del dispositivo</b></h1>
+            <label for="scannedTextMemo"><b>ID</b></label><br>
+            <input class="form-control" type="text" name="" id="scannedTextMemo" disabled="true">
+        </div>
+        <div id="step-3" class="d-none">
+            <h1>Leer Geolocalización</h1>
+            <h3 class="mensaje-espera">Espere un momento...</h3>
+            <br>
+            <i><b>Coloca el marcador en la puerta de tu casa, así podremos entregarte tu gas a tiempo.</b></i>
+            <br>
+            <div id="mapa" class="mt-4" style="min-height: 300px;"></div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="lat">Latitud:</label>
+                        <input class="form-control" type="text" name="lat" id="lat" disabled>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group">
+                        <label for="lon">Longitud:</label>
+                        <input class="form-control" type="text" name="lon" id="lon" disabled>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3>Dirección completa:</h3>
+                <div class="form-group">
+                    <label for="direccion">Calle</label>
+                    <input type="text" name="calle" id="calle" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="numero">Número Int. y/o Ext.</label>
+                    <input type="text" name="numero" id="numero" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="colonia">Colonia</label>
+                    <input type="text" name="colonia" id="colonia" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="cp">Código Postal</label>
+                    <input type="text" name="cp" id="cp" class="form-control">
+                </div>
+            </div>
+            <button class="btn bg-secundario mt-4 w-100 siguiente" id="geo-control" disabled="true">Terminar</button>
+        </div>
+        <div id="step-4" class="d-none">
+            <h3>Registro Terminado</h3>
+        </div>
+    </div>
+    <div class="col-lg-3"></div>
+</div>
+<script>
+    var payload = {
+        location: "",
+        username: "",
+        email: "",
+        wisol: "",
+        capacidad: "",
+        telefono: "",
+        calle: "",
+        numero: "",
+        colonia: "",
+        cp: ""
+    };
+</script>
+{% endblock content %}
+<script>
+    {% block validaciones %}
+    var regex = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'i');
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    {% endblock %}
+</script>
+{% block scripts %}
+<script type="text/javascript">
+    var jbScanner;
+    var scannerParentElement = document.getElementById("scanner");
+    var reg = new RegExp(/^[0-9a-fA-F]{6}$/);
+    var scanning = false;
+    function onQRCodeScanned(scannedText) {
+        var error;
+
+        var scannedTextMemo = document.getElementById("scannedTextMemo");
+        if (scannedTextMemo) {
+            scannedTextMemo.value = scannedText;
+        }
+
+        if (reg.test(scannedText)) {
+            id_dispositivo = scannedText;
+            var data = { 'wisol': id_dispositivo };
+
+            payload.wisol = id_dispositivo;
+
+            $.ajax({
+                url: "../iot/disponibilidad-wisol/",
+                method: "POST",
+                data: data,
+                context: document.body
+            }).done(function (response) {
+                if (response['wisol'] == "valid") {
+                    $.ajax({
+                        url: "../iot/dispositivos/" + id_dispositivo + "/",
+                        context: document.body
+                    }).done(function (response) {
+                        if (response['asignado']) {
+                            error = "Dispositivo ya registrado.";
+                            showModal(error);
+                        }
+                    }).fail(function (error) {
+                        if (!error.responseJSON.asignado) {
+                            $(document).trigger("stepChange");
+                        } else {
+                            showModal("Ocurrió un error, por favor contacta a soporte.");
+                        }
+                    });
+                }
+            }).fail(function (error) {
+                var detalle = error.responseJSON.wisol[0];
+                showModal(detalle);
+            });
+        } else if (scannedText.split(" ").length > 1) {
+            showModal("No permitiste el uso de cámara. Introduce el código manualmente.");
+            $("#scannedTextMemo").val("");
+        } else {
+            showModal("El código QR que se leyó es incorrecto.");
+        }
+    }
+
+    function showModal(texto) {
+        var detalle = texto;
+        document.getElementById("error-message").innerHTML = detalle;
+        $("#modal").modal();
+    }
+
+</script>
+<script>
+    /*
+    var ml4 = {};
+    ml4.opacityIn = [0,1];
+    ml4.scaleIn = [0.2, 1];
+    ml4.scaleOut = 3;
+    ml4.durationIn = 800;
+    ml4.durationOut = 600;
+    ml4.delay = 500;
+    */
+    var step = 0;
+    var lat;
+    var lon;
+    var err = false;
+    var id_dispositivo = "";
+    var opciones = {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 0
+    }
+
+    function getCoordenadas() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(exito, fracaso, opciones);
+        } else {
+            showModal("Usted no ha permitido la geolocalización o su dispositivo no es compatible. Por favor, escriba el ID manualmente");
+        }
+    }
+
+    function cargar() {
+        var OpcionesMapa = {
+            center: new google.maps.LatLng(lat, lon),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            //ROADMAP  SATELLITE HYBRID TERRAIN
+            zoom: err ? 5 : 19,
+        };
+        var miMapa;      //constructor
+        miMapa = new google.maps.Map(document.getElementById('mapa'), OpcionesMapa);
+
+        //Añadimos el marcador
+        var Marcador = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, lon),
+            map: miMapa,
+            draggable: true,
+            title: "Tu ubicación"
+        });
+
+        google.maps.event.addListener(Marcador, 'dragend', function (evt) {
+            lat = evt.latLng.lat();
+            lon = evt.latLng.lng();
+            document.getElementById("lat").value = lat;
+            document.getElementById("lon").value = lon;
+            payload.location = "POINT(" + lon + " " + lat + ")";
+        });
+    }
+
+    function exito(posicion) {
+        var script = document.createElement("script");
+        script.src = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=cargar&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
+        document.body.appendChild(script);
+
+        lat = posicion.coords.latitude;
+        lon = posicion.coords.longitude;
+        document.getElementById("lat").value = lat;
+        document.getElementById("lon").value = lon;
+
+        payload.location = "POINT(" + lon + " " + lat + ")";
+
+        $(".mensaje-espera").addClass("d-none");
+    }
+
+    function fracaso(error) {
+        err = true;
+        var script = document.createElement("script");
+        script.src = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=cargar&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
+        document.body.appendChild(script);
+
+        lat = 21.8808344;
+        lon = -102.2958248;
+        document.getElementById("lat").value = lat;
+        document.getElementById("lon").value = lon;
+
+        payload.location = "POINT(" + lon + " " + lat + ")";
+
+        var output = document.getElementById("output");
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                showModal("Usted no ha permitido su ubicación. Registre manualmente su ubicación.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                showModal("Ubicación no Disponible. Registre manualmente su ubicación.");
+                break;
+            case error.TIMEOUT:
+                showModal("No se recibe respuesta. Registre manualmente.");
+                break;
+        }
+
+        $(".mensaje-espera").addClass("d-none");
+    }
+
+    $(window).on("load", function () {
+        anime.timeline()
+        /* .add({
+          targets: '.starting-text',
+          opacity: ml4.opacityIn,
+          scale: ml4.scaleIn,
+          duration: ml4.durationIn
+        });
+        */
+        function problemasEjecucion() {
+            $("#mensaje-problemas").removeClass("d-none");
+            $("#scannedTextMemo").prop({ disabled: false });
+            $("#scannedTextMemo").on("keyup", function (evt) {
+                if (reg.test(evt.target.value)) {
+                    onQRCodeScanned(evt.target.value);
+                }
+            });
+        }
+        $(document).on("stepChange", function () {
+            if (step) {
+                switch (step) {
+                    case 1:
+                        problemasEjecucion();
+                        break;
+                    case 2:
+                        getCoordenadas();
+                        break;
+                }
+                anime({
+                    targets: '#step-' + (step),
+                    translateX: [0, -500],
+                    easing: 'easeInOutExpo',
+                    complete: function (anim) {
+                        $("#step-" + (step - 1)).addClass("d-none");
+                        $("#step-" + step).removeClass("d-none");
+                        anime({
+                            targets: '#step-' + step,
+                            translateX: [500, 0],
+                            easing: 'easeInOutExpo'
+                        });
+                    }
+                });
+            } else {
+                $("#step-1").removeClass("d-none");
+                anime({
+                    targets: '#step-1',
+                    translateX: [500, 0],
+                    easing: 'easeInOutExpo'
+                });
+            }
+            step++;
+        });
+        $(document).trigger("stepChange");
+        $(".siguiente").on('click', function () {
+            $(document).trigger("stepChange");
+        });
+
+        $("#geo-control").on("click", function () {
+            $.ajax({
+                url: "../users/dispositivo-registration/",
+                method: "POST",
+                data: payload,
+                context: document.body
+            }).done(function (response) {
+                showModal("Dispositivo registrado con éxito.");
+            }).fail(function (error) {
+                var error_json = error.responseJSON;
+                var error_str = "<ul>";
+                for (error in error_json) {
+                    error_str += `<li><b>${error}:</b></li>`;
+                    for (error_detalle in error_json[error]) {
+                        error_str += `<li>${error_json[error][error_detalle]}</li>`;
+                    }
+                }
+                error_str += "</ul>";
+                showModal(error_str);
+            });
+        });
+
+        $("#calle, #numero, #colonia, #cp").on("keyup", function(evt){
+            accionarValidacion(evt.target, evt.target.value.length > 1);
+            var validacion_calle = $("#calle").val().length > 1;
+            var validacion_numero = $("#numero").val().length > 1;
+            var validacion_colonia = $("#colonia").val().length > 1;
+            var validacion_cp = $("#cp").val().length > 1;
+
+            if(validacion_calle && validacion_numero && validacion_colonia && validacion_cp) {
+                $("#geo-control").prop({ 'disabled': false });
+                payload.calle = $("#calle").val();
+                payload.numero = $("#numero").val();
+                payload.colonia = $("#colonia").val();
+                payload.cp = $("#cp").val();
+            }
+        });
+    });
+</script>
+{% endblock scripts %}
