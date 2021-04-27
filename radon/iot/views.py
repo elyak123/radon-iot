@@ -6,13 +6,21 @@ from random import random
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.debug import sensitive_post_parameters
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework import status
 import validate_aws_sns_message
 from radon.iot import serializers, models, utils
+from dj_rest_auth.registration.views import RegisterView
 from .captura import decode_int_little_endian
+
+
+sensitive_post_parameters_m = method_decorator(
+    sensitive_post_parameters('location')
+)
 
 
 class DeviceTypeViewSet(viewsets.ModelViewSet):
@@ -42,6 +50,25 @@ class InstalacionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return models.Instalacion.objects.filter(operario=self.request.user).order_by('-fecha')
+
+
+class RegisterDispositivoView(RegisterView):
+    """
+    Se llama desde API permite la creacion de Consumidores por medio de
+    app y operador
+    """
+    serializer_class = serializers.DispositivoCreationSerializer
+
+    @sensitive_post_parameters_m
+    def dispatch(self, *args, **kwargs):
+        return super(RegisterView, self).dispatch(*args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        return super(RegisterView, self).create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        dispositivo = serializer.save(self.request)
+        return dispositivo
 
 
 class WisolViewSet(viewsets.ModelViewSet):

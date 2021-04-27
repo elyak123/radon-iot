@@ -10,6 +10,7 @@ from drf_spectacular.types import OpenApiTypes
 from radon.users import views as userviews
 from radon.iot import views as iotviews
 from radon.iot.models import Dispositivo
+from radon.iot.serializers import DispositivoCreationSerializer
 from radon.market import views as marketviews
 from radon.market.models import Sucursal
 from radon.rutas import views as rutasviews
@@ -51,6 +52,10 @@ class APIRegisterUsersView(userviews.RegisterUsersView):
 
 
 class APIRegisterDispView(userviews.RegisterUsersView):
+    permission_classes = [permissions.APIConsumidorPermission]
+
+
+class APIRegisterDispositivoView(iotviews.RegisterDispositivoView):
     permission_classes = [permissions.APIConsumidorPermission]
 
 
@@ -205,3 +210,4 @@ def api_mock_lectura(request):
 @api_view(['POST'])
 def api_mock_lecturas(request):
     return iotviews.mock_lecturas(request)
+

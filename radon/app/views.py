@@ -35,11 +35,12 @@ class DashboardView(AppAuthBaseClass, generic.TemplateView):
         context['indexes'] = []
         for idx, dispositivo in enumerate(dispositivos):
             lectura = dispositivo.get_ultima_lectura() if dispositivo else None
-            lectura['counter'] = "nivelLectura" + str(idx)
-            context['dispositivos'].append(dispositivo)
-            context['ultimas_lecturas'].append(lectura)
-            context['litros'].append(round(dispositivo.capacidad * (lectura['lectura']/100), 0))
-            context['indexes'].append(int(idx))
+            if lectura:
+                lectura['counter'] = "nivelLectura" + str(idx)
+                context['dispositivos'].append(dispositivo)
+                context['ultimas_lecturas'].append(lectura)
+                context['litros'].append(round(dispositivo.capacidad * (lectura['lectura']/100), 0))
+                context['indexes'].append(int(idx))
         return context
 
 

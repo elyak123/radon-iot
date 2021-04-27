@@ -1,7 +1,11 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
+from rest_framework_gis.fields import GeometryField
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from radon.iot import models
+from radon.users.models import Consumidor
+from radon.users.utils import get_localidad_from_wkt
 
 User = get_user_model()
 
@@ -59,6 +63,56 @@ class DispositivoSerializer(GeoFeatureModelSerializer):
         fields = [
             'pk', 'nombre', 'wisol', 'capacidad', 'sucursal', 'municipio',
             'localidad', 'usuario', 'calendarizado', 'ultima_lectura'
+        ]
+        depth = 2
+
+
+class DispositivoCreationSerializer(WisolValidation, GeoFeatureModelSerializer):
+    location = GeometryField(precision=14)
+    capacidad = serializers.IntegerField(required=False)
+    calle = serializers.CharField()
+    numero = serializers.CharField()
+    cp = serializers.CharField()
+    colonia = serializers.CharField()
+    username = serializers.CharField()
+
+    def validate_sucursal(self, sucursal):
+        if hasattr(self.context['request'].user, 'sucursal'):
+            return self.context['request'].user.sucursal
+        else:
+            return None
+
+    def get_cleaned_data(self):
+        disp_data = {
+            'wisol': self.wisol,
+            'location': self.validated_data.get('location', ''),
+            'capacidad': self.validated_data.get('capacidad', None),
+            'calle': self.validated_data.get('calle', ''),
+            'numero': self.validated_data.get('numero', ''),
+            'cp': self.validated_data.get('cp', ''),
+            'colonia': self.validated_data.get('colonia', '')
+        }
+        loc = get_localidad_from_wkt(self.validated_data.get('location'))
+        disp_data['localidad'] = loc
+        disp_data['municipio'] = loc.municipio
+        try:
+            user = Consumidor.objects.get(username=self.validated_data.get('username', ''))
+        except Consumidor.DoesNotExist:
+            raise ValidationError("El usuario no existe.")
+        disp_data['usuario'] = user
+        return disp_data
+
+    def save(self, request):
+        disp_data = self.get_cleaned_data()
+        dispositivo = models.Dispositivo.objects.create(**disp_data)
+        return dispositivo
+
+    class Meta:
+        model = models.Dispositivo
+        geo_field = 'location'
+        fields = [
+            'wisol', 'location', 'capacidad', 'calle', 'numero',
+            'cp', 'colonia', 'username'
         ]
         depth = 2
 

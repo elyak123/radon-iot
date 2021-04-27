@@ -1,6 +1,7 @@
 {% extends template %}
 
 {% block content %}
+{% csrf_token %}
 <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -39,7 +40,12 @@
                     <option value="5000">5,000</option>
                 </select>
             </div>
-            <button class="btn bg-secundario my-3 w-100 siguiente" id="phone-control" disabled="true">Siguiente</button>
+            <h3 class="starting-text mt-2"><b>Elige un nombre para el dispositivo</b></h3>
+            <div class="form-group">
+                <input class="form-control" type="text" name="nombre" id="nombre">
+                <small class="form-text text-muted">Al menos 5 caracteres.</small>
+            </div>
+            <button class="btn bg-secundario my-3 w-100 siguiente" id="name-control" disabled="true">Siguiente</button>
         </div>
         <div id="step-2" class="d-none">
             <!-- if django: Sólo para usuario normal -->
@@ -91,6 +97,7 @@
         </div>
         <div id="step-4" class="d-none">
             <h3>Registro Terminado</h3>
+            <a class="my-5 mx-2 btn btn-info" href="{% url 'inicio' %}">Ir a Inicio</a>
         </div>
     </div>
     <div class="col-lg-3"></div>
@@ -98,11 +105,10 @@
 <script>
     var payload = {
         location: "",
-        username: "",
-        email: "",
+        username: "{{ request.user.username }}",
         wisol: "",
         capacidad: "",
-        telefono: "",
+        nombre: "",
         calle: "",
         numero: "",
         colonia: "",
@@ -136,7 +142,12 @@
 
         if (reg.test(scannedText)) {
             id_dispositivo = scannedText;
-            var data = { 'wisol': id_dispositivo };
+            var csrftoken = $("[name=csrfmiddlewaretoken]").val();
+
+            var data = {
+                'wisol': id_dispositivo,
+                'X-CSRFToken': csrftoken
+            };
 
             payload.wisol = id_dispositivo;
 
@@ -340,25 +351,26 @@
         });
 
         $("#geo-control").on("click", function () {
+            payload["capacidad"] = $("#capacidad").val();
             $.ajax({
-                url: "../users/dispositivo-registration/",
+                url: "../iot/dispositivo-register/",
                 method: "POST",
                 data: payload,
                 context: document.body
             }).done(function (response) {
                 showModal("Dispositivo registrado con éxito.");
             }).fail(function (error) {
-                var error_json = error.responseJSON;
-                var error_str = "<ul>";
-                for (error in error_json) {
-                    error_str += `<li><b>${error}:</b></li>`;
-                    for (error_detalle in error_json[error]) {
-                        error_str += `<li>${error_json[error][error_detalle]}</li>`;
-                    }
-                }
-                error_str += "</ul>";
+                error_str = "Ocurrió un error, favor de llamar a soporte."
                 showModal(error_str);
             });
+        });
+
+        $("#nombre").on("keyup", function(evt){
+            var validacion_nombre = $("#nombre").val().length >= 5;
+            if(validacion_nombre) {
+                $("#name-control").prop({ 'disabled': false });
+                payload.nombre = $("#nombre").val();
+            }
         });
 
         $("#calle, #numero, #colonia, #cp").on("keyup", function(evt){
