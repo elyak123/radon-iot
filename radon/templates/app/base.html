@@ -14,14 +14,20 @@
     <link rel="stylesheet" href="{% static 'css/base_style.css' %}">
     {% endcompress %}
     <meta name="viewport" content="width=device-width, user-scalable=no">
-    <meta name="theme-color" content="#49D49D">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#FFFFFF">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#FFFFFF">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#FFFFFF">
+
     <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.0/lib/anime.min.js"></script>
     <style>
 
     </style>
 </head>
 
-<body class="bg-fondo">
+<body class="">
     <nav id="sidebar" class="navbar-dark bg-primario">
         <div class=" sidebar-header" style="width: 295px;">
             <a class="h-button" style="width: 240px; color:white; display: inline-block; padding-left: 75px;"
@@ -53,8 +59,8 @@
         </div>
     </nav>
     {% block body %}
-    <div id="fondo" class="w-100 h-100 d-none" style="margin-top: -24px;"></div>
-    <div id="content" class="content p-4 mt-4">
+    <div id="fondo" class="w-100 h-100 d-none"></div>
+    <div id="content" class="content px-4">
         {% if messages %}
           <div class="">
               {% for message in messages %}

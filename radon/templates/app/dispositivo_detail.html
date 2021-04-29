@@ -3,7 +3,7 @@
 
 {% block content %}
 {% csrf_token %}
-<div class="card p-3">
+<div class="mt-5 p-3">
     <div class="row">
         <div class="col-md-6 p-1">
             <h4>Número de Serie:</h4>
@@ -76,7 +76,7 @@
     $(window).on("load", function(){
         var modo_edicion = false;
         var script = document.createElement('script');
-        script.src = 'http://maps.googleapis.com/maps/api/js?sensor=false&callback=initMap&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
+        script.src = 'https://maps.googleapis.com/maps/api/js?sensor=false&callback=initMap&key=AIzaSyCF1pVeqP7ihDYESHqcBD-te81dC-m7roI';
         document.body.appendChild(script);
         lat = {{ object.location.y }};
         lng = {{ object.location.x }};

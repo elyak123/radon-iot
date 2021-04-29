@@ -9,7 +9,7 @@
     <input class="d-none" type="number" value="{{ dispositivo.id }}" name="dispositivo">
     <div class="row">
         <div class="col-md-3"></div>
-        <div class="col-md-6 card p-3" id="opciones-gas">
+        <div class="col-md-6 mt-5 p-3" id="opciones-gas">
             {% if sucursales|length > 0 %}
             {% if not dispositivo.pedido_set.exists or dispositivo.pedido_set.last.estado == "FINALIZADO" %}
             <h4 class="mt-4">Genera tu pedido para {{ dispositivo.nombre }}</h4>
@@ -126,11 +126,13 @@
             <h1><b>¡Vaya!</b></h1>
             <br>
             <p>Parece que estás intentando hacer un nuevo pedido para {{ dispositivo.nombre }}, pero tienes otro en camino, espera a que éste sea despachado para realizar uno nuevo.</p>
+            <a class="btn btn-primary my-2 w-100" href="{% url 'pedidos' %}">Regresar a mis pedidos</a>
             {% endif %}
             {% else %}
             <h1><b>¡Vaya!</b></h1>
             <br>
             <p>Parece que aún Radargas no ha investigado las gaseras locales cerca de {{ dispositivo.nombre }}. En poco tiempo los tendrás disponibles.</p>
+            <a class="btn btn-primary my-2 w-100" href="{% url 'pedidos' %}">Regresar a mis pedidos</a>
             {% endif %}
         </div>
         <div class="col-md-3"></div>
