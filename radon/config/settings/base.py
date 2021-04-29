@@ -304,10 +304,10 @@ DEFAULT_GASERA = env('DEFAULT_GASERA')
 GOOGLE_MAPS_API_KEY = env('GOOGLE_MAPS_API_KEY')
 
 # pwa cfg
-PWA_APP_NAME = "radargas"
-PWA_APP_DESCRIPTION = "detalles y precio"
-PWA_APP_THEME_COLOR = '#212529'
-PWA_APP_BACKGROUND_COLOR = '#212529'
+PWA_APP_NAME = "Radargas"
+PWA_APP_DESCRIPTION = "App para el control de tu dispositivo Radargas."
+PWA_APP_THEME_COLOR = '#F5F6F7'
+PWA_APP_BACKGROUND_COLOR = '#F5F6F7'
 PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/'
 PWA_APP_ORIENTATION = 'any'
@@ -315,21 +315,77 @@ PWA_APP_START_URL = '/'
 PWA_APP_STATUS_BAR_COLOR = 'default'
 PWA_APP_ICONS = [
     {
-        'src': '/static/images/icon.png',
-        'sizes': '160x160'
+        'src': '/static/images/iconos/1x.png',
+        'sizes': '48x48'
+    },
+    {
+        'src': '/static/images/iconos/1.5x.png',
+        'sizes': '72x72'
+    },
+    {
+        'src': '/static/images/iconos/2x.png',
+        'sizes': '96x96'
+    },
+    {
+        'src': '/static/images/iconos/3x.png',
+        'sizes': '144x144'
+    },
+    {
+        'src': '/static/images/iconos/4x.png',
+        'sizes': '192x192'
+    },
+    {
+        'src': '/static/images/iconos/512x512.png',
+        'sizes': '512x512'
+    },
+    {
+        'src': '/static/images/iconos/1024x1024.png',
+        'sizes': '1024x1024'
     }
 ]
 PWA_APP_ICONS_APPLE = [
     {
-        'src': '/static/images/icon.png',
-        'sizes': '160x160'
-    }
+        'src': '/static/images/Icon-App-29x29@1x.png',
+        'sizes': '29x29'
+    },
+    {
+        'src': '/static/images/Icon-App-29x29@2x.png',
+        'sizes': '58x58'
+    },
+    {
+        'src': '/static/images/Icon-App-29x29@3x.png',
+        'sizes': '87x87'
+    },
+    {
+        'src': '/static/images/Icon-App-40x40@1x.png',
+        'sizes': '40x40'
+    },
+    {
+        'src': '/static/images/Icon-App-40x40@2x.png',
+        'sizes': '80x80'
+    },
+    {
+        'src': '/static/images/Icon-App-40x40@3x.png',
+        'sizes': '120x120'
+    },
+    {
+        'src': '/static/images/Icon-App-60x60@3x.png',
+        'sizes': '180x180'
+    },
+    {
+        'src': '/static/images/Icon-App-76x76@1x.png',
+        'sizes': '76x76'
+    },
+    {
+        'src': '/static/images/Icon-App-76x76@2x.png',
+        'sizes': '152x152'
+    },
 ]
 PWA_APP_SPLASH_SCREEN = [
     {
-        'src': '/static/images/icons/splash.png',
+        'src': '/static/images/splash.png',
         'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
     }
 ]
 PWA_APP_DIR = 'ltr'
-PWA_APP_LANG = 'es-MX'
+PWA_APP_LANG = 'es-ES'
