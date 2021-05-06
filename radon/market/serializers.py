@@ -4,12 +4,12 @@ from radon.market import models
 
 class SucursalSerializer(serializers.Serializer):
     numeroPermiso = serializers.CharField()
-    # precio = serializers.DecimalField(max_digits=12, decimal_places=2)
+    precio = serializers.DecimalField(max_digits=12, decimal_places=2)
 
 
 class GaseraSerializer(serializers.Serializer):
     nombre = serializers.CharField()
-    # sucursal = SucursalSerializer()
+    sucursal = SucursalSerializer()
 
 
 class PrecioSerializer(serializers.ModelSerializer):
