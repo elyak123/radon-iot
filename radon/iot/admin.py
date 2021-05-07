@@ -5,6 +5,7 @@ from radon.iot.widgets import PointWidget
 
 
 class DispositivoAdmin(admin.OSMGeoAdmin):
+    exclude = ['location']
     map_srid = 4326
 
     list_display = ('serie', 'usuario', 'medida_actual', 'enviar_notificacion')
