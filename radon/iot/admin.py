@@ -1,6 +1,6 @@
 from django.contrib.gis import admin
 from django.utils.html import format_html
-from .models import Dispositivo, Wisol, DeviceType, Lectura
+from .models import Dispositivo, Wisol, DeviceType, Lectura, Firmware, Hardware
 from radon.iot.widgets import PointWidget
 
 
@@ -49,6 +49,16 @@ class DeviceTypeAdmin(admin.ModelAdmin):
     pass
 
 
+class FirmwareAdmin(admin.ModelAdmin):
+    pass
+
+
+class HardwareAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(Dispositivo, DispositivoAdmin)
 admin.site.register(Wisol, WisolAdmin)
 admin.site.register(DeviceType, DeviceTypeAdmin)
+admin.site.register(Firmware, FirmwareAdmin)
+admin.site.register(Hardware, HardwareAdmin)

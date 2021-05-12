@@ -11,14 +11,20 @@ from radon.georadon.models import Municipio, Localidad
 User = get_user_model()
 
 
-class FwTag(models.Model):
+class Firmware(models.Model):
     tag = models.CharField(max_length=45, unique=True)
     descripcion = models.CharField(max_length=100)
 
+    def __str__(self):
+        return "fw: " + self.tag + ' ' + self.descripcion[:40]
 
-class HwTag(models.Model):
+
+class Hardware(models.Model):
     tag = models.CharField(max_length=45, unique=True)
     descripcion = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "hw: " + self.tag + ' ' + self.descripcion[:40]
 
 
 class DeviceType(models.Model):
@@ -38,8 +44,8 @@ class Wisol(models.Model):
     pac = models.CharField(max_length=16)
     prototype = models.BooleanField(default=True)
     deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
-    hw_tag = models.ForeignKey(HwTag, on_delete=models.CASCADE)
-    FwTag = models.ForeignKey(FwTag, on_delete=models.CASCADE)
+    hardware = models.ForeignKey(Firmware, on_delete=models.CASCADE)
+    firmware = models.ForeignKey(Hardware, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Wisol"
