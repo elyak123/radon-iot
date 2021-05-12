@@ -1,10 +1,24 @@
 from django.contrib.gis import admin
 from django.utils.html import format_html
-from .models import Dispositivo, Wisol, DeviceType
+from .models import Dispositivo, Wisol, DeviceType, Lectura
 from radon.iot.widgets import PointWidget
 
 
+class LecturaInLine(admin.TabularInline):
+    model = Lectura
+    extra = 0
+
+    def get_queryset(self, request):
+        qs = super(LecturaInLine, self).get_queryset(request)
+        ids = qs.values('pk')[:60]
+        qs = Lectura.objects.filter(pk__in=ids).order_by('-id')
+        return qs
+
+
 class DispositivoAdmin(admin.OSMGeoAdmin):
+    inlines = [
+        LecturaInLine
+    ]
     exclude = ['location']
     map_srid = 4326
 

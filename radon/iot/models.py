@@ -1,5 +1,7 @@
+import pytz
 from django.db.models import OuterRef, Exists, Subquery
 from django.core.serializers import serialize
+from django.conf import settings
 from django.contrib.gis.db import models
 from django.contrib.auth import get_user_model
 from radon.users.utils import get_default_user
@@ -7,6 +9,16 @@ from radon.market.models import Sucursal
 from radon.georadon.models import Municipio, Localidad
 
 User = get_user_model()
+
+
+class FwTag(models.Model):
+    tag = models.CharField(max_length=45, unique=True)
+    descripcion = models.CharField(max_length=100)
+
+
+class HwTag(models.Model):
+    tag = models.CharField(max_length=45, unique=True)
+    descripcion = models.CharField(max_length=100)
 
 
 class DeviceType(models.Model):
@@ -26,6 +38,8 @@ class Wisol(models.Model):
     pac = models.CharField(max_length=16)
     prototype = models.BooleanField(default=True)
     deviceTypeId = models.ForeignKey(DeviceType, on_delete=models.CASCADE)
+    hw_tag = models.ForeignKey(HwTag, on_delete=models.CASCADE)
+    FwTag = models.ForeignKey(FwTag, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Wisol"
@@ -141,4 +155,5 @@ class Lectura(models.Model):
         verbose_name_plural = "Lecturas"
 
     def __str__(self):
-        return f'{self.fecha.isoformat(timespec="minutes")}-{self.dispositivo.wisol.serie}-{self.porcentaje}%'
+        tz = pytz.timezone(settings.TIME_ZONE)
+        return f'{tz.fromutc(self.fecha.utcnow())}-{self.dispositivo.wisol.serie}-{self.porcentaje}%'
