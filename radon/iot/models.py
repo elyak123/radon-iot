@@ -112,7 +112,7 @@ class Dispositivo(models.Model):
     def get_ultima_lectura(self):
         lectura = self.lectura_set.order_by('-fecha').first()
         if lectura:
-            return {'lectura': lectura.porcentaje, 'fecha': lectura.fecha}
+            return {'lectura': lectura.porcentaje, 'fecha': lectura.fecha_local()}
         return None
 
     @property
@@ -163,3 +163,6 @@ class Lectura(models.Model):
     def __str__(self):
         tz = pytz.timezone(settings.TIME_ZONE)
         return f'{tz.fromutc(self.fecha.utcnow())}-{self.dispositivo.wisol.serie}-{self.porcentaje}%'
+
+    def fecha_local(self):
+        return self.fecha.astimezone(pytz.timezone(settings.TIME_ZONE))
