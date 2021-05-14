@@ -10,8 +10,8 @@ class LecturaInLine(admin.TabularInline):
 
     def get_queryset(self, request):
         qs = super(LecturaInLine, self).get_queryset(request)
-        ids = qs.values('pk')[:60]
-        qs = Lectura.objects.filter(pk__in=ids).order_by('-id')
+        ids = qs.order_by('-fecha').values('pk')[:60]
+        qs = Lectura.objects.filter(pk__in=ids).order_by('-fecha')
         return qs
 
 
